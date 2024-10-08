@@ -37,7 +37,7 @@ def cargar_datos(archivo):
             # Cargar los datos de la tabla
             df = pd.read_sql_query(f"SELECT * FROM {tabla}", conn)
             conn.close()
-            if len(tabla) == 0
+            if len(tabla) == 0:
                 raise ValueError("No se encontraron tablas")
             print("Base de datos SQLite cargada.")
         except Exception as e:
