@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import  QApplication, QWidget, QPushButton, QFileDialog, QVBoxLayout
+from PyQt6.QtWidgets import  QApplication, QWidget, QPushButton, QFileDialog, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, QHeaderView
 from PyQt6.QtCore import QStandardPaths 
 import sys
 import pandas as pd
@@ -23,7 +23,7 @@ class Ventana(QWidget):
         layout.addWidget(self.button)
 
         #Crear etiqueta para mostrar la ruta del archivo
-        self.ruta_label = Qlabel("Ruta del archivo: Ninguno")
+        self.ruta_label = QLabel("Ruta del archivo: Ninguno")
         layout.addWidget(self.ruta_label)
 
         #Crear tabla para mostrar los datos
@@ -84,8 +84,8 @@ class Ventana(QWidget):
 
         #Insertamos los datos en la tabla
         for i in range(len(df.index)):
-            for i in range(len(df.columns)):
-                selft.table.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
+            for j in range(len(df.columns)):
+                self.table.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
         
         #Ajustamos las columnas
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
