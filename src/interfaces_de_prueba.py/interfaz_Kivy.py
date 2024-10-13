@@ -32,6 +32,6 @@ class VentanaSimpleApp(App):
                       size_hint=(0.8, 0.4))
         popup.open()
 
-# Ejecutar la aplicación
+
 if __name__ == '__main__':
     VentanaSimpleApp().run()
