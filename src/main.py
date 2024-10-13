@@ -1,7 +1,8 @@
 import pandas as pd
 import sqlite3
-
-
+from PyQt6.QtWidgets import  QApplication
+import sys 
+from ventana import *
 def cargar_datos(archivo):
     # Verificar el tipo de archivo por su extensión
     if archivo.endswith('.csv'):
@@ -56,8 +57,11 @@ def cargar_datos(archivo):
     else:
         print("No se pudieron cargar los datos.")
         return None
-
+    
 # Función principal
 if __name__ == "__main__":
-    archivo = 'housing.xlsx'
-    cargar_datos(archivo)
+    #archivo = 'housing.xlsx'
+    #cargar_datos(archivo)
+    app = QApplication((sys.argv))
+    ventana=Ventana()
+    sys.exit(app.exec())
