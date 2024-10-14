@@ -9,4 +9,5 @@ if __name__ == "__main__":
     #cargar_datos(archivo)
     app = QApplication((sys.argv))
     ventana=Ventana()
+    ventana.show()
     sys.exit(app.exec())
