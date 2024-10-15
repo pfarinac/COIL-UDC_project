@@ -11,6 +11,8 @@ class VentanaSimple(QWidget):
         # Establecer el título de la ventana
         self.setWindowTitle('Ventana Simple con PyQt6')
 
+        # Tamaño de la ventana
+        self.setGeometry(100,100,250,250)
         # Crear un layout vertical
         layout = QVBoxLayout()
 
