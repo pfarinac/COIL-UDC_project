@@ -35,7 +35,7 @@ class Ventana(QWidget):
         self.setLayout(layout)
 
     def mostrar_mensaje_error(self, mensaje):
-        """Muestra un cuadro de diálogo de error con el mensaje proporcionado."""
+        # Muestra un cuadro de diálogo de error con el mensaje proporcionado
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Critical)
         msg.setWindowTitle("Error")
