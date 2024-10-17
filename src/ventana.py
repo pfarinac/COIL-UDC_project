@@ -143,20 +143,14 @@ class Ventana(QWidget):
             if opcion == "Eliminar Filas":
                 self.df.dropna(inplace=True)
             elif opcion == "Rellenar con Media":
-                # Solo rellenar columnas numéricas
-                self.df.fillna(self.df.select_dtypes(include="number").mean(), inplace=True)
+                self.df.fillna(self.df.mean(numeric_only=True), inplace=True)
             elif opcion == "Rellenar con Mediana":
-                # Solo rellenar columnas numéricas
-                self.df.fillna(self.df.select_dtypes(include="number").median(), inplace=True)
+                self.df.fillna(self.df.median(numeric_only=True), inplace=True)
             elif opcion == "Rellenar con Valor":
                 valor = self.constant_input.text()
                 if valor == "":
                     self.mostrar_mensaje_error("Debe ingresar un valor constante.")
                     return
-                try:
-                    valor = float(valor)  # Intentamos convertirlo a un número si es posible
-                except ValueError:
-                    pass  # Si no es número, lo dejamos como texto
                 self.df.fillna(valor, inplace=True)
 
             # Actualizamos la tabla con los datos preprocesados
