@@ -7,15 +7,15 @@ import sqlite3
 class Ventana(QWidget):
     def __init__(self):
         super().__init__()
-        self.df = None  # DataFrame vacío para cargar los datos
+        self.df = None  # Inicializamos el DataFrame vacío
         self.inicializarUI()
-    
-    # Añadir título, medidas, posición a la ventana y configurar el botón
+
+    # Inicializamos la interfaz
     def inicializarUI(self):
         self.setGeometry(100, 100, 600, 600)
         self.setWindowTitle("Gestión de Datos Inexistentes")
 
-        # Crear layout vertical
+        # Layout vertical principal
         layout = QVBoxLayout()
 
         # Botón para añadir archivo
@@ -29,24 +29,22 @@ class Ventana(QWidget):
 
         # Tabla para mostrar los datos
         self.table = QTableWidget()
-        self.table.setRowCount(0)  # sin filas
-        self.table.setColumnCount(0)  # sin columnas
         layout.addWidget(self.table)
 
-        # Botón para detectar NaN
+        # Botón para detectar valores inexistentes (NaN)
         self.nan_button = QPushButton("Detectar Valores Inexistentes")
         self.nan_button.clicked.connect(self.detectar_nan)
         layout.addWidget(self.nan_button)
 
-        # Crear un layout horizontal para las opciones de manejo de NaN
+        # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
 
-        # ComboBox para seleccionar el manejo de NaN
+        # ComboBox para elegir cómo manejar los NaN
         self.nan_options = QComboBox()
         self.nan_options.addItems(["Eliminar Filas", "Rellenar con Media", "Rellenar con Mediana", "Rellenar con Valor"])
         options_layout.addWidget(self.nan_options)
 
-        # Campo para que el usuario ingrese un valor constante
+        # Campo para que el usuario introduzca un valor constante
         self.constant_input = QLineEdit()
         self.constant_input.setPlaceholderText("Valor constante")
         options_layout.addWidget(self.constant_input)
@@ -59,27 +57,25 @@ class Ventana(QWidget):
 
         self.setLayout(layout)
 
+    # Función para mostrar mensajes de error
     def mostrar_mensaje_error(self, mensaje):
-        # Muestra un cuadro de diálogo de error con el mensaje proporcionado
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Critical)
         msg.setWindowTitle("Error")
         msg.setText(mensaje)
         msg.exec()
 
+    # Función para mostrar mensajes informativos
     def mostrar_mensaje_info(self, mensaje):
-        # Muestra un cuadro de diálogo de información con el mensaje proporcionado
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setWindowTitle("Información")
         msg.setText(mensaje)
         msg.exec()
 
+    # Función para seleccionar y cargar un archivo
     def archivos(self):
-        # Se establece que el explorador de archivos se abrirá en Descargas
         initial_dir = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DownloadLocation)
-        
-        # Tipos de archivos aceptados
         file_types = "CSV files (*.csv);;Excel files(*.xlsx);;Excel files(*.xls);;Sqlite files(*.sqlite);;DB files(*.db)"
         file_path, _ = QFileDialog.getOpenFileName(self, "Open File", initial_dir, file_types)
 
@@ -105,7 +101,7 @@ class Ventana(QWidget):
             except Exception as e:
                 self.mostrar_mensaje_error(f"Error al leer el archivo: {str(e)}")
 
-    # Función para mostrar los datos en la tabla
+    # Función para mostrar datos en la tabla
     def mostrar_datos(self, df):
         self.table.setRowCount(len(df.index))
         self.table.setColumnCount(len(df.columns))
@@ -114,11 +110,11 @@ class Ventana(QWidget):
         for i in range(len(df.index)):
             for j in range(len(df.columns)):
                 self.table.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
-        
+
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
 
-    # Detectar y contar los valores NaN
+    # Detectar valores NaN en el DataFrame
     def detectar_nan(self):
         if self.df is None:
             self.mostrar_mensaje_error("No se ha cargado ningún archivo.")
@@ -135,7 +131,7 @@ class Ventana(QWidget):
                 mensaje += f"- {col}: {count} valores\n"
             self.mostrar_mensaje_info(mensaje)
 
-    # Aplicar el preprocesado de valores inexistentes
+    # Aplicar el preprocesado según la opción seleccionada
     def aplicar_preprocesado(self):
         if self.df is None:
             self.mostrar_mensaje_error("No se ha cargado ningún archivo.")
@@ -147,41 +143,28 @@ class Ventana(QWidget):
             if opcion == "Eliminar Filas":
                 self.df.dropna(inplace=True)
             elif opcion == "Rellenar con Media":
-                # Verifica si la versión de pandas soporta numeric_only=True
-                try:
-                    self.df.fillna(self.df.mean(numeric_only=True), inplace=True)
-                except TypeError:
-                    # Si la versión de pandas no soporta numeric_only=True, usa la media solo de las columnas numéricas
-                    numeric_columns = self.df.select_dtypes(include="number").columns
-                    self.df[numeric_columns] = self.df[numeric_columns].fillna(self.df[numeric_columns].mean())
+                # Solo rellenar columnas numéricas
+                self.df.fillna(self.df.select_dtypes(include="number").mean(), inplace=True)
             elif opcion == "Rellenar con Mediana":
-                # Similar a la media, solo columnas numéricas
-                try:
-                    self.df.fillna(self.df.median(numeric_only=True), inplace=True)
-                except TypeError:
-                    numeric_columns = self.df.select_dtypes(include="number").columns
-                    self.df[numeric_columns] = self.df[numeric_columns].fillna(self.df[numeric_columns].median())
+                # Solo rellenar columnas numéricas
+                self.df.fillna(self.df.select_dtypes(include="number").median(), inplace=True)
             elif opcion == "Rellenar con Valor":
                 valor = self.constant_input.text()
                 if valor == "":
                     self.mostrar_mensaje_error("Debe ingresar un valor constante.")
                     return
-
-                # Intentar convertir el valor en su tipo correcto
                 try:
-                    valor = float(valor)
+                    valor = float(valor)  # Intentamos convertirlo a un número si es posible
                 except ValueError:
-                    pass  # Si no puede ser convertido a float, se usa tal cual (como string, por ejemplo)
-
+                    pass  # Si no es número, lo dejamos como texto
                 self.df.fillna(valor, inplace=True)
 
-            # Actualizar los datos en la tabla después de aplicar el preprocesado
+            # Actualizamos la tabla con los datos preprocesados
             self.mostrar_datos(self.df)
             self.mostrar_mensaje_info("Preprocesado aplicado correctamente.")
 
         except Exception as e:
             self.mostrar_mensaje_error(f"Error durante el preprocesado: {str(e)}")
-
 
 
 if __name__ == "__main__":
