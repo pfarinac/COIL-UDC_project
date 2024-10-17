@@ -147,22 +147,41 @@ class Ventana(QWidget):
             if opcion == "Eliminar Filas":
                 self.df.dropna(inplace=True)
             elif opcion == "Rellenar con Media":
-                self.df.fillna(self.df.mean(numeric_only=True), inplace=True)
+                # Verifica si la versión de pandas soporta numeric_only=True
+                try:
+                    self.df.fillna(self.df.mean(numeric_only=True), inplace=True)
+                except TypeError:
+                    # Si la versión de pandas no soporta numeric_only=True, usa la media solo de las columnas numéricas
+                    numeric_columns = self.df.select_dtypes(include="number").columns
+                    self.df[numeric_columns] = self.df[numeric_columns].fillna(self.df[numeric_columns].mean())
             elif opcion == "Rellenar con Mediana":
-                self.df.fillna(self.df.median(numeric_only=True), inplace=True)
+                # Similar a la media, solo columnas numéricas
+                try:
+                    self.df.fillna(self.df.median(numeric_only=True), inplace=True)
+                except TypeError:
+                    numeric_columns = self.df.select_dtypes(include="number").columns
+                    self.df[numeric_columns] = self.df[numeric_columns].fillna(self.df[numeric_columns].median())
             elif opcion == "Rellenar con Valor":
                 valor = self.constant_input.text()
                 if valor == "":
                     self.mostrar_mensaje_error("Debe ingresar un valor constante.")
                     return
+
+                # Intentar convertir el valor en su tipo correcto
+                try:
+                    valor = float(valor)
+                except ValueError:
+                    pass  # Si no puede ser convertido a float, se usa tal cual (como string, por ejemplo)
+
                 self.df.fillna(valor, inplace=True)
-            
-            # Mostramos el DataFrame actualizado en la tabla
+
+            # Actualizar los datos en la tabla después de aplicar el preprocesado
             self.mostrar_datos(self.df)
             self.mostrar_mensaje_info("Preprocesado aplicado correctamente.")
 
         except Exception as e:
             self.mostrar_mensaje_error(f"Error durante el preprocesado: {str(e)}")
+
 
 
 if __name__ == "__main__":
