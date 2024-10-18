@@ -129,6 +129,12 @@ class Ventana(QWidget):
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
 
+        # Poblar los selectores con las columnas del DataFrame
+        self.features_list.clear()
+        self.features_list.addItems(df.columns)
+        self.target_combo.clear()
+        self.target_combo.addItems(df.columns)
+
     # Detectar valores NaN en el DataFrame
     def detectar_nan(self):
         if self.df is None:
