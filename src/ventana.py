@@ -33,11 +33,19 @@ class Ventana(QWidget):
         self.table = QTableWidget()
         layout.addWidget(self.table)
 
-        # Selector múltiple para columnas de entrada
+        # ComboBox para seleccionar el tipo de regresión
+        self.regression_type_label = QLabel("Selecciona el tipo de regresión:")
+        layout.addWidget(self.regression_type_label)
+        self.regression_type_combo = QComboBox()
+        self.regression_type_combo.addItems(["Regresión Simple", "Regresión Múltiple"])
+        self.regression_type_combo.currentIndexChanged.connect(self.cambiar_selector)
+        layout.addWidget(self.regression_type_combo)
+
+       # Selector para columnas de entrada (features)
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
         layout.addWidget(self.features_label)
         self.features_list = QListWidget()
-        self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        self.features_list.setSelectionMode(QListWidget.SelectionMode.SingleSelection)  # Por defecto selección simple
         layout.addWidget(self.features_list)
 
         # Selector único para la columna de salida
@@ -71,6 +79,13 @@ class Ventana(QWidget):
         layout.addWidget(self.apply_button)
 
         self.setLayout(layout)
+
+    # Cambiar el modo del selector de características según el tipo de regresión seleccionado
+    def cambiar_selector(self):
+        if self.regression_type_combo.currentText() == "Regresión Simple":
+            self.features_list.setSelectionMode(QListWidget.SelectionMode.SingleSelection)  # Selección simple
+        else:
+            self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)  # Selección múltiple
 
     # Función para mostrar mensajes de error
     def mostrar_mensaje_error(self, mensaje):
