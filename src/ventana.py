@@ -1,168 +1,171 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QFileDialog, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout
-from PyQt6.QtCore import QStandardPaths
 import sys
 import pandas as pd
 import sqlite3
+from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QFileDialog, QPushButton, QMessageBox, QInputDialog, QComboBox, QLabel
+from PyQt6.QtGui import QColor
 
-class Ventana(QWidget):
+class CsvViewer(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.df = None  # Inicializamos el DataFrame vacío
-        self.inicializarUI()
+        self.setWindowTitle("CSV/XLSX/SQLite Viewer")
+        self.setGeometry(100, 100, 1200, 700)
 
-    # Inicializamos la interfaz
-    def inicializarUI(self):
-        self.setGeometry(100, 100, 600, 600)
-        self.setWindowTitle("Gestión de Datos Inexistentes")
+        self.table_widget = QTableWidget()
+        self.load_button = QPushButton("Cargar CSV/XLSX/SQLite")
+        self.load_button.clicked.connect(self.load_file)
 
-        # Layout vertical principal
+        self.action_combo_box = QComboBox()
+        self.action_combo_box.addItems([
+            "Contar Valores Nulos",
+            "Eliminar Filas con Nulos",
+            "Reemplazar Nulos por Media",
+            "Reemplazar Nulos por Mediana",
+            "Reemplazar Nulos por Valor"
+        ])
+        
+        self.execute_button = QPushButton("Aplicar preprocesado")
+        self.execute_button.clicked.connect(self.execute_action)
+
+        # Añadir etiqueta para mostrar la ruta del archivo
+        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
+        
         layout = QVBoxLayout()
+        layout.addWidget(self.load_button)
+        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+        layout.addWidget(self.action_combo_box)
+        layout.addWidget(self.execute_button)
+        layout.addWidget(self.table_widget)
 
-        # Botón para añadir archivo
-        self.button = QPushButton("Añadir Archivo")
-        self.button.clicked.connect(self.archivos)
-        layout.addWidget(self.button)
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
 
-        # Etiqueta para mostrar la ruta del archivo
-        self.ruta_label = QLabel("Ruta del archivo: Ninguno")
-        layout.addWidget(self.ruta_label)
+        self.df = None  # DataFrame para almacenar el archivo cargado
 
-        # Tabla para mostrar los datos
-        self.table = QTableWidget()
-        layout.addWidget(self.table)
+    def load_file(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "", 
+                                                    "CSV Files (*.csv);;Excel Files (*.xlsx);;SQLite Files (*.sqlite);;All Files (*)")
+        try:
+            if file_name:
+                # Mostrar la ruta del archivo en la etiqueta
+                self.file_path_label.setText(f"Ruta del archivo: {file_name}")
 
-        # Botón para detectar valores inexistentes (NaN)
-        self.nan_button = QPushButton("Detectar Valores Inexistentes")
-        self.nan_button.clicked.connect(self.detectar_nan)
-        layout.addWidget(self.nan_button)
-
-        # Layout horizontal para las opciones de manejo de NaN
-        options_layout = QHBoxLayout()
-
-        # ComboBox para elegir cómo manejar los NaN
-        self.nan_options = QComboBox()
-        self.nan_options.addItems(["Eliminar Filas", "Rellenar con Media", "Rellenar con Mediana", "Rellenar con Valor"])
-        options_layout.addWidget(self.nan_options)
-
-        # Campo para que el usuario introduzca un valor constante
-        self.constant_input = QLineEdit()
-        self.constant_input.setPlaceholderText("Valor constante")
-        options_layout.addWidget(self.constant_input)
-
-        # Botón para aplicar el preprocesado
-        self.apply_button = QPushButton("Aplicar Preprocesado")
-        self.apply_button.clicked.connect(self.aplicar_preprocesado)
-        layout.addLayout(options_layout)
-        layout.addWidget(self.apply_button)
-
-        self.setLayout(layout)
-
-    # Función para mostrar mensajes de error
-    def mostrar_mensaje_error(self, mensaje):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Icon.Critical)
-        msg.setWindowTitle("Error")
-        msg.setText(mensaje)
-        msg.exec()
-
-    # Función para mostrar mensajes informativos
-    def mostrar_mensaje_info(self, mensaje):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Icon.Information)
-        msg.setWindowTitle("Información")
-        msg.setText(mensaje)
-        msg.exec()
-
-    # Función para seleccionar y cargar un archivo
-    def archivos(self):
-        initial_dir = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DownloadLocation)
-        file_types = "CSV files (*.csv);;Excel files(*.xlsx);;Excel files(*.xls);;Sqlite files(*.sqlite);;DB files(*.db)"
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", initial_dir, file_types)
-
-        if file_path:
-            self.ruta_label.setText(f"Ruta del archivo: {file_path}")
-            try:
-                if file_path.endswith(".csv"):
-                    self.df = pd.read_csv(file_path)
-                elif file_path.endswith(".xlsx") or file_path.endswith(".xls"):
-                    self.df = pd.read_excel(file_path)
-                elif file_path.endswith(".sqlite") or file_path.endswith(".db"):
-                    conn = sqlite3.connect(file_path)
-                    query = "SELECT name FROM sqlite_master WHERE type='table';"
-                    tables = pd.read_sql(query, conn)
-                    self.df = pd.read_sql(f"SELECT * FROM {tables.iloc[0, 0]}", conn)
-                    conn.close()
+                if file_name.endswith('.csv'):
+                    self.df = pd.read_csv(file_name)
+                elif file_name.endswith('.xlsx'):
+                    self.df = pd.read_excel(file_name)
+                elif file_name.endswith('.sqlite'):
+                    self.load_sqlite(file_name)
                 else:
-                    self.mostrar_mensaje_error("Archivo no compatible.")
+                    QMessageBox.warning(self, "Advertencia", "Formato de archivo no soportado.")
                     return
+                self.update_table()  # Actualizamos la tabla al cargar el archivo
+        except Exception as e:
+            self.mostrar_mensaje_error(f"Error al leer el archivo: {str(e)}")
 
-                self.mostrar_datos(self.df)
-
-            except Exception as e:
-                self.mostrar_mensaje_error(f"Error al leer el archivo: {str(e)}")
-
-    # Función para mostrar datos en la tabla
-    def mostrar_datos(self, df):
-        self.table.setRowCount(len(df.index))
-        self.table.setColumnCount(len(df.columns))
-        self.table.setHorizontalHeaderLabels(df.columns)
-
-        for i in range(len(df.index)):
-            for j in range(len(df.columns)):
-                self.table.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
-
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
-
-    # Detectar valores NaN en el DataFrame
-    def detectar_nan(self):
-        if self.df is None:
-            self.mostrar_mensaje_error("No se ha cargado ningún archivo.")
+    def load_sqlite(self, file_name):
+        conn = sqlite3.connect(file_name)
+        # Obtener el nombre de la primera tabla en la base de datos
+        query = "SELECT name FROM sqlite_master WHERE type='table';"
+        tables = pd.read_sql_query(query, conn)
+        
+        if tables.empty:
+            QMessageBox.warning(self, "Advertencia", "No se encontraron tablas en la base de datos SQLite.")
             return
         
-        nan_summary = self.df.isna().sum()
-        nan_columns = nan_summary[nan_summary > 0]
+        # Por simplicidad, usar la primera tabla encontrada
+        table_name = tables.iloc[0]['name']
+        self.df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
+        conn.close()
 
-        if nan_columns.empty:
-            self.mostrar_mensaje_info("No hay valores inexistentes en el archivo.")
+    def update_table(self):
+        self.table_widget.setRowCount(self.df.shape[0])
+        self.table_widget.setColumnCount(self.df.shape[1])
+        self.table_widget.setHorizontalHeaderLabels(self.df.columns)
+
+        for i in range(self.df.shape[0]):
+            for j in range(self.df.shape[1]):
+                value = self.df.iat[i, j]
+                table_item = QTableWidgetItem(str(value))
+
+                # Si el valor es NaN, lo detectamos y coloreamos la celda
+                if pd.isna(value):
+                    table_item.setBackground(QColor("yellow"))  # Resaltar la celda en amarillo
+
+                self.table_widget.setItem(i, j, table_item)
+
+    def execute_action(self):
+        action = self.action_combo_box.currentText()
+        
+        if action == "Contar Valores Nulos":
+            self.count_nulls()
+        elif action == "Eliminar Filas con Nulos":
+            self.remove_nulls()
+        elif action == "Reemplazar Nulos por Media":
+            self.replace_nulls_with_mean()
+        elif action == "Reemplazar Nulos por Mediana":
+            self.replace_nulls_with_median()
+        elif action == "Reemplazar Nulos por Valor":
+            self.replace_nulls_with_value()
         else:
-            mensaje = "Valores inexistentes detectados en:\n"
-            for col, count in nan_columns.items():
-                mensaje += f"- {col}: {count} valores\n"
-            self.mostrar_mensaje_info(mensaje)
+            QMessageBox.warning(self, "Advertencia", "Por favor, selecciona una acción válida.")
 
-    # Aplicar el preprocesado según la opción seleccionada
-    def aplicar_preprocesado(self):
-        if self.df is None:
-            self.mostrar_mensaje_error("No se ha cargado ningún archivo.")
-            return
+    def count_nulls(self):
+        if self.df is not None:
+            null_counts = self.df.isnull().sum()
+            null_info = "\n".join([f"{col}: {count}" for col, count in null_counts.items()])
+            QMessageBox.information(self, "Valores Nulos", f"Cantidad de valores nulos por columna:\n{null_info}")
+        else:
+            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
-        opcion = self.nan_options.currentText()
+    def remove_nulls(self):
+        if self.df is not None:
+            original_shape = self.df.shape
+            self.df.dropna(inplace=True)
+            self.update_table()
+            QMessageBox.information(self, "Filas Eliminadas", f"Se eliminaron {original_shape[0] - self.df.shape[0]} filas con valores nulos.")
+        else:
+            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
-        try:
-            if opcion == "Eliminar Filas":
-                self.df.dropna(inplace=True)
-            elif opcion == "Rellenar con Media":
-                self.df.fillna(self.df.mean(numeric_only=True), inplace=True)
-            elif opcion == "Rellenar con Mediana":
-                self.df.fillna(self.df.median(numeric_only=True), inplace=True)
-            elif opcion == "Rellenar con Valor":
-                valor = self.constant_input.text()
-                if valor == "":
-                    self.mostrar_mensaje_error("Debe ingresar un valor constante.")
-                    return
-                self.df.fillna(valor, inplace=True)
+    def replace_nulls_with_mean(self):
+        if self.df is not None:
+            for col in self.df.columns:
+                if self.df[col].isnull().any():
+                    mean_value = self.df[col].mean()
+                    self.df[col].fillna(mean_value, inplace=True)
+            self.update_table()
+            QMessageBox.information(self, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la media de cada columna.")
+        else:
+            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
-            # Actualizamos la tabla con los datos preprocesados
-            self.mostrar_datos(self.df)
-            self.mostrar_mensaje_info("Preprocesado aplicado correctamente.")
+    def replace_nulls_with_median(self):
+        if self.df is not None:
+            for col in self.df.columns:
+                if self.df[col].isnull().any():
+                    median_value = self.df[col].median()
+                    self.df[col].fillna(median_value, inplace=True)
+            self.update_table()
+            QMessageBox.information(self, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la mediana de cada columna.")
+        else:
+            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
-        except Exception as e:
-            self.mostrar_mensaje_error(f"Error durante el preprocesado: {str(e)}")
-
+    def replace_nulls_with_value(self):
+        if self.df is not None:
+            value, ok = QInputDialog.getText(self, "Reemplazar Nulos por Valor", "Ingrese el valor para reemplazar los nulos:")
+            if ok and value:
+                for col in self.df.columns:
+                    if self.df[col].isnull().any():
+                        self.df[col].fillna(value, inplace=True)
+                self.update_table()
+                QMessageBox.information(self, "Valores Reemplazados", f"Los valores nulos han sido reemplazados por '{value}'.")
+            else:
+                QMessageBox.warning(self, "Advertencia", "Por favor, ingrese un valor válido para reemplazar los nulos.")
+        else:
+            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ventana = Ventana()
-    ventana.show()
+    viewer = CsvViewer()
+    viewer.show()
     sys.exit(app.exec())
+
