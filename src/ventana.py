@@ -1,4 +1,6 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QFileDialog, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout
+from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
+QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
+QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget)
 from PyQt6.QtCore import QStandardPaths
 import sys
 import pandas as pd
@@ -30,6 +32,19 @@ class Ventana(QWidget):
         # Tabla para mostrar los datos
         self.table = QTableWidget()
         layout.addWidget(self.table)
+
+        # Selector múltiple para columnas de entrada
+        self.features_label = QLabel("Selecciona las columnas de entrada (features):")
+        layout.addWidget(self.features_label)
+        self.features_list = QListWidget()
+        self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        layout.addWidget(self.features_list)
+
+        # Selector único para la columna de salida
+        self.target_label = QLabel("Selecciona la columna de salida (target):")
+        layout.addWidget(self.target_label)
+        self.target_combo = QComboBox()
+        layout.addWidget(self.target_combo)
 
         # Botón para detectar valores inexistentes (NaN)
         self.nan_button = QPushButton("Detectar Valores Inexistentes")
