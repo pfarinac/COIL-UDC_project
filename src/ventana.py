@@ -47,12 +47,20 @@ class Ventana(QWidget):
         self.features_list = QListWidget()
         self.features_list.setSelectionMode(QListWidget.SelectionMode.SingleSelection)  # Por defecto selección simple
         layout.addWidget(self.features_list)
-
+             
         # Selector único para la columna de salida
         self.target_label = QLabel("Selecciona la columna de salida (target):")
         layout.addWidget(self.target_label)
         self.target_combo = QComboBox()
         layout.addWidget(self.target_combo)
+        
+        # Botón para confimar la selección de las columnas 
+        confirm = QPushButton("Confirmar selección")
+        self.input_col = []
+        self.features_list.clicked.connect(self.registrar_input)
+        confirm.clicked.connect(self.almacenar)
+        layout.addWidget(confirm)
+
 
         # Botón para detectar valores inexistentes (NaN)
         self.nan_button = QPushButton("Detectar Valores Inexistentes")
@@ -86,6 +94,23 @@ class Ventana(QWidget):
             self.features_list.setSelectionMode(QListWidget.SelectionMode.SingleSelection)  # Selección simple
         else:
             self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)  # Selección múltiple
+
+    # Función para registrar las columnas de entrada 
+    def registrar_input(self):
+        input_col_text = self.features_list.currentItem().text()
+        if input_col_text in self.input_col:
+            self.input_col.remove(input_col_text)
+        else:
+            self.input_col.append(input_col_text)
+
+    # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
+    def almacenar(self):
+        output_col = self.target_combo.currentText()
+        print(self.input_col)
+        if output_col == None or self.input_col == []:
+            self.mostrar_mensaje_error("Por favor seleccione al menos una columna de entrada y una de salida")
+        else:
+            self.mostrar_mensaje_info("Tu selección se ha guardado correctamente")
 
     # Función para mostrar mensajes de error
     def mostrar_mensaje_error(self, mensaje):
