@@ -105,7 +105,8 @@ class CsvViewer(QMainWindow):
         self.setCentralWidget(container)
 
         self.setLayout(layout)
-
+        self.df = None  # DataFrame para almacenar el archivo cargado
+        
     # Cambiar el modo del selector de características según el tipo de regresión seleccionado
     def cambiar_selector(self):
         if self.regression_type_combo.currentText() == "Regresión Simple":
@@ -165,7 +166,8 @@ class CsvViewer(QMainWindow):
                     tables = pd.read_sql(query, conn)
                     self.df = pd.read_sql(f"SELECT * FROM {tables.iloc[0, 0]}", conn)
                     conn.close()
-        self.df = None  # DataFrame para almacenar el archivo cargado
+            except Exception as e:
+                self.mostrar_mensaje_error(f"Error al leer el archivo: {str(e)}")
 
     def load_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "", 
