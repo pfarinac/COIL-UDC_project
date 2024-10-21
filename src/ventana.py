@@ -1,22 +1,29 @@
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
 QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget)
+QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog)
 from PyQt6.QtCore import QStandardPaths
 import sys
 import pandas as pd
 import sqlite3
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QFileDialog, QPushButton, QMessageBox, QInputDialog, QComboBox, QLabel
 from PyQt6.QtGui import QColor
 
 class CsvViewer(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.df = None  # DataFrame para almacenar el archivo cargado
+        self.inicializarUI()
+    
+    def inicializarUI(self):
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
 
         self.table_widget = QTableWidget()
         self.load_button = QPushButton("Cargar CSV/XLSX/SQLite")
         self.load_button.clicked.connect(self.load_file)
+        
+        layout = QVBoxLayout()
+        layout.addWidget(self.load_button)
+        layout.addWidget(self.table_widget)
 
         self.action_combo_box = QComboBox()
         self.action_combo_box.addItems([
@@ -29,29 +36,14 @@ class CsvViewer(QMainWindow):
         
         self.execute_button = QPushButton("Aplicar preprocesado")
         self.execute_button.clicked.connect(self.execute_action)
-
-        # Añadir etiqueta para mostrar la ruta del archivo
-        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
-        
-        layout = QVBoxLayout()
-        layout.addWidget(self.load_button)
-        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
         layout.addWidget(self.action_combo_box)
         layout.addWidget(self.execute_button)
-        layout.addWidget(self.table_widget)
+        # Añadir etiqueta para mostrar la ruta del archivo
+        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
+        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+        
+        
 
-        # Botón para añadir archivo
-        self.button = QPushButton("Añadir Archivo")
-        self.button.clicked.connect(self.archivos)
-        layout.addWidget(self.button)
-
-        # Etiqueta para mostrar la ruta del archivo
-        self.ruta_label = QLabel("Ruta del archivo: Ninguno")
-        layout.addWidget(self.ruta_label)
-
-        # Tabla para mostrar los datos
-        self.table = QTableWidget()
-        layout.addWidget(self.table)
 
         # ComboBox para seleccionar el tipo de regresión
         self.regression_type_label = QLabel("Selecciona el tipo de regresión:")
@@ -81,12 +73,6 @@ class CsvViewer(QMainWindow):
         confirm.clicked.connect(self.almacenar)
         layout.addWidget(confirm)
 
-
-        # Botón para detectar valores inexistentes (NaN)
-        self.nan_button = QPushButton("Detectar Valores Inexistentes")
-        self.nan_button.clicked.connect(self.detectar_nan)
-        layout.addWidget(self.nan_button)
-
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
 
@@ -104,8 +90,8 @@ class CsvViewer(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
-        self.setLayout(layout)
-        self.df = None  # DataFrame para almacenar el archivo cargado
+    
+        
         
     # Cambiar el modo del selector de características según el tipo de regresión seleccionado
     def cambiar_selector(self):
@@ -121,15 +107,17 @@ class CsvViewer(QMainWindow):
             self.input_col.remove(input_col_text)
         else:
             self.input_col.append(input_col_text)
+    
+    
 
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
         output_col = self.target_combo.currentText()
         print(self.input_col)
         if output_col == None or self.input_col == []:
-            self.mostrar_mensaje_error("Por favor seleccione al menos una columna de entrada y una de salida")
+            QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
-            self.mostrar_mensaje_info("Tu selección se ha guardado correctamente")
+            QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
 
     # Función para mostrar mensajes de error
     def mostrar_mensaje_error(self, mensaje):
@@ -147,27 +135,6 @@ class CsvViewer(QMainWindow):
         msg.setText(mensaje)
         msg.exec()
 
-    # Función para seleccionar y cargar un archivo
-    def archivos(self):
-        initial_dir = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DownloadLocation)
-        file_types = "CSV files (*.csv);;Excel files(*.xlsx);;Excel files(*.xls);;Sqlite files(*.sqlite);;DB files(*.db)"
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", initial_dir, file_types)
-
-        if file_path:
-            self.ruta_label.setText(f"Ruta del archivo: {file_path}")
-            try:
-                if file_path.endswith(".csv"):
-                    self.df = pd.read_csv(file_path)
-                elif file_path.endswith(".xlsx") or file_path.endswith(".xls"):
-                    self.df = pd.read_excel(file_path)
-                elif file_path.endswith(".sqlite") or file_path.endswith(".db"):
-                    conn = sqlite3.connect(file_path)
-                    query = "SELECT name FROM sqlite_master WHERE type='table';"
-                    tables = pd.read_sql(query, conn)
-                    self.df = pd.read_sql(f"SELECT * FROM {tables.iloc[0, 0]}", conn)
-                    conn.close()
-            except Exception as e:
-                self.mostrar_mensaje_error(f"Error al leer el archivo: {str(e)}")
 
     def load_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "", 
@@ -187,8 +154,9 @@ class CsvViewer(QMainWindow):
                     QMessageBox.warning(self, "Advertencia", "Formato de archivo no soportado.")
                     return
                 self.update_table()  # Actualizamos la tabla al cargar el archivo
+                self.mostrar_columnas()
         except Exception as e:
-            self.mostrar_mensaje_error(f"Error al leer el archivo: {str(e)}")
+            QMessageBox.warning(self,"Error",f"Error al leer el archivo: {str(e)}")
 
     def load_sqlite(self, file_name):
         conn = sqlite3.connect(file_name)
@@ -198,6 +166,17 @@ class CsvViewer(QMainWindow):
         
         if tables.empty:
             QMessageBox.warning(self, "Advertencia", "No se encontraron tablas en la base de datos SQLite.")
+    # Función para mostrar columnas en la tabla
+    def mostrar_columnas(self):
+        if self.df is not None:
+        # Poblar los selectores con las columnas del DataFrame
+            self.features_list.clear()  # Limpiar lista anterior
+            self.features_list.addItems(self.df.columns)  # Añadir las columnas al selector de características
+
+            self.target_combo.clear()  # Limpiar la selección anterior del target
+            self.target_combo.addItems(self.df.columns)  # Añadir las columnas al combo de target
+        else:
+            QMessageBox.warning(self, "Advertencia", "No hay un archivo cargado.")
     # Función para mostrar datos en la tabla
     def mostrar_datos(self, df):
         self.table.setRowCount(len(df.index))
@@ -208,25 +187,9 @@ class CsvViewer(QMainWindow):
             for j in range(len(df.columns)):
                 self.table.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
 
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
 
-        # Poblar los selectores con las columnas del DataFrame
-        self.features_list.clear()
-        self.features_list.addItems(df.columns)
-        self.target_combo.clear()
-        self.target_combo.addItems(df.columns)
 
-    # Detectar valores NaN en el DataFrame
-    def detectar_nan(self):
-        if self.df is None:
-            self.mostrar_mensaje_error("No se ha cargado ningún archivo.")
-            return
-        
-        # Por simplicidad, usar la primera tabla encontrada
-        table_name = tables.iloc[0]['name']
-        self.df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
-        conn.close()
+    
 
     def update_table(self):
         self.table_widget.setRowCount(self.df.shape[0])
