@@ -40,33 +40,8 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.execute_button)
         layout.addWidget(self.table_widget)
 
-        # ComboBox para seleccionar el tipo de regresión
-        self.regression_type_label = QLabel("Selecciona el tipo de regresión:")
-        layout.addWidget(self.regression_type_label)
-        self.regression_type_combo = QComboBox()
-        self.regression_type_combo.addItems(["Regresión Simple", "Regresión Múltiple"])
-        self.regression_type_combo.currentIndexChanged.connect(self.cambiar_selector)
-        layout.addWidget(self.regression_type_combo)
-
-       # Selector para columnas de entrada (features)
-        self.features_label = QLabel("Selecciona las columnas de entrada (features):")
-        layout.addWidget(self.features_label)
-        self.features_list = QListWidget()
-        self.features_list.setSelectionMode(QListWidget.SelectionMode.SingleSelection)  # Por defecto selección simple
-        layout.addWidget(self.features_list)
-             
-        # Selector único para la columna de salida
-        self.target_label = QLabel("Selecciona la columna de salida (target):")
-        layout.addWidget(self.target_label)
-        self.target_combo = QComboBox()
-        layout.addWidget(self.target_combo)
-        
-        # Botón para confimar la selección de las columnas 
-        confirm = QPushButton("Confirmar selección")
-        self.input_col = []
-        self.features_list.clicked.connect(self.registrar_input)
-        confirm.clicked.connect(self.almacenar)
-        layout.addWidget(confirm)
+    
+    
 
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
@@ -88,12 +63,6 @@ class CsvViewer(QMainWindow):
         #self.setLayout(layout)
         self.df = None  # DataFrame para almacenar el archivo cargado
         
-    # Cambiar el modo del selector de características según el tipo de regresión seleccionado
-    def cambiar_selector(self):
-        if self.regression_type_combo.currentText() == "Regresión Simple":
-            self.features_list.setSelectionMode(QListWidget.SelectionMode.SingleSelection)  # Selección simple
-        else:
-            self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)  # Selección múltiple
 
     # Función para registrar las columnas de entrada 
     def registrar_input(self):
