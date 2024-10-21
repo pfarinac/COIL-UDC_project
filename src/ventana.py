@@ -85,7 +85,7 @@ class CsvViewer(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
-        self.setLayout(layout)
+        #self.setLayout(layout)
         self.df = None  # DataFrame para almacenar el archivo cargado
         
     # Cambiar el modo del selector de características según el tipo de regresión seleccionado
