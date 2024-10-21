@@ -40,19 +40,6 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.execute_button)
         layout.addWidget(self.table_widget)
 
-        # Botón para añadir archivo
-        self.button = QPushButton("Añadir Archivo")
-        self.button.clicked.connect(self.archivos)
-        layout.addWidget(self.button)
-
-        # Etiqueta para mostrar la ruta del archivo
-        self.ruta_label = QLabel("Ruta del archivo: Ninguno")
-        layout.addWidget(self.ruta_label)
-
-        # Tabla para mostrar los datos
-        self.table = QTableWidget()
-        layout.addWidget(self.table)
-
         # ComboBox para seleccionar el tipo de regresión
         self.regression_type_label = QLabel("Selecciona el tipo de regresión:")
         layout.addWidget(self.regression_type_label)
@@ -80,12 +67,6 @@ class CsvViewer(QMainWindow):
         self.features_list.clicked.connect(self.registrar_input)
         confirm.clicked.connect(self.almacenar)
         layout.addWidget(confirm)
-
-
-        # Botón para detectar valores inexistentes (NaN)
-        self.nan_button = QPushButton("Detectar Valores Inexistentes")
-        self.nan_button.clicked.connect(self.detectar_nan)
-        layout.addWidget(self.nan_button)
 
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
@@ -127,9 +108,9 @@ class CsvViewer(QMainWindow):
         output_col = self.target_combo.currentText()
         print(self.input_col)
         if output_col == None or self.input_col == []:
-            self.mostrar_mensaje_error("Por favor seleccione al menos una columna de entrada y una de salida")
+            QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
-            self.mostrar_mensaje_info("Tu selección se ha guardado correctamente")
+            QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
 
     # Función para mostrar mensajes de error
     def mostrar_mensaje_error(self, mensaje):
@@ -188,7 +169,7 @@ class CsvViewer(QMainWindow):
                     return
                 self.update_table()  # Actualizamos la tabla al cargar el archivo
         except Exception as e:
-            self.mostrar_mensaje_error(f"Error al leer el archivo: {str(e)}")
+            QMessageBox.warning(self,"Error",f"Error al leer el archivo: {str(e)}")
 
     def load_sqlite(self, file_name):
         conn = sqlite3.connect(file_name)
@@ -220,7 +201,7 @@ class CsvViewer(QMainWindow):
     # Detectar valores NaN en el DataFrame
     def detectar_nan(self):
         if self.df is None:
-            self.mostrar_mensaje_error("No se ha cargado ningún archivo.")
+            QMessageBox.warning(self,"Error","No se ha cargado ningún archivo.")
             return
         
         # Por simplicidad, usar la primera tabla encontrada
