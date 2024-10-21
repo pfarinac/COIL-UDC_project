@@ -119,21 +119,7 @@ class CsvViewer(QMainWindow):
         else:
             QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
 
-    # Función para mostrar mensajes de error
-    def mostrar_mensaje_error(self, mensaje):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Icon.Critical)
-        msg.setWindowTitle("Error")
-        msg.setText(mensaje)
-        msg.exec()
 
-    # Función para mostrar mensajes informativos
-    def mostrar_mensaje_info(self, mensaje):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Icon.Information)
-        msg.setWindowTitle("Información")
-        msg.setText(mensaje)
-        msg.exec()
 
 
     def load_file(self):
