@@ -1,11 +1,10 @@
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
 QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget)
+QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog)
 from PyQt6.QtCore import QStandardPaths
 import sys
 import pandas as pd
 import sqlite3
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QFileDialog, QPushButton, QMessageBox, QInputDialog, QComboBox, QLabel
 from PyQt6.QtGui import QColor
 
 class CsvViewer(QMainWindow):
@@ -24,7 +23,8 @@ class CsvViewer(QMainWindow):
         
         layout = QVBoxLayout()
         layout.addWidget(self.load_button)
-        
+        layout.addWidget(self.table_widget)
+
         self.action_combo_box = QComboBox()
         self.action_combo_box.addItems([
             "Contar Valores Nulos",
@@ -43,7 +43,7 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
         
         
-        layout.addWidget(self.table_widget)
+
 
         # ComboBox para seleccionar el tipo de regresión
         self.regression_type_label = QLabel("Selecciona el tipo de regresión:")
@@ -107,6 +107,8 @@ class CsvViewer(QMainWindow):
             self.input_col.remove(input_col_text)
         else:
             self.input_col.append(input_col_text)
+    
+    
 
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
@@ -152,6 +154,7 @@ class CsvViewer(QMainWindow):
                     QMessageBox.warning(self, "Advertencia", "Formato de archivo no soportado.")
                     return
                 self.update_table()  # Actualizamos la tabla al cargar el archivo
+                self.mostrar_columnas()
         except Exception as e:
             QMessageBox.warning(self,"Error",f"Error al leer el archivo: {str(e)}")
 
@@ -163,6 +166,17 @@ class CsvViewer(QMainWindow):
         
         if tables.empty:
             QMessageBox.warning(self, "Advertencia", "No se encontraron tablas en la base de datos SQLite.")
+    # Función para mostrar columnas en la tabla
+    def mostrar_columnas(self):
+        if self.df is not None:
+        # Poblar los selectores con las columnas del DataFrame
+            self.features_list.clear()  # Limpiar lista anterior
+            self.features_list.addItems(self.df.columns)  # Añadir las columnas al selector de características
+
+            self.target_combo.clear()  # Limpiar la selección anterior del target
+            self.target_combo.addItems(self.df.columns)  # Añadir las columnas al combo de target
+        else:
+            QMessageBox.warning(self, "Advertencia", "No hay un archivo cargado.")
     # Función para mostrar datos en la tabla
     def mostrar_datos(self, df):
         self.table.setRowCount(len(df.index))
@@ -173,14 +187,9 @@ class CsvViewer(QMainWindow):
             for j in range(len(df.columns)):
                 self.table.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
 
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
 
-        # Poblar los selectores con las columnas del DataFrame
-        self.features_list.clear()
-        self.features_list.addItems(df.columns)
-        self.target_combo.clear()
-        self.target_combo.addItems(df.columns)
+
+    
 
     def update_table(self):
         self.table_widget.setRowCount(self.df.shape[0])
