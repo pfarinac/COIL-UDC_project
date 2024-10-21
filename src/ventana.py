@@ -198,17 +198,6 @@ class CsvViewer(QMainWindow):
         self.target_combo.clear()
         self.target_combo.addItems(df.columns)
 
-    # Detectar valores NaN en el DataFrame
-    def detectar_nan(self):
-        if self.df is None:
-            QMessageBox.warning(self,"Error","No se ha cargado ningún archivo.")
-            return
-        
-        # Por simplicidad, usar la primera tabla encontrada
-        table_name = tables.iloc[0]['name']
-        self.df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
-        conn.close()
-
     def update_table(self):
         self.table_widget.setRowCount(self.df.shape[0])
         self.table_widget.setColumnCount(self.df.shape[1])

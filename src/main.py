@@ -8,6 +8,6 @@ if __name__ == "__main__":
     #archivo = 'housing.xlsx'
     #cargar_datos(archivo)
     app = QApplication((sys.argv))
-    ventana=Ventana()
+    ventana=CsvViewer()
     ventana.show()
     sys.exit(app.exec())
