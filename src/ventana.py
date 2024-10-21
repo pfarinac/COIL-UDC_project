@@ -11,13 +11,20 @@ from PyQt6.QtGui import QColor
 class CsvViewer(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.df = None  # DataFrame para almacenar el archivo cargado
+        self.inicializarUI()
+    
+    def inicializarUI(self):
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
 
         self.table_widget = QTableWidget()
         self.load_button = QPushButton("Cargar CSV/XLSX/SQLite")
         self.load_button.clicked.connect(self.load_file)
-
+        
+        layout = QVBoxLayout()
+        layout.addWidget(self.load_button)
+        
         self.action_combo_box = QComboBox()
         self.action_combo_box.addItems([
             "Contar Valores Nulos",
@@ -29,19 +36,42 @@ class CsvViewer(QMainWindow):
         
         self.execute_button = QPushButton("Aplicar preprocesado")
         self.execute_button.clicked.connect(self.execute_action)
-
-        # Añadir etiqueta para mostrar la ruta del archivo
-        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
-        
-        layout = QVBoxLayout()
-        layout.addWidget(self.load_button)
-        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
         layout.addWidget(self.action_combo_box)
         layout.addWidget(self.execute_button)
+        # Añadir etiqueta para mostrar la ruta del archivo
+        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
+        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+        
+        
         layout.addWidget(self.table_widget)
 
-    
-    
+        # ComboBox para seleccionar el tipo de regresión
+        self.regression_type_label = QLabel("Selecciona el tipo de regresión:")
+        layout.addWidget(self.regression_type_label)
+        self.regression_type_combo = QComboBox()
+        self.regression_type_combo.addItems(["Regresión Simple", "Regresión Múltiple"])
+        self.regression_type_combo.currentIndexChanged.connect(self.cambiar_selector)
+        layout.addWidget(self.regression_type_combo)
+
+       # Selector para columnas de entrada (features)
+        self.features_label = QLabel("Selecciona las columnas de entrada (features):")
+        layout.addWidget(self.features_label)
+        self.features_list = QListWidget()
+        self.features_list.setSelectionMode(QListWidget.SelectionMode.SingleSelection)  # Por defecto selección simple
+        layout.addWidget(self.features_list)
+             
+        # Selector único para la columna de salida
+        self.target_label = QLabel("Selecciona la columna de salida (target):")
+        layout.addWidget(self.target_label)
+        self.target_combo = QComboBox()
+        layout.addWidget(self.target_combo)
+        
+        # Botón para confimar la selección de las columnas 
+        confirm = QPushButton("Confirmar selección")
+        self.input_col = []
+        self.features_list.clicked.connect(self.registrar_input)
+        confirm.clicked.connect(self.almacenar)
+        layout.addWidget(confirm)
 
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
@@ -60,9 +90,15 @@ class CsvViewer(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
-        #self.setLayout(layout)
-        self.df = None  # DataFrame para almacenar el archivo cargado
+    
         
+        
+    # Cambiar el modo del selector de características según el tipo de regresión seleccionado
+    def cambiar_selector(self):
+        if self.regression_type_combo.currentText() == "Regresión Simple":
+            self.features_list.setSelectionMode(QListWidget.SelectionMode.SingleSelection)  # Selección simple
+        else:
+            self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)  # Selección múltiple
 
     # Función para registrar las columnas de entrada 
     def registrar_input(self):
@@ -97,27 +133,6 @@ class CsvViewer(QMainWindow):
         msg.setText(mensaje)
         msg.exec()
 
-    # Función para seleccionar y cargar un archivo
-    def archivos(self):
-        initial_dir = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DownloadLocation)
-        file_types = "CSV files (*.csv);;Excel files(*.xlsx);;Excel files(*.xls);;Sqlite files(*.sqlite);;DB files(*.db)"
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", initial_dir, file_types)
-
-        if file_path:
-            self.ruta_label.setText(f"Ruta del archivo: {file_path}")
-            try:
-                if file_path.endswith(".csv"):
-                    self.df = pd.read_csv(file_path)
-                elif file_path.endswith(".xlsx") or file_path.endswith(".xls"):
-                    self.df = pd.read_excel(file_path)
-                elif file_path.endswith(".sqlite") or file_path.endswith(".db"):
-                    conn = sqlite3.connect(file_path)
-                    query = "SELECT name FROM sqlite_master WHERE type='table';"
-                    tables = pd.read_sql(query, conn)
-                    self.df = pd.read_sql(f"SELECT * FROM {tables.iloc[0, 0]}", conn)
-                    conn.close()
-            except Exception as e:
-                self.mostrar_mensaje_error(f"Error al leer el archivo: {str(e)}")
 
     def load_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "", 
