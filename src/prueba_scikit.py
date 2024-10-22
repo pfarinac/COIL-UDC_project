@@ -5,10 +5,12 @@ import pandas as pd
 from cargar_datos import cargar_datos
 
 #Almacenamos los datos del archivo en una variable
-archivo = 'housing.xlsx'
-cargar_datos(archivo)
-data=pd.read_excel(archivo)
+data=cargar_datos('housing.xlsx')
+
+#Eliminamos valores nulos
 data=data.dropna()
+
+#Eliminamos variables categóricas
 data=pd.get_dummies(data,drop_first=True)
 
 #Seleccionamos nuestras columnas de entrada
