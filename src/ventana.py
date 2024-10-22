@@ -29,10 +29,6 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
         layout.addWidget(self.table_widget)
 
-        # Añadir etiqueta para mostrar la ruta del archivo
-        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
-        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
-
         self.action_combo_box = QComboBox()
         self.action_combo_box.addItems([
             "Contar Valores Nulos",
