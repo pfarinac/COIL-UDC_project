@@ -21,7 +21,7 @@ class CsvViewer(QMainWindow):
         self.load_button = QPushButton("Cargar CSV/XLSX/SQLite")
         self.load_button.clicked.connect(self.load_file)
         
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
         layout.addWidget(self.load_button)
         
         # Añadir etiqueta para mostrar la ruta del archivo
