@@ -85,11 +85,6 @@ class CsvViewer(QMainWindow):
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
 
-        # ComboBox para elegir cómo manejar los NaN
-        self.nan_options = QComboBox()
-        self.nan_options.addItems(["Eliminar Filas", "Rellenar con Media", "Rellenar con Mediana", "Rellenar con Valor"])
-        options_layout.addWidget(self.nan_options)
-
         # Campo para que el usuario introduzca un valor constante
         self.constant_input = QLineEdit()
         self.constant_input.setPlaceholderText("Valor constante")
