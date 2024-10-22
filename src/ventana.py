@@ -23,7 +23,15 @@ class CsvViewer(QMainWindow):
         
         layout = QVBoxLayout()
         layout.addWidget(self.load_button)
+        
+        # Añadir etiqueta para mostrar la ruta del archivo
+        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
+        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
         layout.addWidget(self.table_widget)
+
+        # Añadir etiqueta para mostrar la ruta del archivo
+        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
+        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
         self.action_combo_box = QComboBox()
         self.action_combo_box.addItems([
@@ -38,9 +46,7 @@ class CsvViewer(QMainWindow):
         self.execute_button.clicked.connect(self.execute_action)
         layout.addWidget(self.action_combo_box)
         layout.addWidget(self.execute_button)
-        # Añadir etiqueta para mostrar la ruta del archivo
-        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
-        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+
         
         
 
