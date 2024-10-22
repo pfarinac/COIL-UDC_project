@@ -21,12 +21,19 @@ class CsvViewer(QMainWindow):
         self.load_button = QPushButton("Cargar CSV/XLSX/SQLite")
         self.load_button.clicked.connect(self.load_file)
         
-        layout = QHBoxLayout()
-        layout.addWidget(self.load_button)
+        # Layout auxiliar 
+        layoutaux = QHBoxLayout()
+
+        layoutaux.addWidget(self.load_button)
         
         # Añadir etiqueta para mostrar la ruta del archivo
         self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
-        layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+        layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+
+        # Creamos el layout principal y le añadimos el auxiliar
+        layout = QVBoxLayout()
+        layout.addLayout(layoutaux)
+
         layout.addWidget(self.table_widget)
 
         self.action_combo_box = QComboBox()
@@ -265,4 +272,3 @@ if __name__ == "__main__":
     viewer = CsvViewer()
     viewer.show()
     sys.exit(app.exec())
-
