@@ -177,19 +177,7 @@ class CsvViewer(QMainWindow):
             self.target_combo.addItems(self.df.columns)  # Añadir las columnas al combo de target
         else:
             QMessageBox.warning(self, "Advertencia", "No hay un archivo cargado.")
-    # Función para mostrar datos en la tabla
-    def mostrar_datos(self, df):
-        self.table.setRowCount(len(df.index))
-        self.table.setColumnCount(len(df.columns))
-        self.table.setHorizontalHeaderLabels(df.columns)
-
-        for i in range(len(df.index)):
-            for j in range(len(df.columns)):
-                self.table.setItem(i, j, QTableWidgetItem(str(df.iat[i, j])))
-
-
-
-    
+        
 
     def update_table(self):
         self.table_widget.setRowCount(self.df.shape[0])
