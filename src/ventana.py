@@ -60,6 +60,7 @@ class CsvViewer(QMainWindow):
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
         layout.addWidget(self.features_label)
         self.features_list = QListWidget()
+        self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout.addWidget(self.features_list)
              
         # Selector único para la columna de salida
