@@ -111,13 +111,21 @@ class CsvViewer(QMainWindow):
         input_col_text = self.features_list.currentItem().text()
         if input_col_text in self.input_col:
             self.input_col.remove(input_col_text)
+        if input_col_text in self.input_col:
+            self.input_col.remove(input_col_text)
         else:
+            self.input_col.append(input_col_text)
             self.input_col.append(input_col_text)
     
     
 
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
+        self.output_col = self.target_combo.currentText()
+        if self.output_col == None or self.input_col == []:
+            QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
+        else:
+            QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
         self.output_col = self.target_combo.currentText()
         if self.output_col == None or self.input_col == []:
             QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
