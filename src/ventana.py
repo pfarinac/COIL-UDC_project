@@ -6,6 +6,7 @@ import sys
 import pandas as pd
 import sqlite3
 from PyQt6.QtGui import QColor
+from modelo_lineal import model,graf
 
 class CsvViewer(QMainWindow):
     def __init__(self):
@@ -103,13 +104,14 @@ class CsvViewer(QMainWindow):
         self.constant_input.setPlaceholderText("Valor constante")
         options_layout.addWidget(self.constant_input)
 
+        #Botón para iniciar el modelo de regresión lineal
+        self.model_button =  QPushButton("Iniciar modelo")
+        self.model_button.setEnabled(False)
+        self.model_button.clicked.connect(self.start_model)
+
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
-
-    
-        
-        
 
     # Función para registrar las columnas de entrada 
     def registrar_input(self):
@@ -135,9 +137,6 @@ class CsvViewer(QMainWindow):
         else:
             QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
             self.habilitar_botones_preprocesado(True)   
-
-
-
 
     def load_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "", 
@@ -285,7 +284,13 @@ class CsvViewer(QMainWindow):
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
-
+    def start_model(self):
+        m = model(self.df[self.input_col],self.df[self.output_col])
+        if len(self.input_col) == 1:
+            graf(self.df[self.input_col],self.df[self.output_col],self.input_col[0],self.output_col,m)
+        else:
+            QMessageBox.warning("Error", "Para poder generar una gráfica debe eligir una única columna de entrada")
+        
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     viewer = CsvViewer()
