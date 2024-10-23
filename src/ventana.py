@@ -51,8 +51,8 @@ class CsvViewer(QMainWindow):
         
         # Botón para confimar la selección de las columnas 
         confirm = QPushButton("Confirmar selección")
-        self.input_col = []
-        self.output_col = None
+        self.input_col = [] # Lista con las columnas de entrada
+        self.output_col = None # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
         confirm.clicked.connect(self.almacenar)
         layout.addWidget(confirm)
@@ -100,7 +100,6 @@ class CsvViewer(QMainWindow):
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
         self.output_col = self.target_combo.currentText()
-        print(self.input_col)
         if self.output_col == None or self.input_col == []:
             QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
