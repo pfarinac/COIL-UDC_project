@@ -64,26 +64,31 @@ class CsvViewer(QMainWindow):
 
         # Botón para contar valores nulos
         self.btn_count_nulls = QPushButton("Contar Valores Nulos")
+        self.btn_count_nulls.setEnabled(False)
         self.btn_count_nulls.clicked.connect(self.count_nulls)
         preprocesado_layout.addWidget(self.btn_count_nulls)
 
         # Botón para eliminar filas con nulos
         self.btn_remove_nulls = QPushButton("Eliminar Filas con Nulos")
+        self.btn_remove_nulls.setEnabled(False)
         self.btn_remove_nulls.clicked.connect(self.remove_nulls)
         preprocesado_layout.addWidget(self.btn_remove_nulls)
 
         # Botón para reemplazar nulos por media
         self.btn_replace_nulls_mean = QPushButton("Reemplazar Nulos por Media")
+        self.btn_replace_nulls_mean.setEnabled(False)
         self.btn_replace_nulls_mean.clicked.connect(self.replace_nulls_with_mean)
         preprocesado_layout.addWidget(self.btn_replace_nulls_mean)
 
         # Botón para reemplazar nulos por mediana
         self.btn_replace_nulls_median = QPushButton("Reemplazar Nulos por Mediana")
+        self.btn_replace_nulls_median.setEnabled(False)
         self.btn_replace_nulls_median.clicked.connect(self.replace_nulls_with_median)
         preprocesado_layout.addWidget(self.btn_replace_nulls_median)
 
         # Botón para reemplazar nulos por un valor específico
         self.btn_replace_nulls_value = QPushButton("Reemplazar Nulos por Valor")
+        self.btn_replace_nulls_value.setEnabled(False)
         self.btn_replace_nulls_value.clicked.connect(self.replace_nulls_with_value)
         preprocesado_layout.addWidget(self.btn_replace_nulls_value)
 
@@ -113,8 +118,14 @@ class CsvViewer(QMainWindow):
             self.input_col.remove(input_col_text)
         else:
             self.input_col.append(input_col_text)
+            self.habilitar_botones_preprocesado(False)
     
-    
+    def habilitar_botones_preprocesado(self, habilitar):
+        self.btn_count_nulls.setEnabled(habilitar)
+        self.btn_remove_nulls.setEnabled(habilitar)
+        self.btn_replace_nulls_mean.setEnabled(habilitar)
+        self.btn_replace_nulls_median.setEnabled(habilitar)
+        self.btn_replace_nulls_value.setEnabled(habilitar)
 
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
@@ -123,7 +134,7 @@ class CsvViewer(QMainWindow):
             QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
             QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
-                
+            self.habilitar_botones_preprocesado(True)   
 
 
 
