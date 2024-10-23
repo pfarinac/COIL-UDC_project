@@ -36,27 +36,7 @@ class CsvViewer(QMainWindow):
 
         layout.addWidget(self.table_widget)
 
-        self.action_combo_box = QComboBox()
-        self.action_combo_box.addItems([
-            "Contar Valores Nulos",
-            "Eliminar Filas con Nulos",
-            "Reemplazar Nulos por Media",
-            "Reemplazar Nulos por Mediana",
-            "Reemplazar Nulos por Valor"
-        ])
-        
-        self.execute_button = QPushButton("Aplicar preprocesado")
-        self.execute_button.clicked.connect(self.execute_action)
-        layout.addWidget(self.action_combo_box)
-        layout.addWidget(self.execute_button)
-
-        
-        
-
-
-        
-
-       # Selector para columnas de entrada (features)
+               # Selector para columnas de entrada (features)
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
         layout.addWidget(self.features_label)
         self.features_list = QListWidget()
@@ -71,10 +51,25 @@ class CsvViewer(QMainWindow):
         
         # Botón para confimar la selección de las columnas 
         confirm = QPushButton("Confirmar selección")
-        self.input_col_multpl = []
+        self.input_col = []
+        self.output_col = None
         self.features_list.clicked.connect(self.registrar_input)
         confirm.clicked.connect(self.almacenar)
         layout.addWidget(confirm)
+
+        self.action_combo_box = QComboBox()
+        self.action_combo_box.addItems([
+            "Contar Valores Nulos",
+            "Eliminar Filas con Nulos",
+            "Reemplazar Nulos por Media",
+            "Reemplazar Nulos por Mediana",
+            "Reemplazar Nulos por Valor"
+        ])
+        
+        self.execute_button = QPushButton("Aplicar preprocesado")
+        self.execute_button.clicked.connect(self.execute_action)
+        layout.addWidget(self.action_combo_box)
+        layout.addWidget(self.execute_button)
 
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
@@ -95,28 +90,21 @@ class CsvViewer(QMainWindow):
     # Función para registrar las columnas de entrada 
     def registrar_input(self):
         input_col_text = self.features_list.currentItem().text()
-        if input_col_text in self.input_col_multpl:
-            self.input_col_multpl.remove(input_col_text)
+        if input_col_text in self.input_col:
+            self.input_col.remove(input_col_text)
         else:
-            self.input_col_multpl.append(input_col_text)
+            self.input_col.append(input_col_text)
     
     
 
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
-        output_col = self.target_combo.currentText()
-        print(self.input_col_multpl)
-        if self.regression_type_combo.currentText() == "Regresión Múltiple":
-            if output_col == None or self.input_col_multpl == []:
-                QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
-            else:
-                QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
+        self.output_col = self.target_combo.currentText()
+        print(self.input_col)
+        if self.output_col == None or self.input_col == []:
+            QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
-            if output_col == None or self.features_list.currentItem() == None:
-                QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
-            else:
-                input_col_singl = self.features_list.currentItem().text()
-                QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
+            QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
                 
 
 
