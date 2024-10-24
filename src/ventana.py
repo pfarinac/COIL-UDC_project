@@ -316,6 +316,8 @@ class CsvViewer(QMainWindow):
 
                 # Actualizar el canvas para mostrar la nueva gráfica
                 self.canvas.draw()
+            else:
+                QMessageBox.warning(self, "Error", " Debes seleecionar una unica columna de entrada para poder mostrar la grafica")
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
