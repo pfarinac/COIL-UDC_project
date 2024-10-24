@@ -1,4 +1,4 @@
-import pickle
+import joblib
 from sklearn.linear_model import LinearRegression
 import numpy as np
 
@@ -16,13 +16,11 @@ print("Coeficientes:", model.coef_)
 print("Intercepto:", model.intercept_)
 print("Predicción antes de guardar:", model.predict([[3, 4]]))
 
-# Guardar el modelo en un archivo .pkl
-with open('linear_model_pickle.pkl', 'wb') as f:
-    pickle.dump(model, f)
+# Guardar el modelo en un archivo utilizando joblib
+joblib.dump(model, 'linear_model_joblib.pkl')
 
-# Cargar el modelo desde el archivo .pkl
-with open('linear_model_pickle.pkl', 'rb') as f:
-    loaded_model = pickle.load(f)
+# Cargar el modelo desde el archivo .pkl con joblib
+loaded_model = joblib.load('linear_model_joblib.pkl')
 
 # Mostrar los detalles del modelo cargado
 print("\n=== Detalles del modelo cargado ===")
@@ -34,5 +32,3 @@ print("Predicción después de cargar:", loaded_model.predict([[3, 4]]))
 print("\n=== Predicciones adicionales ===")
 predicciones = loaded_model.predict([[5, 6], [7, 8], [9, 10]])
 print("Predicciones para [5, 6], [7, 8], [9, 10]:", predicciones)
-
-
