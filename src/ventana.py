@@ -16,10 +16,12 @@ class CsvViewer(QMainWindow):
     def inicializarUI(self):
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
+        #self.setStyleSheet("background-color: lightblue;")
 
         self.table_widget = QTableWidget()
         self.load_button = QPushButton("Abrir")
         self.load_button.setFixedSize(60, 30)
+        #self.load_button.setStyleSheet("background-color: green; color: black;")
         self.load_button.clicked.connect(self.load_file)
 
         
