@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
 QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog)
+QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QTextEdit)
 from PyQt6.QtCore import QStandardPaths
 import sys
 import pandas as pd
@@ -61,6 +61,13 @@ class CsvViewer(QMainWindow):
         confirm.clicked.connect(self.almacenar)
         layout.addWidget(confirm)
 
+        #Campo de texto para la descripcion del modelo
+        self.description_label = QLabel("Descripcion del modelo (opcional): ")
+        layout.addWidget(self.description_label)
+        self.description_text = QTextEdit()
+        self.decription_text.setPlaceholderText("Agrega una descripcion para el modelo...")
+        layout.addWidget(self.description_text)
+       
         # Layout para botones de preprocesado
         preprocesado_layout = QHBoxLayout()
 
@@ -132,10 +139,16 @@ class CsvViewer(QMainWindow):
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
         self.output_col = self.target_combo.currentText()
+        self.model_description = self.description_text.toPlainText()
         if self.output_col == None or self.input_col == []:
             QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
-            QMessageBox.information(self,"Información", "Tu selección se ha guardado correctamente")
+            message = "Tu seleccion se ha guardado correactamente.\n"
+            if not self.model_description:
+                message += "Nota: No se ha añadido ninguna descripcion para el modelo."
+            else:
+                message += f"Descripcion del modelo: {self.model_description}"
+            QMessageBox.information(self,"Información", message)
             self.habilitar_botones_preprocesado(True)   
 
 
