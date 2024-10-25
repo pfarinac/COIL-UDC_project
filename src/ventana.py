@@ -1,12 +1,12 @@
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
 QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog)
+QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea)
 from PyQt6.QtCore import QStandardPaths
 import sys
 import pandas as pd
 import sqlite3
 from PyQt6.QtGui import QColor
-from modelo_lineal import model,graf
+from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
@@ -116,6 +116,9 @@ class CsvViewer(QMainWindow):
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
         layout.addWidget(self.canvas)
+
+        label_formula = QLabel("La fórmula es: ")
+        layout.addWidget(label_formula)
 
         container = QWidget()
         container.setLayout(layout)
@@ -300,7 +303,7 @@ class CsvViewer(QMainWindow):
     # Función para crear el modelo y mostrar la gráfica
     def start_model(self):
         if self.df is not None and self.input_col and self.output_col:
-            m, _, _ = model(self.df[self.input_col], self.df[self.output_col])
+            modelo, r2, mse = model(self.df[self.input_col], self.df[self.output_col])
             if len(self.input_col) == 1:
                 # Limpia la figura antes de dibujar
                 self.figure.clear()
@@ -308,11 +311,12 @@ class CsvViewer(QMainWindow):
                 
                 # Generar la gráfica
                 ax.scatter(self.df[self.input_col], self.df[self.output_col], label='Datos')
-                ax.plot(self.df[self.input_col], m.predict(self.df[self.input_col]), color='red', label='Ajuste')
+                ax.plot(self.df[self.input_col], modelo.predict(self.df[self.input_col]), color='red', label='Ajuste')
                 ax.set_xlabel(self.input_col[0])
                 ax.set_ylabel(self.output_col)
                 ax.set_title('Regresión Lineal')
                 ax.legend()
+                formula =f"{self.output_col} = {self.input_col} * {modelo.coef_} + {modelo.intercept_} "
 
                 # Actualizar el canvas para mostrar la nueva gráfica
                 self.canvas.draw()
