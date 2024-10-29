@@ -27,6 +27,9 @@ class CsvViewer(QMainWindow):
         #self.load_button.setStyleSheet("background-color: green; color: black;")
         self.load_button.clicked.connect(self.load_file)
 
+        # Crear un área de scroll
+        scroll_area = QScrollArea(self)
+        scroll_area.setWidgetResizable(True)
         
         # Layout auxiliar 
         layoutaux = QHBoxLayout()
@@ -134,7 +137,11 @@ class CsvViewer(QMainWindow):
 
         container = QWidget()
         container.setLayout(layout)
+        
         self.setCentralWidget(container)
+        scroll_area.setWidget(container)
+
+        self.setCentralWidget(scroll_area)
 
     # Función para registrar las columnas de entrada 
     def registrar_input(self):
