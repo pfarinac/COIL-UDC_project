@@ -66,13 +66,6 @@ class CsvViewer(QMainWindow):
         self.features_list.clicked.connect(self.registrar_input)
         confirm.clicked.connect(self.almacenar)
         layout.addWidget(confirm)
-
-        #Campo de texto para la descripcion del modelo
-        self.description_label = QLabel("Descripcion del modelo (opcional): ")
-        layout.addWidget(self.description_label)
-        self.description_text = QTextEdit()
-        self.decription_text.setPlaceholderText("Agrega una descripcion para el modelo...")
-        layout.addWidget(self.description_text)
        
         # Layout para botones de preprocesado
         preprocesado_layout = QHBoxLayout()
@@ -134,6 +127,13 @@ class CsvViewer(QMainWindow):
         self.label_r2_mse = QLabel("")
         layout.addWidget(self.label_formula)
         layout.addWidget(self.label_r2_mse)
+
+        #Campo de texto para la descripcion del modelo
+        self.description_label = QLabel("Descripcion del modelo (opcional): ")
+        layout.addWidget(self.description_label)
+        self.description_text = QTextEdit()
+        self.description_text.setPlaceholderText("Agrega una descripcion para el modelo...")
+        layout.addWidget(self.description_text)
 
         container = QWidget()
         container.setLayout(layout)
