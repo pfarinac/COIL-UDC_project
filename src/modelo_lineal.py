@@ -14,6 +14,7 @@ def model(x,y):
 
 def graf(x,y,input_col:str,output_col:str,clf:LinearRegression):
     plt.scatter(x,y)
+    plt.plot(x,clf.predict(x))
     plt.xlabel(input_col)
     plt.ylabel(output_col)
     plt.show()

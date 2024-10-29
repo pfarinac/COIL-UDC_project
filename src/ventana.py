@@ -115,10 +115,13 @@ class CsvViewer(QMainWindow):
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
+        self.canvas.resize(500,600)
         layout.addWidget(self.canvas)
 
-        label_formula = QLabel("La fórmula es: ")
-        layout.addWidget(label_formula)
+        self.label_formula = QLabel("")
+        self.label_r2_mse = QLabel("")
+        layout.addWidget(self.label_formula)
+        layout.addWidget(self.label_r2_mse)
 
         container = QWidget()
         container.setLayout(layout)
@@ -299,7 +302,7 @@ class CsvViewer(QMainWindow):
                 QMessageBox.warning(self, "Advertencia", "Por favor, ingrese un valor válido para reemplazar los nulos.")
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
-
+    
     # Función para crear el modelo y mostrar la gráfica
     def start_model(self):
         if self.df is not None and self.input_col and self.output_col:
@@ -316,7 +319,9 @@ class CsvViewer(QMainWindow):
                 ax.set_ylabel(self.output_col)
                 ax.set_title('Regresión Lineal')
                 ax.legend()
-                formula =f"{self.output_col} = {self.input_col} * {modelo.coef_} + {modelo.intercept_} "
+                formula =f"{self.output_col} = {self.input_col[0]} * {modelo.coef_[0]} + {modelo.intercept_} "
+                self.label_r2_mse.setText(f"R2= {r2} \nMSE= {mse}")
+                self.label_formula.setText(f"La fórmula del modelo es: {formula}")
 
                 # Actualizar el canvas para mostrar la nueva gráfica
                 self.canvas.draw()
