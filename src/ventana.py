@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
 QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit)
+QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit,QFrame)
 from PyQt6.QtCore import QStandardPaths
 import sys
 import pandas as pd
@@ -22,14 +22,17 @@ class CsvViewer(QMainWindow):
         #self.setStyleSheet("background-color: lightblue;")
 
         self.table_widget = QTableWidget()
+        self.table_widget.setFixedSize(1180, 200)
         self.load_button = QPushButton("Abrir")
         self.load_button.setFixedSize(60, 30)
         #self.load_button.setStyleSheet("background-color: green; color: black;")
         self.load_button.clicked.connect(self.load_file)
 
         # Crear un área de scroll
-        scroll_area = QScrollArea(self)
+        scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
+
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
         
         # Layout auxiliar 
         layoutaux = QHBoxLayout()
@@ -50,6 +53,7 @@ class CsvViewer(QMainWindow):
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
         layout.addWidget(self.features_label)
         self.features_list = QListWidget()
+        self.features_list.setFixedSize(1180, 150)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout.addWidget(self.features_list)
              
@@ -137,7 +141,7 @@ class CsvViewer(QMainWindow):
 
         container = QWidget()
         container.setLayout(layout)
-        
+
         self.setCentralWidget(container)
         scroll_area.setWidget(container)
 
