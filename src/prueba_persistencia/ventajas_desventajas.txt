@@ -1,6 +1,6 @@
 ¿Cuál es más eficiente en términos de velocidad y tamaño del archivo?
 pickle es razonablemente rápida con objetos pequeños, pero puede ser más lenta en el caso de manejar
-grandes volúmenes de datos, especialmente matrices grandes de NumPy o pandas DataFrames.Generalmente 
+grandes volúmenes de datos, especialmente matrices grandes de NumPy o pandas DataFrames. Generalmente 
 produce archivos de mayor tamaño al serializar objetos grandes. joblib está optimizada para trabajar 
 con grandes estructuras de datos, como los arrays de NumPy o grandes modelos de machine learning, 
 tiende a generar archivos más pequeños que pickle, ya que está optimizado para comprimir estructuras 
