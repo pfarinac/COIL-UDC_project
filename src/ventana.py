@@ -5,9 +5,8 @@ from PyQt6.QtCore import QStandardPaths
 import sys
 import pandas as pd
 import sqlite3
-from PyQt6.QtGui import QColor
 from joblib import dump
-
+from PyQt6.QtGui import QColor
 from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -149,7 +148,7 @@ class CsvViewer(QMainWindow):
         self.save_button = QPushButton("Guardar Modelo")
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_model)
-        layout.addWidget(self.save_button)
+        layout.addWidget(self.save_button)    
 
     # Función para registrar las columnas de entrada 
     def registrar_input(self):
@@ -354,6 +353,7 @@ class CsvViewer(QMainWindow):
             else:
                 QMessageBox.warning(self, "Error", "Debes seleccionar una única columna de entrada para poder mostrar la gráfica")
 
+
     # Método para guardar el modelo y sus metadatos en un archivo .joblib
     def save_model(self):
         file_path, _ = QFileDialog.getSaveFileName(self, "Guardar Modelo", "", "Joblib Files (*.joblib)")
@@ -371,7 +371,7 @@ class CsvViewer(QMainWindow):
                 QMessageBox.information(self, "Guardado Exitoso", "El modelo se ha guardado correctamente.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"No se pudo guardar el modelo: {str(e)}")
-
+        
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     viewer = CsvViewer()
