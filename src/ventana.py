@@ -38,38 +38,48 @@ class CsvViewer(QMainWindow):
         layoutaux = QHBoxLayout()
 
         layoutaux.addWidget(self.load_button)
-        
+
+        # Layout auxiliar horizontal selectores
+        layout_select = QHBoxLayout()
+        layout_entrad = QVBoxLayout()
+        layout_salid = QVBoxLayout()
+
         # Añadir etiqueta para mostrar la ruta del archivo
         self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
-        # Creamos el layout principal y le añadimos el auxiliar
+        # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
         layout.addLayout(layoutaux)
-
         layout.addWidget(self.table_widget)
+        layout_select.addLayout(layout_entrad)
+        layout_select.addLayout(layout_salid)
+        layout.addLayout(layout_select)
+        
 
         # Selector para columnas de entrada (features)
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
-        layout.addWidget(self.features_label)
+        layout_entrad.addWidget(self.features_label)
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(1180, 150)
+        self.features_list.setFixedSize(150, 50)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
-        layout.addWidget(self.features_list)
+        layout_entrad.addWidget(self.features_list)
              
         # Selector único para la columna de salida
         self.target_label = QLabel("Selecciona la columna de salida (target):")
-        layout.addWidget(self.target_label)
+        layout_salid.addWidget(self.target_label)
         self.target_combo = QComboBox()
-        layout.addWidget(self.target_combo)
+        self.target_combo.setFixedSize(150, 50)
+        layout_salid.addWidget(self.target_combo)
         
         # Botón para confimar la selección de las columnas 
         confirm = QPushButton("Confirmar selección")
+        confirm.setFixedSize(150, 30)
         self.input_col = [] # Lista con las columnas de entrada
         self.output_col = None # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
         confirm.clicked.connect(self.almacenar)
-        layout.addWidget(confirm)
+        layout_select.addWidget(confirm)
        
         # Layout para botones de preprocesado
         preprocesado_layout = QHBoxLayout()
