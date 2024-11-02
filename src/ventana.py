@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
 QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
 QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit,QFrame)
-from PyQt6.QtCore import QStandardPaths
+from PyQt6.QtCore import QStandardPaths,Qt
 import sys
 import pandas as pd
 import sqlite3
@@ -42,7 +42,9 @@ class CsvViewer(QMainWindow):
         # Layout auxiliar horizontal selectores
         layout_select = QHBoxLayout()
         layout_entrad = QVBoxLayout()
+    
         layout_salid = QVBoxLayout()
+        layout_salid.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Añadir etiqueta para mostrar la ruta del archivo
         self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
@@ -61,7 +63,7 @@ class CsvViewer(QMainWindow):
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
         layout_entrad.addWidget(self.features_label)
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(150, 50)
+        self.features_list.setFixedSize(150, 100)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout_entrad.addWidget(self.features_list)
              
