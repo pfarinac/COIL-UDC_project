@@ -30,7 +30,7 @@ class CsvViewer(QMainWindow):
 
         # Crear un área de scroll
         scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
+        scroll_area.setWidgetResizable(False)
 
         scroll_area.setFrameShape(QFrame.Shape.NoFrame)
         
@@ -122,15 +122,20 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.model_button)
 
         # Widget para mostrar la gráfica de matplotlib
+        model_layout=QVBoxLayout()
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
-        self.canvas.resize(500,600)
-        layout.addWidget(self.canvas)
+        self.canvas.setFixedSize(1180, 200)
+        model_layout.addWidget(self.canvas)
 
         self.label_formula = QLabel("")
+        self.label_formula.setVisible(False)
         self.label_r2_mse = QLabel("")
-        layout.addWidget(self.label_formula)
-        layout.addWidget(self.label_r2_mse)
+        self.label_r2_mse.setVisible(False)
+        model_layout.addWidget(self.label_formula)
+        model_layout.addWidget(self.label_r2_mse)
+
+        layout.addLayout(model_layout)
 
         #Campo de texto para la descripcion del modelo
         self.description_label = QLabel("Descripcion del modelo (opcional): ")
@@ -347,7 +352,9 @@ class CsvViewer(QMainWindow):
                 ax.legend()
                 formula =f"{self.output_col} = {self.input_col[0]} * {modelo.coef_[0]} + {modelo.intercept_} "
                 self.label_r2_mse.setText(f"R2= {r2} \nMSE= {mse}")
+                self.label_r2_mse.setVisible(True)
                 self.label_formula.setText(f"La fórmula del modelo es: {formula}")
+                self.label_formula.setVisible(True)
 
                 # Actualizar el canvas para mostrar la nueva gráfica
                 self.canvas.draw()
