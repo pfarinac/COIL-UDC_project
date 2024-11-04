@@ -60,8 +60,8 @@ class CsvViewer(QMainWindow):
 
         # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
-        layout.addLayout(layoutaux)
         layout.addWidget(viewer_title)
+        layout.addLayout(layoutaux)
         layout.addWidget(self.table_widget)
         layout.addWidget(inout_title)
         layout_select.addLayout(layout_entrad)
