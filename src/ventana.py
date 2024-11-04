@@ -209,10 +209,6 @@ class CsvViewer(QMainWindow):
             QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
             message = "Tu seleccion se ha guardado correactamente.\n"
-            if not self.model_description:
-                message += "Nota: No se ha añadido ninguna descripcion para el modelo."
-            else:
-                message += f"Descripcion del modelo: {self.model_description}"
             QMessageBox.information(self,"Información", message)
             self.habilitar_botones_preprocesado(True)   
 
