@@ -93,6 +93,10 @@ class CsvViewer(QMainWindow):
         confirm.clicked.connect(self.almacenar)
         layout_select.addWidget(confirm)
        
+        prep_title = QLabel("Preprocesado de datos")
+        prep_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        layout.addWidget(prep_title)
+
         # Layout para botones de preprocesado
         preprocesado_layout = QHBoxLayout()
 
