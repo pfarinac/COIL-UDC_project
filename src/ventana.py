@@ -5,30 +5,37 @@ from PyQt6.QtCore import QStandardPaths,Qt
 import sys
 import pandas as pd
 import sqlite3
+import joblib
 from joblib import dump
 from PyQt6.QtGui import QColor
 from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+ 
+
 class CsvViewer(QMainWindow):
+
     def __init__(self):
         super().__init__()
         self.df = None  # DataFrame para almacenar el archivo cargado
         self.inicializarUI()
-    
+
     def inicializarUI(self):
+
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
+
         #self.setStyleSheet("background-color: lightblue;")
 
-        viewer_title = QLabel("Visualización de los datos")
-        viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.viewer_title = QLabel("Visualización de los datos")
+        self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
  
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1180, 200)
         self.load_button = QPushButton("Abrir")
         self.load_button.setFixedSize(60, 30)
+
         #self.load_button.setStyleSheet("background-color: green; color: black;")
         self.load_button.clicked.connect(self.load_file)
 
@@ -40,7 +47,6 @@ class CsvViewer(QMainWindow):
         
         # Layout auxiliar 
         layoutaux = QHBoxLayout()
-
         layoutaux.addWidget(self.load_button)
         
 
@@ -53,18 +59,18 @@ class CsvViewer(QMainWindow):
         layout_salid.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Añadir etiqueta para mostrar la ruta del archivo
-        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
+        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
-        inout_title = QLabel("Elija las columnas de entrada y salida")
-        inout_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.inout_title = QLabel("Elija las columnas de entrada y salida")
+        self.inout_title.setStyleSheet("font-size: 20px; font-weight: bold;")
 
         # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
-        layout.addWidget(viewer_title)
+        layout.addWidget(self.viewer_title)
         layout.addLayout(layoutaux)
         layout.addWidget(self.table_widget)
-        layout.addWidget(inout_title)
+        layout.addWidget(self.inout_title)
         layout_select.addLayout(layout_entrad)
         layout_select.addLayout(layout_salid)
         layout.addLayout(layout_select)
@@ -86,17 +92,17 @@ class CsvViewer(QMainWindow):
         layout_salid.addWidget(self.target_combo)
         
         # Botón para confimar la selección de las columnas 
-        confirm = QPushButton("Confirmar selección")
-        confirm.setFixedSize(150, 30)
+        self.confirm = QPushButton("Confirmar selección")
+        self.confirm.setFixedSize(150, 30)
         self.input_col = [] # Lista con las columnas de entrada
         self.output_col = None # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
-        confirm.clicked.connect(self.almacenar)
-        layout_select.addWidget(confirm)
+        self.confirm.clicked.connect(self.almacenar)
+        layout_select.addWidget(self.confirm)
        
-        prep_title = QLabel("Preprocesado de datos")
-        prep_title.setStyleSheet("font-size: 20px; font-weight: bold;")
-        layout.addWidget(prep_title)
+        self.prep_title = QLabel("Preprocesado de datos")
+        self.prep_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        layout.addWidget(self.prep_title)
 
         # Layout para botones de preprocesado
         preprocesado_layout = QHBoxLayout()
@@ -143,18 +149,26 @@ class CsvViewer(QMainWindow):
         options_layout.addWidget(self.constant_input)
 
         model_layout = QHBoxLayout()
-        model_title = QLabel("Visualizar e iniciar modelo")
-        model_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.model_title = QLabel("Visualizar e iniciar modelo")
+        self.model_title.setStyleSheet("font-size: 20px; font-weight: bold;")
 
         #Botón para iniciar el modelo de regresión lineal
         self.model_button =  QPushButton("Iniciar modelo")
         self.model_button.setFixedSize(150, 30)
         self.model_button.setEnabled(False)
+        self.model_button.setFixedSize(300, 30)
         self.model_button.clicked.connect(self.start_model)
-        layout.addWidget(model_title)
+        layout.addWidget(self.model_title)
         model_layout.addWidget(self.model_button,alignment = Qt.AlignmentFlag.AlignLeft)
 
 
+        # Botón de carga de modelo
+        self.load_model_button = QPushButton("Cargar Modelo")
+        self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
+        
+        # Añadir el botón al layout
+        layout.addWidget(self.load_model_button)
+       
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -177,30 +191,32 @@ class CsvViewer(QMainWindow):
         self.description_text = QTextEdit()
         self.description_text.setPlaceholderText("Agrega una descripcion para el modelo...")
         layout.addWidget(self.description_text)
-
         container = QWidget()
         container.setLayout(layout)
 
         self.setCentralWidget(container)
         scroll_area.setWidget(container)
-
         self.setCentralWidget(scroll_area)
 
         # Botón para guardar el modelo
         self.save_button = QPushButton("Guardar Modelo")
+        self.save_button.adjustSize()
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_model)
         layout.addWidget(self.save_button)    
 
-    # Función para registrar las columnas de entrada 
+
+    # Función para registrar las columnas de entrada
     def registrar_input(self):
+
         input_col_text = self.features_list.currentItem().text()
         if input_col_text in self.input_col:
             self.input_col.remove(input_col_text)
         else:
             self.input_col.append(input_col_text)
             self.habilitar_botones_preprocesado(False)
-    
+
+   
     def habilitar_botones_preprocesado(self, habilitar):
         self.btn_count_nulls.setEnabled(habilitar)
         self.btn_remove_nulls.setEnabled(habilitar)
@@ -208,8 +224,10 @@ class CsvViewer(QMainWindow):
         self.btn_replace_nulls_median.setEnabled(habilitar)
         self.btn_replace_nulls_value.setEnabled(habilitar)
 
+
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
+
         self.output_col = self.target_combo.currentText()
         self.model_description = self.description_text.toPlainText()
         if self.output_col == None or self.input_col == []:
@@ -217,10 +235,10 @@ class CsvViewer(QMainWindow):
         else:
             message = "Tu seleccion se ha guardado correactamente.\n"
             QMessageBox.information(self,"Información", message)
-            self.habilitar_botones_preprocesado(True)   
+            self.habilitar_botones_preprocesado(True)  
 
     def load_file(self):
-        file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "", 
+        file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "",
                                                     "CSV Files (*.csv);;Excel Files (*.xlsx);;SQLite Files (*.sqlite);;All Files (*)")
         try:
             if file_name:
@@ -241,27 +259,29 @@ class CsvViewer(QMainWindow):
         except Exception as e:
             QMessageBox.warning(self,"Error",f"Error al leer el archivo: {str(e)}")
 
+ 
     def load_sqlite(self, file_name):
+
         conn = sqlite3.connect(file_name)
+
         # Obtener el nombre de la primera tabla en la base de datos
         query = "SELECT name FROM sqlite_master WHERE type='table';"
         tables = pd.read_sql_query(query, conn)
-        
         if tables.empty:
             QMessageBox.warning(self, "Advertencia", "No se encontraron tablas en la base de datos SQLite.")
+
     # Función para mostrar columnas en la tabla
     def mostrar_columnas(self):
         if self.df is not None:
         # Poblar los selectores con las columnas del DataFrame
             self.features_list.clear()  # Limpiar lista anterior
             self.features_list.addItems(self.df.columns)  # Añadir las columnas al selector de características
-
             self.target_combo.clear()  # Limpiar la selección anterior del target
             self.target_combo.addItems(self.df.columns)  # Añadir las columnas al combo de target
         else:
             QMessageBox.warning(self, "Advertencia", "No hay un archivo cargado.")
-        
 
+   
     def update_table(self):
         self.table_widget.setRowCount(self.df.shape[0])
         self.table_widget.setColumnCount(self.df.shape[1])
@@ -271,12 +291,12 @@ class CsvViewer(QMainWindow):
             for j in range(self.df.shape[1]):
                 value = self.df.iat[i, j]
                 table_item = QTableWidgetItem(str(value))
-
                 # Si el valor es NaN, lo detectamos y coloreamos la celda
                 if pd.isna(value):
                     table_item.setBackground(QColor("yellow"))  # Resaltar la celda en amarillo
-
                 self.table_widget.setItem(i, j, table_item)
+
+ 
 
     def execute_action(self):
         action = self.action_combo_box.currentText()
@@ -294,24 +314,24 @@ class CsvViewer(QMainWindow):
         else:
             QMessageBox.warning(self, "Advertencia", "Por favor, selecciona una acción válida.")
 
+
     def count_nulls(self):
+
         if self.df is not None:
             # Seleccionar solo las columnas de entrada y salida
             columns_to_process = self.input_col + [self.output_col]
-        
             # Contar los valores nulos solo en las columnas seleccionadas
             null_counts = self.df[columns_to_process].isnull().sum()
-        
             # Crear el mensaje con el conteo de valores nulos por cada columna
             null_info = "\n".join([f"{col}: {count}" for col, count in null_counts.items()])
-        
             QMessageBox.information(self, "Valores Nulos", f"Cantidad de valores nulos por columna:\n{null_info}")
             self.model_button.setEnabled(True)
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
-    
-    
+
+   
     def remove_nulls(self):
+
         if self.df is not None:
             columns_to_process = self.input_col + [self.output_col]
             original_shape = self.df.shape
@@ -323,10 +343,11 @@ class CsvViewer(QMainWindow):
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
     def replace_nulls_with_mean(self):
+
         if self.df is not None:
             # Seleccionar solo las columnas de entrada y salida
             columns_to_process = self.input_col + [self.output_col]
-        
+       
             for col in columns_to_process:
                 if self.df[col].isnull().any():
                     mean_value = self.df[col].mean()
@@ -337,11 +358,12 @@ class CsvViewer(QMainWindow):
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
-
+ 
     def replace_nulls_with_median(self):
+
         if self.df is not None:
             columns_to_process = self.input_col + [self.output_col]
-        
+       
             for col in columns_to_process:
                 if self.df[col].isnull().any():
                     median_value = self.df[col].median()
@@ -352,13 +374,13 @@ class CsvViewer(QMainWindow):
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
-
     def replace_nulls_with_value(self):
+
         if self.df is not None:
             value, ok = QInputDialog.getText(self, "Reemplazar Nulos por Valor", "Ingrese el valor para reemplazar los nulos:")
             if ok and value:
                 columns_to_process = self.input_col + [self.output_col]
-            
+
                 for col in columns_to_process:
                     if self.df[col].isnull().any():
                         self.df[col].fillna(value, inplace=True)
@@ -369,9 +391,11 @@ class CsvViewer(QMainWindow):
                 QMessageBox.warning(self, "Advertencia", "Por favor, ingrese un valor válido para reemplazar los nulos.")
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
-    
+
+
     # Método para crear el modelo y mostrar la gráfica
     def start_model(self):
+
         if self.df is not None and self.input_col and self.output_col:
             self.model, self.r2, self.mse = model(self.df[self.input_col], self.df[self.output_col])
             if len(self.input_col) == 1:
@@ -394,10 +418,11 @@ class CsvViewer(QMainWindow):
             else:
                 QMessageBox.warning(self, "Error", "Debes seleccionar una única columna de entrada para poder mostrar la gráfica")
 
-
     # Método para guardar el modelo y sus metadatos en un archivo .joblib
     def save_model(self):
+        
         file_path, _ = QFileDialog.getSaveFileName(self, "Guardar Modelo", "", "Joblib Files (*.joblib)")
+        
         if file_path:
             model_data = {
                 "model": self.model,
@@ -412,7 +437,75 @@ class CsvViewer(QMainWindow):
                 QMessageBox.information(self, "Guardado Exitoso", "El modelo se ha guardado correctamente.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"No se pudo guardar el modelo: {str(e)}")
+
+    def load_model(self):
+        # Abrir el diálogo de selección de archivo
+        file_name, _ = QFileDialog.getOpenFileName(self, "Cargar Modelo", "", "Model Files (*.pkl *.joblib)")
+
+       
+
+        if file_name:
+            try:
+                # Cargar el modelo desde el archivo
+                loaded_model_data = joblib.load(file_name)
+                # Actualizar la interfaz con la información del modelo cargado
+                self.display_loaded_model(loaded_model_data)
+                # Mostrar mensaje de confirmación de carga
+                QMessageBox.information(self, "Modelo Cargado", "El modelo ha sido cargado exitosamente.")
+            except Exception as e:
+                # Mostrar mensaje de error si el archivo es inválido
+                QMessageBox.warning(self, "Error al Cargar Modelo", f"No se pudo cargar el modelo: {str(e)}")
+
+    def display_loaded_model(self, model_data):
+        # Ocultar secciones de carga de datos y selección de columnas
+        self.table_widget.hide()
+        self.features_label.hide()
+        self.features_list.hide()
+        self.target_label.hide()
+        self.target_combo.hide()
+        self.viewer_title.hide()
+        self.inout_title.hide()
+        self.prep_title.hide()
+        self.model_title.hide()
+        # Botones de preprocesado
+        self.btn_count_nulls.hide()
+        self.btn_remove_nulls.hide()
+        self.btn_replace_nulls_mean.hide()
+        self.btn_replace_nulls_median.hide()
+        self.btn_replace_nulls_value.hide()
+        self.confirm.hide()
+        self.model_button.hide()
+        self.load_button.hide()
+        self.file_path_label.hide()
+        self.save_button.setEnabled(True)
+        # Modelo
+        self.canvas.setVisible(True)
+        self.label_formula.setVisible(True)
+        self.label_r2_mse.setVisible(True)
         
+        # Mostrar los detalles del modelo cargado
+        if "model" in model_data:
+            self.model = model_data["model"]
+            self.input_col = model_data["input_columns"]
+            self.output_col = model_data["output_column"]
+            r2_score = model_data.get("r2_score", "N/A")
+            mse = model_data.get("mse", "N/A")
+            description = model_data.get("description", "No hay descripción disponible.")
+
+            # Generar fórmula
+            coefs = self.model.coef_
+            intercept = self.model.intercept_
+            formula = f"{self.output_col} = " + " + ".join(f"{coef:.4f} * {col}" for coef, col in zip(coefs, self.input_col)) + f" + {intercept:.4f}"
+    
+            # Actualizar etiquetas
+            self.label_formula.setText(f"Fórmula del Modelo: {formula}")
+            self.label_r2_mse.setText(f"R²: {r2_score}  |  MSE: {mse}")
+            self.description_text.setText(description)    
+
+ 
+
+   
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     viewer = CsvViewer()
