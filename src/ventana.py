@@ -21,6 +21,9 @@ class CsvViewer(QMainWindow):
         self.setGeometry(100, 100, 1200, 700)
         #self.setStyleSheet("background-color: lightblue;")
 
+        viewer_title = QLabel("Visualización de los datos")
+        viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+ 
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1180, 200)
         self.load_button = QPushButton("Abrir")
@@ -30,7 +33,7 @@ class CsvViewer(QMainWindow):
 
         # Crear un área de scroll
         scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(False)
+        scroll_area.setWidgetResizable(True)
 
         scroll_area.setFrameShape(QFrame.Shape.NoFrame)
         
@@ -38,6 +41,8 @@ class CsvViewer(QMainWindow):
         layoutaux = QHBoxLayout()
 
         layoutaux.addWidget(self.load_button)
+        
+
 
         # Layout auxiliar horizontal selectores
         layout_select = QHBoxLayout()
@@ -50,10 +55,15 @@ class CsvViewer(QMainWindow):
         self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.") 
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
+        inout_title = QLabel("Elija las columnas de entrada y salida")
+        inout_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+
         # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
         layout.addLayout(layoutaux)
+        layout.addWidget(viewer_title)
         layout.addWidget(self.table_widget)
+        layout.addWidget(inout_title)
         layout_select.addLayout(layout_entrad)
         layout_select.addLayout(layout_salid)
         layout.addLayout(layout_select)
@@ -127,27 +137,34 @@ class CsvViewer(QMainWindow):
         self.constant_input.setPlaceholderText("Valor constante")
         options_layout.addWidget(self.constant_input)
 
+        model_layout = QHBoxLayout()
+        model_title = QLabel("Visualizar e iniciar modelo")
+        model_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+
         #Botón para iniciar el modelo de regresión lineal
         self.model_button =  QPushButton("Iniciar modelo")
+        self.model_button.setFixedSize(150, 30)
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
-        layout.addWidget(self.model_button)
+        layout.addWidget(model_title)
+        model_layout.addWidget(self.model_button,alignment = Qt.AlignmentFlag.AlignLeft)
+
 
         # Widget para mostrar la gráfica de matplotlib
-        model_layout=QVBoxLayout()
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
-        self.canvas.setFixedSize(1180, 200)
+        self.canvas.setFixedSize(700, 160)
+        self.canvas.setVisible(False)
         model_layout.addWidget(self.canvas)
 
         self.label_formula = QLabel("")
         self.label_formula.setVisible(False)
         self.label_r2_mse = QLabel("")
         self.label_r2_mse.setVisible(False)
-        model_layout.addWidget(self.label_formula)
-        model_layout.addWidget(self.label_r2_mse)
-
         layout.addLayout(model_layout)
+        layout.addWidget(self.label_formula)
+        layout.addWidget(self.label_r2_mse)
+
 
         #Campo de texto para la descripcion del modelo
         self.description_label = QLabel("Descripcion del modelo (opcional): ")
@@ -370,6 +387,7 @@ class CsvViewer(QMainWindow):
 
                 # Actualizar el canvas para mostrar la nueva gráfica
                 self.canvas.draw()
+                self.canvas.setVisible(True)
             else:
                 QMessageBox.warning(self, "Error", " Debes seleecionar una unica columna de entrada para poder mostrar la grafica")
         
