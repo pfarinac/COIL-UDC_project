@@ -30,7 +30,7 @@ class CsvViewer(QMainWindow):
 
         self.viewer_title = QLabel("Visualización de los datos")
         self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
- 
+        
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1180, 200)
         self.load_button = QPushButton("Abrir")
@@ -48,9 +48,7 @@ class CsvViewer(QMainWindow):
         # Layout auxiliar 
         layoutaux = QHBoxLayout()
         layoutaux.addWidget(self.load_button)
-        
-
-
+ 
         # Layout auxiliar horizontal selectores
         layout_select = QHBoxLayout()
         layout_entrad = QVBoxLayout()
@@ -61,6 +59,14 @@ class CsvViewer(QMainWindow):
         # Añadir etiqueta para mostrar la ruta del archivo
         self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+
+        # Botón de carga de modelo
+        self.load_model_button = QPushButton("Cargar Modelo")
+        self.load_model_button.setFixedSize(150, 30)
+        self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
+        
+        # Añadir el botón al layout
+        layoutaux.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
 
         self.inout_title = QLabel("Elija las columnas de entrada y salida")
         self.inout_title.setStyleSheet("font-size: 20px; font-weight: bold;")
@@ -156,19 +162,10 @@ class CsvViewer(QMainWindow):
         self.model_button =  QPushButton("Iniciar modelo")
         self.model_button.setFixedSize(150, 30)
         self.model_button.setEnabled(False)
-        self.model_button.setFixedSize(300, 30)
         self.model_button.clicked.connect(self.start_model)
         layout.addWidget(self.model_title)
         model_layout.addWidget(self.model_button,alignment = Qt.AlignmentFlag.AlignLeft)
 
-
-        # Botón de carga de modelo
-        self.load_model_button = QPushButton("Cargar Modelo")
-        self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
-        
-        # Añadir el botón al layout
-        layout.addWidget(self.load_model_button)
-       
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -200,10 +197,10 @@ class CsvViewer(QMainWindow):
 
         # Botón para guardar el modelo
         self.save_button = QPushButton("Guardar Modelo")
-        self.save_button.adjustSize()
+        self.save_button.setFixedSize(150, 30)
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_model)
-        layout.addWidget(self.save_button)    
+        layout.addWidget(self.save_button,alignment=Qt.AlignmentFlag.AlignCenter)    
 
 
     # Función para registrar las columnas de entrada
@@ -479,7 +476,7 @@ class CsvViewer(QMainWindow):
         self.file_path_label.hide()
         self.save_button.setEnabled(True)
         # Modelo
-        self.canvas.setVisible(True)
+        self.canvas.hide()
         self.label_formula.setVisible(True)
         self.label_r2_mse.setVisible(True)
         
