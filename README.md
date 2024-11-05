@@ -2,8 +2,10 @@
 
 ## Introduction
 
-### Overview
 
+### Overview
+Linear Reg 1.0 is a software application that helps users easily create and work with linear regression models. Using predictive mathematical formulas, this tool is used to predict a result based on specific information variables and datasets. 
+Its intuitive interface will allow users to easily explore relationships between data inputs and outputs. The tool also provides unique insights into the model’s predictive formula, enabling users to assess models for accuracy. Users can save their models for future use and update data entries to suit different scenarios.
 ### Features
 
 ## Getting Started
