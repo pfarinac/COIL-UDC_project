@@ -19,6 +19,8 @@ class CsvViewer(QMainWindow):
     def __init__(self):
         super().__init__()
         self.df = None  # DataFrame para almacenar el archivo cargado
+        self.model = None
+        self.inputs = []
         self.inicializarUI()
 
     def inicializarUI(self):
@@ -26,6 +28,39 @@ class CsvViewer(QMainWindow):
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
 
+       
+       
+        layout = QVBoxLayout()
+
+        # Botón para cargar modelo
+        self.load_model_button = QPushButton("Cargar Modelo")
+        self.load_model_button.clicked.connect(self.load_model)
+        layout.addWidget(self.load_model_button)
+
+        # Área de predicción
+        self.prediction_area = QWidget()
+        self.prediction_layout = QVBoxLayout()
+        self.prediction_area.setLayout(self.prediction_layout)
+        layout.addWidget(self.prediction_area)
+
+        # Botón de predicción
+        self.predict_button = QPushButton("Realizar Predicción")
+        self.predict_button.setEnabled(False)  # Deshabilitado hasta que un modelo esté disponible
+        self.predict_button.clicked.connect(self.make_prediction)
+        layout.addWidget(self.predict_button)
+
+        self.output_label = QLabel("Salida del Modelo:")
+        self.prediction_layout.addWidget(self.output_label)
+
+        # Mensaje de error
+        self.error_message = QLabel("")
+        self.prediction_layout.addWidget(self.error_message)
+
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+       
+       
         #self.setStyleSheet("background-color: lightblue;")
 
         self.viewer_title = QLabel("Visualización de los datos")
@@ -517,7 +552,50 @@ class CsvViewer(QMainWindow):
             self.description_text.setText(description)    
 
  
+    def load_model_predict(self):
+        try:
+            model_path, _ = QFileDialog.getOpenFileName(self, "Seleccionar Modelo", "", "Model Files (*.pkl *.joblib)")
+            if model_path:
+                self.model = joblib.load(model_path)
+                self.update_input_fields()
+                self.predict_button.setEnabled(True)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"No se pudo cargar el modelo: {str(e)}")
+            self.traceback.print_exc()
 
+    def update_input_fields(self):
+        # Limpiar campos de entrada previos
+        for widget in self.inputs:
+            widget.deleteLater()
+        self.inputs = []
+
+        # Suponiendo que las variables de entrada del modelo están en `self.model.feature_names_in_`
+        if hasattr(self.model, 'feature_names_in_'):
+            for feature in self.model.feature_names_in_:
+                label = QLabel(feature)
+                line_edit = QLineEdit()
+                self.prediction_layout.addWidget(label)
+                self.prediction_layout.addWidget(line_edit)
+                self.inputs.append((feature, line_edit))
+
+    def make_prediction(self):
+        try:
+            # Obtener valores de entrada
+            input_values = []
+            for feature, line_edit in self.inputs:
+                text = line_edit.text()
+                if not text:
+                    raise ValueError(f"Por favor, ingrese un valor para {feature}.")
+                input_values.append(float(text))
+
+            # Realizar predicción
+            prediction = self.model.predict([input_values])[0]
+            self.output_label.setText(f"Salida del Modelo: {prediction:.2f}")
+            self.error_message.setText("")  # Limpiar errores
+        except ValueError as ve:
+            self.error_message.setText(str(ve))
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Ocurrió un error en la predicción: {str(e)}")
    
 
 if __name__ == "__main__":
