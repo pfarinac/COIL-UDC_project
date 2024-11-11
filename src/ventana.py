@@ -167,7 +167,7 @@ class CsvViewer(QMainWindow):
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
         layout.addWidget(self.model_title)
-        model_layout.addWidget(self.model_button,alignment = Qt.AlignmentFlag.AlignLeft)
+        layout.addWidget(self.model_button)
         model_layout.setContentsMargins(0,20,0,20)
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
@@ -180,9 +180,10 @@ class CsvViewer(QMainWindow):
         self.label_formula.setVisible(False)
         self.label_r2_mse = QLabel("")
         self.label_r2_mse.setVisible(False)
+        model_layout.addWidget(self.label_formula)
+        model_layout.addWidget(self.label_r2_mse)
         layout.addLayout(model_layout)
-        layout.addWidget(self.label_formula)
-        layout.addWidget(self.label_r2_mse)
+
 
 
         #Campo de texto para la descripcion del modelo
