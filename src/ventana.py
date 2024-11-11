@@ -48,21 +48,22 @@ class CsvViewer(QMainWindow):
         # Layout auxiliar 
         layoutaux = QHBoxLayout()
         layoutaux.addWidget(self.load_button)
+        layoutaux.setContentsMargins(0,20,0,20)
  
         # Layout auxiliar horizontal selectores
         layout_select = QHBoxLayout()
         layout_entrad = QVBoxLayout()
-    
         layout_salid = QVBoxLayout()
-        layout_salid.setAlignment(Qt.AlignmentFlag.AlignTop)
-
+        layout_salid.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        layout_entrad.setContentsMargins(0,20,20,20)
+        layout_salid.setContentsMargins(20,20,0,20)
         # Añadir etiqueta para mostrar la ruta del archivo
         self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
         # Botón de carga de modelo
         self.load_model_button = QPushButton("Cargar Modelo")
-        self.load_model_button.setFixedSize(150, 30)
+        self.load_model_button.setFixedSize(150, 25)
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         
         # Añadir el botón al layout
@@ -86,20 +87,21 @@ class CsvViewer(QMainWindow):
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
         layout_entrad.addWidget(self.features_label)
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(150, 100)
+        self.features_list.setFixedSize(245, 60)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout_entrad.addWidget(self.features_list)
              
         # Selector único para la columna de salida
         self.target_label = QLabel("Selecciona la columna de salida (target):")
         layout_salid.addWidget(self.target_label)
-        self.target_combo = QComboBox()
-        self.target_combo.setFixedSize(150, 50)
+        self.target_combo = QListWidget()
+        self.target_combo.setFixedSize(215, 60)
+        self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         layout_salid.addWidget(self.target_combo)
         
         # Botón para confimar la selección de las columnas 
         self.confirm = QPushButton("Confirmar selección")
-        self.confirm.setFixedSize(150, 30)
+        self.confirm.setFixedSize(150, 25)
         self.input_col = [] # Lista con las columnas de entrada
         self.output_col = None # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
@@ -145,6 +147,7 @@ class CsvViewer(QMainWindow):
 
         # Añadir layout de botones de preprocesado al layout principal
         layout.addLayout(preprocesado_layout)
+        preprocesado_layout.setContentsMargins(0,20,0,20)
 
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
@@ -165,7 +168,7 @@ class CsvViewer(QMainWindow):
         self.model_button.clicked.connect(self.start_model)
         layout.addWidget(self.model_title)
         model_layout.addWidget(self.model_button,alignment = Qt.AlignmentFlag.AlignLeft)
-
+        model_layout.setContentsMargins(0,20,0,20)
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
