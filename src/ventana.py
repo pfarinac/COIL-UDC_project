@@ -103,7 +103,7 @@ class CsvViewer(QMainWindow):
         self.confirm = QPushButton("Confirmar selección")
         self.confirm.setFixedSize(150, 25)
         self.input_col = [] # Lista con las columnas de entrada
-        self.output_col = None # Variable str que contiene la columna de salida
+        self.output_col = [] # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
         self.confirm.clicked.connect(self.almacenar)
         layout_select.addWidget(self.confirm)
@@ -229,9 +229,9 @@ class CsvViewer(QMainWindow):
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
 
-        self.output_col = self.target_combo.currentText()
+        self.output_col = self.target_combo.currentItem().text()
         self.model_description = self.description_text.toPlainText()
-        if self.output_col == None or self.input_col == []:
+        if self.output_col == [] or self.input_col == []:
             QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
             message = "Tu seleccion se ha guardado correactamente.\n"
