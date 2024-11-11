@@ -48,21 +48,24 @@ class CsvViewer(QMainWindow):
         # Layout auxiliar 
         layoutaux = QHBoxLayout()
         layoutaux.addWidget(self.load_button)
- 
+        layoutaux.setContentsMargins(0,20,0,20)
+        layout_data= QVBoxLayout()
+        layout_data.addWidget(self.table_widget)
+        layout_data.setContentsMargins(0,0,0,20)
         # Layout auxiliar horizontal selectores
         layout_select = QHBoxLayout()
         layout_entrad = QVBoxLayout()
-    
         layout_salid = QVBoxLayout()
-        layout_salid.setAlignment(Qt.AlignmentFlag.AlignTop)
-
+        layout_salid.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        layout_entrad.setContentsMargins(0,20,20,20)
+        layout_salid.setContentsMargins(20,20,0,20)
         # Añadir etiqueta para mostrar la ruta del archivo
         self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
         # Botón de carga de modelo
         self.load_model_button = QPushButton("Cargar Modelo")
-        self.load_model_button.setFixedSize(150, 30)
+        self.load_model_button.setFixedSize(150, 25)
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         
         # Añadir el botón al layout
@@ -75,7 +78,7 @@ class CsvViewer(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.viewer_title)
         layout.addLayout(layoutaux)
-        layout.addWidget(self.table_widget)
+        layout.addLayout(layout_data)
         layout.addWidget(self.inout_title)
         layout_select.addLayout(layout_entrad)
         layout_select.addLayout(layout_salid)
@@ -86,22 +89,23 @@ class CsvViewer(QMainWindow):
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
         layout_entrad.addWidget(self.features_label)
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(150, 100)
+        self.features_list.setFixedSize(245, 60)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout_entrad.addWidget(self.features_list)
              
         # Selector único para la columna de salida
         self.target_label = QLabel("Selecciona la columna de salida (target):")
         layout_salid.addWidget(self.target_label)
-        self.target_combo = QComboBox()
-        self.target_combo.setFixedSize(150, 50)
+        self.target_combo = QListWidget()
+        self.target_combo.setFixedSize(215, 60)
+        self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         layout_salid.addWidget(self.target_combo)
         
         # Botón para confimar la selección de las columnas 
         self.confirm = QPushButton("Confirmar selección")
-        self.confirm.setFixedSize(150, 30)
+        self.confirm.setFixedSize(150, 25)
         self.input_col = [] # Lista con las columnas de entrada
-        self.output_col = None # Variable str que contiene la columna de salida
+        self.output_col = [] # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
         self.confirm.clicked.connect(self.almacenar)
         layout_select.addWidget(self.confirm)
@@ -145,6 +149,7 @@ class CsvViewer(QMainWindow):
 
         # Añadir layout de botones de preprocesado al layout principal
         layout.addLayout(preprocesado_layout)
+        preprocesado_layout.setContentsMargins(0,20,0,20)
 
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
@@ -164,22 +169,28 @@ class CsvViewer(QMainWindow):
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
         layout.addWidget(self.model_title)
-        model_layout.addWidget(self.model_button,alignment = Qt.AlignmentFlag.AlignLeft)
-
+        layout.addWidget(self.model_button)
+        model_layout.setContentsMargins(0,20,0,20)
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
-        self.canvas.setFixedSize(700, 160)
+        self.canvas.setFixedSize(700, 200)
         self.canvas.setVisible(False)
         model_layout.addWidget(self.canvas)
+
+        formula_layout = QVBoxLayout() 
 
         self.label_formula = QLabel("")
         self.label_formula.setVisible(False)
         self.label_r2_mse = QLabel("")
         self.label_r2_mse.setVisible(False)
+        self.label_formula.setStyleSheet("font-weight: bold;")
+        self.label_r2_mse.setStyleSheet("font-weight: bold;")
+        formula_layout.addWidget(self.label_formula)
+        formula_layout.addWidget(self.label_r2_mse,alignment= Qt.AlignmentFlag.AlignTop)
+        model_layout.addLayout(formula_layout)
         layout.addLayout(model_layout)
-        layout.addWidget(self.label_formula)
-        layout.addWidget(self.label_r2_mse)
+
 
 
         #Campo de texto para la descripcion del modelo
@@ -225,9 +236,9 @@ class CsvViewer(QMainWindow):
     # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
     def almacenar(self):
 
-        self.output_col = self.target_combo.currentText()
+        self.output_col = self.target_combo.currentItem().text()
         self.model_description = self.description_text.toPlainText()
-        if self.output_col == None or self.input_col == []:
+        if self.output_col == [] or self.input_col == []:
             QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
             message = "Tu seleccion se ha guardado correactamente.\n"
@@ -406,7 +417,7 @@ class CsvViewer(QMainWindow):
                 ax.legend()
                 formula = f"{self.output_col} = {self.input_col[0]} * {self.model.coef_[0]} + {self.model.intercept_}"
                 self.label_r2_mse.setVisible(True)
-                self.label_formula.setText(f"La fórmula del modelo es: {formula}")
+                self.label_formula.setText(f"La fórmula del modelo es:\n{formula}")
                 self.label_formula.setVisible(True)
                 self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
                 self.canvas.draw()
@@ -414,6 +425,12 @@ class CsvViewer(QMainWindow):
                 self.canvas.setVisible(True)
             else:
                 QMessageBox.warning(self, "Error", "Debes seleccionar una única columna de entrada para poder mostrar la gráfica")
+            self.btn_count_nulls.setEnabled(False)
+            self.btn_remove_nulls.setEnabled(False)
+            self.btn_replace_nulls_mean.setEnabled(False)
+            self.btn_replace_nulls_median.setEnabled(False)
+            self.btn_replace_nulls_value.setEnabled(False)
+            self.model_button.setEnabled(False)
 
     # Método para guardar el modelo y sus metadatos en un archivo .joblib
     def save_model(self):
