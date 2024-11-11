@@ -49,7 +49,9 @@ class CsvViewer(QMainWindow):
         layoutaux = QHBoxLayout()
         layoutaux.addWidget(self.load_button)
         layoutaux.setContentsMargins(0,20,0,20)
- 
+        layout_data= QVBoxLayout()
+        layout_data.addWidget(self.table_widget)
+        layout_data.setContentsMargins(0,0,0,20)
         # Layout auxiliar horizontal selectores
         layout_select = QHBoxLayout()
         layout_entrad = QVBoxLayout()
@@ -76,7 +78,7 @@ class CsvViewer(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.viewer_title)
         layout.addLayout(layoutaux)
-        layout.addWidget(self.table_widget)
+        layout.addLayout(layout_data)
         layout.addWidget(self.inout_title)
         layout_select.addLayout(layout_entrad)
         layout_select.addLayout(layout_salid)
