@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
 QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit,QFrame)
+QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit,QFrame,QTabWidget)
 from PyQt6.QtCore import QStandardPaths,Qt
 import sys
 import pandas as pd
@@ -17,15 +17,24 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 class CsvViewer(QMainWindow):
 
     def __init__(self):
-        super().__init__()
+        super(CsvViewer,self).__init__()
         self.df = None  # DataFrame para almacenar el archivo cargado
         self.inicializarUI()
-
-    def inicializarUI(self):
-
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
 
+
+        self.inicializarUI()
+        
+
+    def inicializarUI(self):
+
+        self.tab = QTabWidget()
+        self.setCentralWidget(self.tab)
+
+        self.setWindowTitle("CSV/XLSX/SQLite Viewer")
+        self.setGeometry(100, 100, 1200, 700)
+        
         #self.setStyleSheet("background-color: lightblue;")
 
         self.viewer_title = QLabel("Visualización de los datos")
@@ -159,18 +168,48 @@ class CsvViewer(QMainWindow):
         self.constant_input.setPlaceholderText("Valor constante")
         options_layout.addWidget(self.constant_input)
 
+        
+        container = QWidget()
+        container.setLayout(layout)
+        scroll_area.setWidget(container)
+        self.tab.addTab(container,"Analisis de datos")
+        
+        
+  
+
+    def pesta_modelo(self):
+        
+        self.tab = QTabWidget()
+        self.setCentralWidget(self.tab)
+
+        scroll_area2 = QScrollArea()
+        scroll_area2.setWidgetResizable(True)
+
+        scroll_area2.setFrameShape(QFrame.Shape.NoFrame)
+
+        layout2 = QVBoxLayout()
+
+        # Botón de carga de modelo
+        self.load_model_button = QPushButton("Cargar Modelo")
+        self.load_model_button.setFixedSize(150, 25)
+        self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
+        
+        # Añadir el botón al layout
+        layout2.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
+
         model_layout = QHBoxLayout()
         self.model_title = QLabel("Visualizar e iniciar modelo")
         self.model_title.setStyleSheet("font-size: 20px; font-weight: bold;")
-
+        
         #Botón para iniciar el modelo de regresión lineal
         self.model_button =  QPushButton("Iniciar modelo")
         self.model_button.setFixedSize(150, 30)
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
-        layout.addWidget(self.model_title)
-        layout.addWidget(self.model_button)
+        layout2.addWidget(self.model_title)
+        layout2.addWidget(self.model_button)
         model_layout.setContentsMargins(0,20,0,20)
+        
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -184,31 +223,33 @@ class CsvViewer(QMainWindow):
         self.label_r2_mse.setVisible(False)
         model_layout.addWidget(self.label_formula)
         model_layout.addWidget(self.label_r2_mse)
-        layout.addLayout(model_layout)
+        
 
-
+        description_layout = QHBoxLayout()
 
         #Campo de texto para la descripcion del modelo
         self.description_label = QLabel("Descripcion del modelo (opcional): ")
-        layout.addWidget(self.description_label)
+        layout2.addWidget(self.description_label)
         self.description_text = QTextEdit()
         self.description_text.setPlaceholderText("Agrega una descripcion para el modelo...")
-        layout.addWidget(self.description_text)
-        container = QWidget()
-        container.setLayout(layout)
-
-        self.setCentralWidget(container)
-        scroll_area.setWidget(container)
-        self.setCentralWidget(scroll_area)
-
+        description_layout.addWidget(self.description_text)
+        
         # Botón para guardar el modelo
         self.save_button = QPushButton("Guardar Modelo")
         self.save_button.setFixedSize(150, 30)
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_model)
-        layout.addWidget(self.save_button,alignment=Qt.AlignmentFlag.AlignCenter)    
 
+        layout2.addLayout(model_layout)
+        layout2.addLayout(description_layout)
+        layout2.addWidget(self.save_button)
+        modelo = QWidget()
+        modelo.setLayout(layout2)
+        scroll_area2.setWidget(modelo)
+        self.tab.addTab(modelo,"Modelo")
 
+        
+        
     # Función para registrar las columnas de entrada
     def registrar_input(self):
 
