@@ -40,7 +40,7 @@ class CsvViewer(QMainWindow):
         # Área de predicción
         self.prediction_area = QWidget()
         self.prediction_layout = QVBoxLayout()
-        self.prediction_area.setLayout(self.prediction_layout)
+        
         layout.addWidget(self.prediction_area)
 
         # Botón de predicción
@@ -56,6 +56,8 @@ class CsvViewer(QMainWindow):
         self.error_message = QLabel("")
         self.prediction_layout.addWidget(self.error_message)
 
+        self.prediction_area.setLayout(self.prediction_layout)
+
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
@@ -67,7 +69,7 @@ class CsvViewer(QMainWindow):
         self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
         
         self.table_widget = QTableWidget()
-        self.table_widget.setFixedSize(1180, 200)
+        self.table_widget.setFixedSize(1180, 500)
         self.load_button = QPushButton("Abrir")
         self.load_button.setFixedSize(60, 30)
 
@@ -91,7 +93,8 @@ class CsvViewer(QMainWindow):
         layout_select = QHBoxLayout()
         layout_entrad = QVBoxLayout()
         layout_salid = QVBoxLayout()
-        layout_salid.setAlignment(Qt.AlignmentFlag.AlignLeft)
+
+        layout_select.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout_entrad.setContentsMargins(0,20,20,20)
         layout_salid.setContentsMargins(20,20,0,20)
         # Añadir etiqueta para mostrar la ruta del archivo
@@ -118,7 +121,9 @@ class CsvViewer(QMainWindow):
         layout_select.addLayout(layout_entrad)
         layout_select.addLayout(layout_salid)
         layout.addLayout(layout_select)
-        
+        layout.addWidget(self.load_model_button)
+        layout.addWidget(self.prediction_area)
+        layout.addWidget(self.predict_button)
 
         # Selector para columnas de entrada (features)
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
@@ -466,6 +471,7 @@ class CsvViewer(QMainWindow):
             self.btn_replace_nulls_median.setEnabled(False)
             self.btn_replace_nulls_value.setEnabled(False)
             self.model_button.setEnabled(False)
+            self.predict_button.setEnabled(True)
 
     # Método para guardar el modelo y sus metadatos en un archivo .joblib
     def save_model(self):
