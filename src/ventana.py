@@ -277,7 +277,6 @@ class CsvViewer(QMainWindow):
     def almacenar(self):
 
         self.output_col = self.target_combo.currentItem().text()
-        self.model_description = self.description_text.toPlainText()
         if self.output_col == [] or self.input_col == []:
             QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
         else:
