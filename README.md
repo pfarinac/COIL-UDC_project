@@ -64,6 +64,25 @@ pip install matplotlib
 4. Repeat steps 2-3 until all libraries have been installed.
 
 ## User Interface
+The user interface (UI) is divided into four main components: the data visualization window, input and output selectors, data preprocessing options, and an optional model description field.
+
+[screenshot with callouts].
+
+The steps to produce a linear regression model are completed in these four sections. The following table describes each of the UI components.
+
+| UI Component| Description|
+|:----------------------|:------------------------------------------------------------------------------|
+| Data Visualization| Where you will upload and view a choosen spreadsheet file (.csv. or .xlsx). This information will be used to create the linear regression model. Once the model is complete, the tool will display a graph of the data, incluing the model's prediction.|
+| Input and Output selectors| Where you will select the columns of data you would like the tool to use to make predictions. Input "features" specify the conditional information to be analyzed and the output "targets" specify the outcome to predict. For example, predict the price of a home (output) given the number of bedrooms (input).|
+| Data Preprocessing| Where you will indicate how you would like the tool to handle any missing or incomplete spreadsheet data, called "nulls." LinearReg can: 
+* Count Null Values - use this to include missing data, as is. 
+* Delete Rows with Nulls - use this to delete the rows where data is missing.
+* Replace Nulls with Average - use this to replace missing data with column's average value.
+* Replace Nulls with Median - use this to replace the missing data with column's median value.
+* Replace Nulls with Value - use this to replace the missing data with a specific value.
+
+| Model Description| Where you can write key details related to a specific model, such as what information was used, the relationships to predict, and the accuracy of those predictions.|
+
 
 ## Functions and Usage
 
