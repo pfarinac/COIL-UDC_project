@@ -19,7 +19,6 @@ class CsvViewer(QMainWindow):
     def __init__(self):
         super(CsvViewer,self).__init__()
         self.df = None  # DataFrame para almacenar el archivo cargado
-        self.inicializarUI()
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
 
@@ -213,16 +212,21 @@ class CsvViewer(QMainWindow):
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
-        self.canvas.setFixedSize(700, 160)
+        self.canvas.setFixedSize(700, 200)
         self.canvas.setVisible(False)
         model_layout.addWidget(self.canvas)
+
+        formula_layout = QVBoxLayout() 
 
         self.label_formula = QLabel("")
         self.label_formula.setVisible(False)
         self.label_r2_mse = QLabel("")
         self.label_r2_mse.setVisible(False)
-        model_layout.addWidget(self.label_formula)
-        model_layout.addWidget(self.label_r2_mse)
+        self.label_formula.setStyleSheet("font-weight: bold;")
+        self.label_r2_mse.setStyleSheet("font-weight: bold;")
+        formula_layout.addWidget(self.label_formula)
+        formula_layout.addWidget(self.label_r2_mse,alignment= Qt.AlignmentFlag.AlignTop)
+        model_layout.addLayout(formula_layout)
         
 
         description_layout = QHBoxLayout()
@@ -453,7 +457,7 @@ class CsvViewer(QMainWindow):
                 ax.legend()
                 formula = f"{self.output_col} = {self.input_col[0]} * {self.model.coef_[0]} + {self.model.intercept_}"
                 self.label_r2_mse.setVisible(True)
-                self.label_formula.setText(f"La fórmula del modelo es: {formula}")
+                self.label_formula.setText(f"La fórmula del modelo es:\n{formula}")
                 self.label_formula.setVisible(True)
                 self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
                 self.canvas.draw()
@@ -461,6 +465,12 @@ class CsvViewer(QMainWindow):
                 self.canvas.setVisible(True)
             else:
                 QMessageBox.warning(self, "Error", "Debes seleccionar una única columna de entrada para poder mostrar la gráfica")
+            self.btn_count_nulls.setEnabled(False)
+            self.btn_remove_nulls.setEnabled(False)
+            self.btn_replace_nulls_mean.setEnabled(False)
+            self.btn_replace_nulls_median.setEnabled(False)
+            self.btn_replace_nulls_value.setEnabled(False)
+            self.model_button.setEnabled(False)
 
     # Método para guardar el modelo y sus metadatos en un archivo .joblib
     def save_model(self):
