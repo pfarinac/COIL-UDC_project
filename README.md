@@ -72,8 +72,8 @@ The steps to produce a linear regression model are completed in these four secti
 
 | UI Component| Description|
 |:----------------------|:------------------------------------------------------------------------------|
-| Data Visualization| Where you will upload and view a choosen spreadsheet file (.csv. or .xlsx). This information will be used to create the linear regression model. Once the model is complete, the tool will display a graph of the data, incluing the model's prediction.|
-| Input and Output selectors| Where you will select the columns of data you would like the tool to use to make predictions. Input "features" specify the conditional information to be analyzed and the output "targets" specify the outcome to predict. For example, predict the price of a home (output) given the number of bedrooms (input).|
+| Data Visualization| Where you will upload and view your spreadsheet file (.csv. or .xlsx). This information will be used to create the linear regression model. Once the model is complete, the tool will display a graph of the data, incluing the model's prediction.|
+| Input and Output selectors| Where you will select the columns of data you would like the tool to use to make predictions. Input "features" specify the conditional information to be retrieved and the output "targets" specify the outcome to predict. For example, ma model that predicts the price of a home (output) given the number of bedrooms (input).|
 | Data Preprocessing| Where you will indicate how you would like the tool to handle any missing or incomplete spreadsheet data, called "nulls." LinearReg can: 
 * Count Null Values - use this to include missing data, as is. 
 * Delete Rows with Nulls - use this to delete the rows where data is missing.
