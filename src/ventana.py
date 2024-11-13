@@ -21,15 +21,15 @@ class CsvViewer(QMainWindow):
         self.df = None  # DataFrame para almacenar el archivo cargado
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
-
-
+        self.tab = QTabWidget()
+        self.setCentralWidget(self.tab)
+        self.model_button=QPushButton()
         self.inicializarUI()
-        
+        self.pesta_modelo()
 
     def inicializarUI(self):
 
-        self.tab = QTabWidget()
-        self.setCentralWidget(self.tab)
+        
 
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
         self.setGeometry(100, 100, 1200, 700)
@@ -178,8 +178,7 @@ class CsvViewer(QMainWindow):
 
     def pesta_modelo(self):
         
-        self.tab = QTabWidget()
-        self.setCentralWidget(self.tab)
+       
 
         scroll_area2 = QScrollArea()
         scroll_area2.setWidgetResizable(True)
@@ -385,7 +384,7 @@ class CsvViewer(QMainWindow):
             self.df.dropna(subset=columns_to_process, inplace=True)
             self.update_table()
             QMessageBox.information(self, "Filas Eliminadas", f"Se eliminaron {original_shape[0] - self.df.shape[0]} filas con valores nulos en las columnas seleccionadas.")
-            self.model_button.setEnabled(True)
+            
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
@@ -401,7 +400,7 @@ class CsvViewer(QMainWindow):
                     self.df[col].fillna(mean_value, inplace=True)
             self.update_table()
             QMessageBox.information(self, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la media de las columnas seleccionadas.")
-            self.model_button.setEnabled(True)
+            
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
@@ -417,7 +416,7 @@ class CsvViewer(QMainWindow):
                     self.df[col].fillna(median_value, inplace=True)
             self.update_table()
             QMessageBox.information(self, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la mediana de las columnas seleccionadas.")
-            self.model_button.setEnabled(True)
+            
         else:
             QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
@@ -433,7 +432,7 @@ class CsvViewer(QMainWindow):
                         self.df[col].fillna(value, inplace=True)
                 self.update_table()
                 QMessageBox.information(self, "Valores Reemplazados", f"Los valores nulos han sido reemplazados por '{value}' en las columnas seleccionadas.")
-                self.model_button.setEnabled(True)
+                
             else:
                 QMessageBox.warning(self, "Advertencia", "Por favor, ingrese un valor válido para reemplazar los nulos.")
         else:
@@ -510,26 +509,6 @@ class CsvViewer(QMainWindow):
                 QMessageBox.warning(self, "Error al Cargar Modelo", f"No se pudo cargar el modelo: {str(e)}")
 
     def display_loaded_model(self, model_data):
-        # Ocultar secciones de carga de datos y selección de columnas
-        self.table_widget.hide()
-        self.features_label.hide()
-        self.features_list.hide()
-        self.target_label.hide()
-        self.target_combo.hide()
-        self.viewer_title.hide()
-        self.inout_title.hide()
-        self.prep_title.hide()
-        self.model_title.hide()
-        # Botones de preprocesado
-        self.btn_count_nulls.hide()
-        self.btn_remove_nulls.hide()
-        self.btn_replace_nulls_mean.hide()
-        self.btn_replace_nulls_median.hide()
-        self.btn_replace_nulls_value.hide()
-        self.confirm.hide()
-        self.model_button.hide()
-        self.load_button.hide()
-        self.file_path_label.hide()
         self.save_button.setEnabled(True)
         # Modelo
         self.canvas.hide()
