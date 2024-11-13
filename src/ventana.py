@@ -186,6 +186,8 @@ class CsvViewer(QMainWindow):
         scroll_area2.setFrameShape(QFrame.Shape.NoFrame)
 
         layout2 = QVBoxLayout()
+        intro_layout = QHBoxLayout()
+
 
         # Botón de carga de modelo
         self.load_model_button = QPushButton("Cargar Modelo")
@@ -193,7 +195,7 @@ class CsvViewer(QMainWindow):
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         
         # Añadir el botón al layout
-        layout2.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
+        
 
         model_layout = QHBoxLayout()
         self.model_title = QLabel("Visualizar e iniciar modelo")
@@ -204,7 +206,12 @@ class CsvViewer(QMainWindow):
         self.model_button.setFixedSize(150, 30)
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
-        layout2.addWidget(self.model_title)
+
+        intro_layout.addWidget(self.model_title)
+        intro_layout.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
+        intro_layout.setContentsMargins(0,0,0,20)
+        layout2.addLayout(intro_layout)
+
         layout2.addWidget(self.model_button)
         model_layout.setContentsMargins(0,20,0,20)
         
@@ -228,14 +235,15 @@ class CsvViewer(QMainWindow):
         model_layout.addLayout(formula_layout)
         
 
-        description_layout = QHBoxLayout()
+        description_layout = QVBoxLayout()
 
         #Campo de texto para la descripcion del modelo
         self.description_label = QLabel("Descripcion del modelo (opcional): ")
-        layout2.addWidget(self.description_label)
+        description_layout.addWidget(self.description_label,alignment= Qt.AlignmentFlag.AlignTop)
         self.description_text = QTextEdit()
         self.description_text.setPlaceholderText("Agrega una descripcion para el modelo...")
-        description_layout.addWidget(self.description_text)
+        self.description_text.setFixedSize(1180,80)
+        description_layout.addWidget(self.description_text, alignment= Qt.AlignmentFlag.AlignTop)
         
         # Botón para guardar el modelo
         self.save_button = QPushButton("Guardar Modelo")
@@ -244,8 +252,9 @@ class CsvViewer(QMainWindow):
         self.save_button.clicked.connect(self.save_model)
 
         layout2.addLayout(model_layout)
+        description_layout.addWidget(self.save_button,alignment =  Qt.AlignmentFlag.AlignCenter)
         layout2.addLayout(description_layout)
-        layout2.addWidget(self.save_button)
+
         modelo = QWidget()
         modelo.setLayout(layout2)
         scroll_area2.setWidget(modelo)
