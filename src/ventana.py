@@ -214,7 +214,7 @@ class CsvViewer(QMainWindow):
         # Widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
-        self.canvas.setFixedSize(700, 200)
+        self.canvas.setFixedSize(700, 400)
         self.canvas.setVisible(False)
         model_layout.addWidget(self.canvas)
 
