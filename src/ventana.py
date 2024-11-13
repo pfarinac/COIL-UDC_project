@@ -443,19 +443,20 @@ class CsvViewer(QMainWindow):
 
     # Método para crear el modelo y mostrar la gráfica
     def start_model(self):
-
-        if self.df is not None and self.input_col and self.output_col:
-            self.model, self.r2, self.mse = model(self.df[self.input_col], self.df[self.output_col])
-            if len(self.input_col) == 1:
+        self.model_input = self.input_col.copy()
+        self.model_output = self.output_col
+        if self.df is not None and self.model_input and self.model_output:
+            self.model, self.r2, self.mse = model(self.df[self.model_input], self.df[self.model_output])
+            if len(self.model_input) == 1:
                 self.figure.clear()
                 ax = self.figure.add_subplot(111)
-                ax.scatter(self.df[self.input_col], self.df[self.output_col], label='Datos')
-                ax.plot(self.df[self.input_col], self.model.predict(self.df[self.input_col]), color='red', label='Ajuste')
-                ax.set_xlabel(self.input_col[0])
-                ax.set_ylabel(self.output_col)
+                ax.scatter(self.df[self.model_input], self.df[self.model_output], label='Datos')
+                ax.plot(self.df[self.model_input], self.model.predict(self.df[self.model_input]), color='red', label='Ajuste')
+                ax.set_xlabel(self.model_input[0])
+                ax.set_ylabel(self.model_output)
                 ax.set_title('Regresión Lineal')
                 ax.legend()
-                formula = f"{self.output_col} = {self.input_col[0]} * {self.model.coef_[0]} + {self.model.intercept_}"
+                formula = f"{self.model_output} = {self.model_input[0]} * {self.model.coef_[0]} + {self.model.intercept_}"
                 self.label_r2_mse.setVisible(True)
                 self.label_formula.setText(f"La fórmula del modelo es:\n{formula}")
                 self.label_formula.setVisible(True)
@@ -482,8 +483,8 @@ class CsvViewer(QMainWindow):
             model_data = {
                 "model": self.model,
                 "description": self.description_text.toPlainText(),
-                "input_columns": self.input_col,
-                "output_column": self.output_col,
+                "input_columns": self.model_input,
+                "output_column": self.model_output,
                 "r2_score": self.r2,
                 "mse": self.mse
             }
@@ -541,8 +542,8 @@ class CsvViewer(QMainWindow):
         # Mostrar los detalles del modelo cargado
         if "model" in model_data:
             self.model = model_data["model"]
-            self.input_col = model_data["input_columns"]
-            self.output_col = model_data["output_column"]
+            self.model_input = model_data["input_columns"]
+            self.model_output = model_data["output_column"]
             r2_score = model_data.get("r2_score", "N/A")
             mse = model_data.get("mse", "N/A")
             description = model_data.get("description", "No hay descripción disponible.")
@@ -550,7 +551,7 @@ class CsvViewer(QMainWindow):
             # Generar fórmula
             coefs = self.model.coef_
             intercept = self.model.intercept_
-            formula = f"{self.output_col} = " + " + ".join(f"{coef:.4f} * {col}" for coef, col in zip(coefs, self.input_col)) + f" + {intercept:.4f}"
+            formula = f"{self.model_output} = " + " + ".join(f"{coef:.4f} * {col}" for coef, col in zip(coefs, self.model_input)) + f" + {intercept:.4f}"
     
             # Actualizar etiquetas
             self.label_formula.setText(f"Fórmula del Modelo: {formula}")
