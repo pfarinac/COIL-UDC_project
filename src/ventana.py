@@ -11,6 +11,7 @@ from PyQt6.QtGui import QColor
 from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from data import Data
 
  
 
@@ -65,16 +66,7 @@ class CsvViewer(QMainWindow):
        
         #self.setStyleSheet("background-color: lightblue;")
 
-        self.viewer_title = QLabel("Visualización de los datos")
-        self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
-        
-        self.table_widget = QTableWidget()
-        self.table_widget.setFixedSize(1180, 500)
-        self.load_button = QPushButton("Abrir")
-        self.load_button.setFixedSize(60, 30)
-
-        #self.load_button.setStyleSheet("background-color: green; color: black;")
-        self.load_button.clicked.connect(self.load_file)
+   
 
         # Crear un área de scroll
         scroll_area = QScrollArea()
@@ -83,12 +75,7 @@ class CsvViewer(QMainWindow):
         scroll_area.setFrameShape(QFrame.Shape.NoFrame)
         
         # Layout auxiliar 
-        layoutaux = QHBoxLayout()
-        layoutaux.addWidget(self.load_button)
-        layoutaux.setContentsMargins(0,20,0,20)
-        layout_data= QVBoxLayout()
-        layout_data.addWidget(self.table_widget)
-        layout_data.setContentsMargins(0,0,0,20)
+
         # Layout auxiliar horizontal selectores
         layout_select = QHBoxLayout()
         layout_entrad = QVBoxLayout()
@@ -98,8 +85,7 @@ class CsvViewer(QMainWindow):
         layout_entrad.setContentsMargins(0,20,20,20)
         layout_salid.setContentsMargins(20,20,0,20)
         # Añadir etiqueta para mostrar la ruta del archivo
-        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
-        layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+
 
         # Botón de carga de modelo
         self.load_model_button = QPushButton("Cargar Modelo")
@@ -107,15 +93,18 @@ class CsvViewer(QMainWindow):
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         
         # Añadir el botón al layout
-        layoutaux.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
+        #layoutaux.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
 
         self.inout_title = QLabel("Elija las columnas de entrada y salida")
         self.inout_title.setStyleSheet("font-size: 20px; font-weight: bold;")
 
         # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
-        layout.addWidget(self.viewer_title)
-        layout.addLayout(layoutaux)
+        data = Data()
+        
+        layout_data = data.get_layout()
+        data.load_button.clicked.connect(data.load_file)
+        layout_data.update()
         layout.addLayout(layout_data)
         layout.addWidget(self.inout_title)
         layout_select.addLayout(layout_entrad)
@@ -285,27 +274,7 @@ class CsvViewer(QMainWindow):
             QMessageBox.information(self,"Información", message)
             self.habilitar_botones_preprocesado(True)  
 
-    def load_file(self):
-        file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "",
-                                                    "CSV Files (*.csv);;Excel Files (*.xlsx);;SQLite Files (*.sqlite);;All Files (*)")
-        try:
-            if file_name:
-                # Mostrar la ruta del archivo en la etiqueta
-                self.file_path_label.setText(f"Ruta del archivo: {file_name}")
 
-                if file_name.endswith('.csv'):
-                    self.df = pd.read_csv(file_name)
-                elif file_name.endswith('.xlsx'):
-                    self.df = pd.read_excel(file_name)
-                elif file_name.endswith('.sqlite'):
-                    self.load_sqlite(file_name)
-                else:
-                    QMessageBox.warning(self, "Advertencia", "Formato de archivo no soportado.")
-                    return
-                self.update_table()  # Actualizamos la tabla al cargar el archivo
-                self.mostrar_columnas()
-        except Exception as e:
-            QMessageBox.warning(self,"Error",f"Error al leer el archivo: {str(e)}")
 
  
     def load_sqlite(self, file_name):
