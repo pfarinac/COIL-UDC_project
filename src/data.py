@@ -5,9 +5,13 @@ from PyQt6.QtCore import QStandardPaths,Qt
 import pandas as pd
 from PyQt6.QtGui import QColor
 import sqlite3
+from preprocesado import Preprocess
 class Data():
-    def __init__(self) -> None:
-        self.layout = QVBoxLayout()
+    def __init__(self,df) -> None:
+        self._layout = QVBoxLayout()
+        self.df = df
+        self.p = Preprocess(self.df)
+        self.p_layout = self.p.get_layout()
         self.inicializarUI()
     def inicializarUI(self):
         self.viewer_title = QLabel("Visualización de los datos")
@@ -21,22 +25,57 @@ class Data():
         #self.load_button.setStyleSheet("background-color: green; color: black;")
         self.load_button.clicked.connect(self.load_file)
 
-        self.layout.addWidget(self.viewer_title)
-        self.layout.addWidget(self.load_button)
-        self.layout.addWidget(self.table_widget)
+        self._layout.addWidget(self.viewer_title)
+        self._layout.addWidget(self.load_button)
+        self._layout.addWidget(self.table_widget)
 
 
         self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
-        self.layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+        self._layout.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
         self.features_list = QListWidget()
         self.target_combo = QListWidget()
 
-        self.layout.setContentsMargins(0,20,0,20)
+        self._layout.setContentsMargins(0,20,0,20)
 
+        layout_entrad = QVBoxLayout()
+        layout_salid = QVBoxLayout()
+
+        layout_aux = QHBoxLayout()
+
+        self._layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        layout_entrad.setContentsMargins(0,20,20,20)
+        layout_salid.setContentsMargins(20,20,0,20)
+
+        # Selector para columnas de entrada (features)
+        self.features_label = QLabel("Selecciona las columnas de entrada (features):")
+        layout_entrad.addWidget(self.features_label)
+        self.features_list.setFixedSize(245, 60)
+        self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        layout_entrad.addWidget(self.features_list)
+                
+        # Selector único para la columna de salida
+        self.target_label = QLabel("Selecciona la columna de salida (target):")
+        layout_salid.addWidget(self.target_label)
+        self.target_combo.setFixedSize(215, 60)
+        self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
+        layout_salid.addWidget(self.target_combo)
+            
+            # Botón para confimar la selección de las columnas 
+        self.confirm = QPushButton("Confirmar selección")
+        self.confirm.setFixedSize(150, 25)
+        self.input_col = [] # Lista con las columnas de entrada
+        self.output_col = [] # Variable str que contiene la columna de salida
+        self.features_list.clicked.connect(self.registrar_input)
+        self.confirm.clicked.connect(self.almacenar)
+        layout_aux.addLayout(layout_entrad)
+        layout_aux.addLayout(layout_salid)
+        layout_aux.addWidget(self.confirm)
+        self._layout.addLayout(layout_aux)
+        self._layout.addLayout(self.p_layout)
 
     def get_layout(self):
-        return self.layout
+        return self._layout
     
     def load_file(self):
         print("prueba")
@@ -92,7 +131,29 @@ class Data():
         query = "SELECT name FROM sqlite_master WHERE type='table';"
         tables = pd.read_sql_query(query, conn)
         if tables.empty:
-            QMessageBox.warning(self, "Advertencia", "No se encontraron tablas en la base de datos SQLite.")
+            QMessageBox.warning(None, "Advertencia", "No se encontraron tablas en la base de datos SQLite.")
+
+    def registrar_input(self):
+
+            input_col_text = self.features_list.currentItem().text()
+            if input_col_text in self.input_col:
+                self.input_col.remove(input_col_text)
+            else:
+                self.input_col.append(input_col_text)
+                self.p_layout.setEnabled(False)
+
+
+        # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
+    def almacenar(self):
+
+            self.output_col = self.target_combo.currentItem().text()
+            #self.model_description = self.description_text.toPlainText()
+            if self.output_col == [] or self.input_col == []:
+                QMessageBox.warning(None,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
+            else:
+                message = "Tu seleccion se ha guardado correactamente.\n"
+                QMessageBox.information(None,"Información",message)
+                self.p_layout.setEnabled(False)
 
 if __name__=="__main__":
     data=Data()
