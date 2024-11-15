@@ -12,6 +12,7 @@ from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from data import Data
+from entrada_salida import Input_Output
 
  
 
@@ -77,13 +78,7 @@ class CsvViewer(QMainWindow):
         # Layout auxiliar 
 
         # Layout auxiliar horizontal selectores
-        layout_select = QHBoxLayout()
-        layout_entrad = QVBoxLayout()
-        layout_salid = QVBoxLayout()
 
-        layout_select.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        layout_entrad.setContentsMargins(0,20,20,20)
-        layout_salid.setContentsMargins(20,20,0,20)
         # Añadir etiqueta para mostrar la ruta del archivo
 
 
@@ -94,50 +89,26 @@ class CsvViewer(QMainWindow):
         
         # Añadir el botón al layout
         #layoutaux.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
-
         self.inout_title = QLabel("Elija las columnas de entrada y salida")
         self.inout_title.setStyleSheet("font-size: 20px; font-weight: bold;")
 
+
         # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
-        data = Data()
+        self.data = Data()
+        self.in_out = Input_Output()
         
-        layout_data = data.get_layout()
-        data.load_button.clicked.connect(data.load_file)
-        layout_data.update()
+        layout_data = self.data.get_layout()
+        layout_in_out =  self.in_out.get_layout()
         layout.addLayout(layout_data)
         layout.addWidget(self.inout_title)
-        layout_select.addLayout(layout_entrad)
-        layout_select.addLayout(layout_salid)
-        layout.addLayout(layout_select)
+        layout.addLayout(layout_in_out)
+        layout.addWidget(self.inout_title)
         layout.addWidget(self.load_model_button)
         layout.addWidget(self.prediction_area)
         layout.addWidget(self.predict_button)
 
-        # Selector para columnas de entrada (features)
-        self.features_label = QLabel("Selecciona las columnas de entrada (features):")
-        layout_entrad.addWidget(self.features_label)
-        self.features_list = QListWidget()
-        self.features_list.setFixedSize(245, 60)
-        self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
-        layout_entrad.addWidget(self.features_list)
-             
-        # Selector único para la columna de salida
-        self.target_label = QLabel("Selecciona la columna de salida (target):")
-        layout_salid.addWidget(self.target_label)
-        self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(215, 60)
-        self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
-        layout_salid.addWidget(self.target_combo)
-        
-        # Botón para confimar la selección de las columnas 
-        self.confirm = QPushButton("Confirmar selección")
-        self.confirm.setFixedSize(150, 25)
-        self.input_col = [] # Lista con las columnas de entrada
-        self.output_col = [] # Variable str que contiene la columna de salida
-        self.features_list.clicked.connect(self.registrar_input)
-        self.confirm.clicked.connect(self.almacenar)
-        layout_select.addWidget(self.confirm)
+
        
         self.prep_title = QLabel("Preprocesado de datos")
         self.prep_title.setStyleSheet("font-size: 20px; font-weight: bold;")
@@ -243,93 +214,7 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.save_button,alignment=Qt.AlignmentFlag.AlignCenter)    
 
 
-    # Función para registrar las columnas de entrada
-    def registrar_input(self):
 
-        input_col_text = self.features_list.currentItem().text()
-        if input_col_text in self.input_col:
-            self.input_col.remove(input_col_text)
-        else:
-            self.input_col.append(input_col_text)
-            self.habilitar_botones_preprocesado(False)
-
-   
-    def habilitar_botones_preprocesado(self, habilitar):
-        self.btn_count_nulls.setEnabled(habilitar)
-        self.btn_remove_nulls.setEnabled(habilitar)
-        self.btn_replace_nulls_mean.setEnabled(habilitar)
-        self.btn_replace_nulls_median.setEnabled(habilitar)
-        self.btn_replace_nulls_value.setEnabled(habilitar)
-
-
-    # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
-    def almacenar(self):
-
-        self.output_col = self.target_combo.currentItem().text()
-        self.model_description = self.description_text.toPlainText()
-        if self.output_col == [] or self.input_col == []:
-            QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
-        else:
-            message = "Tu seleccion se ha guardado correactamente.\n"
-            QMessageBox.information(self,"Información", message)
-            self.habilitar_botones_preprocesado(True)  
-
-
-
- 
-    def load_sqlite(self, file_name):
-
-        conn = sqlite3.connect(file_name)
-
-        # Obtener el nombre de la primera tabla en la base de datos
-        query = "SELECT name FROM sqlite_master WHERE type='table';"
-        tables = pd.read_sql_query(query, conn)
-        if tables.empty:
-            QMessageBox.warning(self, "Advertencia", "No se encontraron tablas en la base de datos SQLite.")
-
-    # Función para mostrar columnas en la tabla
-    def mostrar_columnas(self):
-        if self.df is not None:
-        # Poblar los selectores con las columnas del DataFrame
-            self.features_list.clear()  # Limpiar lista anterior
-            self.features_list.addItems(self.df.columns)  # Añadir las columnas al selector de características
-            self.target_combo.clear()  # Limpiar la selección anterior del target
-            self.target_combo.addItems(self.df.columns)  # Añadir las columnas al combo de target
-        else:
-            QMessageBox.warning(self, "Advertencia", "No hay un archivo cargado.")
-
-   
-    def update_table(self):
-        self.table_widget.setRowCount(self.df.shape[0])
-        self.table_widget.setColumnCount(self.df.shape[1])
-        self.table_widget.setHorizontalHeaderLabels(self.df.columns)
-
-        for i in range(self.df.shape[0]):
-            for j in range(self.df.shape[1]):
-                value = self.df.iat[i, j]
-                table_item = QTableWidgetItem(str(value))
-                # Si el valor es NaN, lo detectamos y coloreamos la celda
-                if pd.isna(value):
-                    table_item.setBackground(QColor("yellow"))  # Resaltar la celda en amarillo
-                self.table_widget.setItem(i, j, table_item)
-
- 
-
-    def execute_action(self):
-        action = self.action_combo_box.currentText()
-        
-        if action == "Contar Valores Nulos":
-            self.count_nulls()
-        elif action == "Eliminar Filas con Nulos":
-            self.remove_nulls()
-        elif action == "Reemplazar Nulos por Media":
-            self.replace_nulls_with_mean()
-        elif action == "Reemplazar Nulos por Mediana":
-            self.replace_nulls_with_median()
-        elif action == "Reemplazar Nulos por Valor":
-            self.replace_nulls_with_value()
-        else:
-            QMessageBox.warning(self, "Advertencia", "Por favor, selecciona una acción válida.")
 
 
     def count_nulls(self):

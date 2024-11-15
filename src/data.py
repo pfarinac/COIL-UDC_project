@@ -5,7 +5,7 @@ from PyQt6.QtCore import QStandardPaths,Qt
 import pandas as pd
 from PyQt6.QtGui import QColor
 import sqlite3
-class Data:
+class Data():
     def __init__(self) -> None:
         self.layout = QVBoxLayout()
         self.inicializarUI()
@@ -40,7 +40,7 @@ class Data:
     
     def load_file(self):
         print("prueba")
-        file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "",
+        file_name, _ = QFileDialog.getOpenFileName(None, "Abrir CSV/XLSX/SQLite", "",
                                                     "CSV Files (*.csv);;Excel Files (*.xlsx);;SQLite Files (*.sqlite);;All Files (*)")
         try:
             if file_name:
