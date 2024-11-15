@@ -51,6 +51,9 @@ class Preprocess:
         self.constant_input.setPlaceholderText("Valor constante")
         options_layout.addWidget(self.constant_input)
 
+        self.output_col = None
+        self.input_col = None
+
         self._layout.setEnabled(False)
     def count_nulls(self):
 
@@ -61,8 +64,8 @@ class Preprocess:
             null_counts = self.df[columns_to_process].isnull().sum()
             # Crear el mensaje con el conteo de valores nulos por cada columna
             null_info = "\n".join([f"{col}: {count}" for col, count in null_counts.items()])
-            QMessageBox.information(self, "Valores Nulos", f"Cantidad de valores nulos por columna:\n{null_info}")
-            self.model_button.setEnabled(True)
+            QMessageBox.information(None, "Valores Nulos", f"Cantidad de valores nulos por columna:\n{null_info}")
+            #self.model_button.setEnabled(True)
         else:
             QMessageBox.warning(None, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
@@ -74,10 +77,10 @@ class Preprocess:
             original_shape = self.df.shape
             self.df.dropna(subset=columns_to_process, inplace=True)
             self.update_table()
-            QMessageBox.information(self, "Filas Eliminadas", f"Se eliminaron {original_shape[0] - self.df.shape[0]} filas con valores nulos en las columnas seleccionadas.")
+            QMessageBox.information(None, "Filas Eliminadas", f"Se eliminaron {original_shape[0] - self.df.shape[0]} filas con valores nulos en las columnas seleccionadas.")
             self.model_button.setEnabled(True)
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(None, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
     def replace_nulls_with_mean(self):
 
@@ -90,10 +93,10 @@ class Preprocess:
                     mean_value = self.df[col].mean()
                     self.df[col].fillna(mean_value, inplace=True)
             self.update_table()
-            QMessageBox.information(self, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la media de las columnas seleccionadas.")
+            QMessageBox.information(None, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la media de las columnas seleccionadas.")
             self.model_button.setEnabled(True)
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(None, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
  
     def replace_nulls_with_median(self):
@@ -106,10 +109,10 @@ class Preprocess:
                     median_value = self.df[col].median()
                     self.df[col].fillna(median_value, inplace=True)
             self.update_table()
-            QMessageBox.information(self, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la mediana de las columnas seleccionadas.")
+            QMessageBox.information(None, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la mediana de las columnas seleccionadas.")
             self.model_button.setEnabled(True)
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(None, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
 
     def replace_nulls_with_value(self):
 
@@ -121,13 +124,20 @@ class Preprocess:
                 for col in columns_to_process:
                     if self.df[col].isnull().any():
                         self.df[col].fillna(value, inplace=True)
-                self.update_table()
+                self.d.update_table()
                 QMessageBox.information(self, "Valores Reemplazados", f"Los valores nulos han sido reemplazados por '{value}' en las columnas seleccionadas.")
-                self.model_button.setEnabled(True)
+                #self.model_button.setEnabled(True)
             else:
-                QMessageBox.warning(self, "Advertencia", "Por favor, ingrese un valor válido para reemplazar los nulos.")
+                QMessageBox.warning(None, "Advertencia", "Por favor, ingrese un valor válido para reemplazar los nulos.")
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(None, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+        
+    def update_dataframe(self, df):
+        """Método para actualizar el DataFrame en esta clase."""
+        self.df = df
+    def update_cols(self,input_col, output_col):
+        self.input_col = input_col  
+        self.output_col = output_col
 
     def get_layout(self):
         return self._layout

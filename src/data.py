@@ -9,7 +9,7 @@ from preprocesado import Preprocess
 class Data():
     def __init__(self,df) -> None:
         self._layout = QVBoxLayout()
-        self.df = df
+        self.df = []
         self.p = Preprocess(self.df)
         self.p_layout = self.p.get_layout()
         self.inicializarUI()
@@ -123,6 +123,7 @@ class Data():
                 if pd.isna(value):
                     table_item.setBackground(QColor("yellow"))  # Resaltar la celda en amarillo
                 self.table_widget.setItem(i, j, table_item)
+        self.p.update_dataframe(self.df)
     def load_sqlite(self, file_name):
 
         conn = sqlite3.connect(file_name)
@@ -141,6 +142,7 @@ class Data():
             else:
                 self.input_col.append(input_col_text)
                 self.p_layout.setEnabled(False)
+            
 
 
         # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
@@ -154,6 +156,7 @@ class Data():
                 message = "Tu seleccion se ha guardado correactamente.\n"
                 QMessageBox.information(None,"Información",message)
                 self.p_layout.setEnabled(False)
+                self.p.update_cols(self.input_col, self.output_col)
 
 if __name__=="__main__":
     data=Data()

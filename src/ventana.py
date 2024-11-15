@@ -20,7 +20,7 @@ class CsvViewer(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.df = None  # DataFrame para almacenar el archivo cargado
+        self.df =  None
         self.model = None
         self.inputs = []
         self.inicializarUI()
