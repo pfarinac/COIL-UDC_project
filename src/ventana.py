@@ -453,7 +453,7 @@ class CsvViewer(QMainWindow):
             else:
                 QMessageBox.warning(self, "Error", "Debes seleccionar una única columna de entrada para poder mostrar la gráfica")
             self.label_r2_mse.setVisible(True)
-            self.label_formula.setText(f"La fórmula del modelo es:\n{self.formula()}")
+            self.label_formula.setText(f"La fórmula del modelo es:\n{self.formula(self.input_col,self.output_col)}")
             self.label_formula.setVisible(True)
             self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
             self.canvas.draw()
@@ -465,7 +465,7 @@ class CsvViewer(QMainWindow):
             self.btn_replace_nulls_value.setEnabled(False)
             self.model_button.setEnabled(False)
             self.predict_button.setEnabled(True)
-
+            self.enable_prediction()
     # Método para guardar el modelo y sus metadatos en un archivo .joblib
     def save_model(self):
         
@@ -505,7 +505,7 @@ class CsvViewer(QMainWindow):
                 # Mostrar mensaje de error si el archivo es inválido
                 QMessageBox.warning(self, "Error al Cargar Modelo", f"No se pudo cargar el modelo: {str(e)}")
 
-    def display_loaded_model(self, model_data):
+    def display_loaded_model(self, model_data,):
         # Ocultar secciones de carga de datos y selección de columnas
         self.table_widget.hide()
         self.features_label.hide()
@@ -541,13 +541,10 @@ class CsvViewer(QMainWindow):
             mse = model_data.get("mse", "N/A")
             description = model_data.get("description", "No hay descripción disponible.")
 
-            # Generar fórmula
-            coefs = self.model.coef_
-            intercept = self.model.intercept_
-            formula = f"{self.model_output} = " + " + ".join(f"{coef:.4f} * {col}" for coef, col in zip(coefs, self.model_input)) + f" + {intercept:.4f}"
+            
     
             # Actualizar etiquetas
-            self.label_formula.setText(f"Fórmula del Modelo: {formula}")
+            self.label_formula.setText(f"Fórmula del Modelo: {self.formula(self.model_input,self.model_output)}")
             self.label_r2_mse.setText(f"R²: {r2_score}  |  MSE: {mse}")
             self.description_text.setText(description)    
 
@@ -584,10 +581,10 @@ class CsvViewer(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Error en Predicción", f"Error durante la predicción: {e}")
 
-    def formula(self):
-            formula = f"{self.output_col} = "
-            for i in range(len(self.input_col)):
-                formula += f"{self.input_col[i]}  *  {self.model.coef_[i]}  +  "
+    def formula(self, input_col,output_col):
+            formula = f"{output_col} = "
+            for i in range(len(input_col)):
+                formula += f"{input_col[i]}  *  {self.model.coef_[i]}  +  "
             formula += f" {self.model.intercept_}"
             return formula
 
