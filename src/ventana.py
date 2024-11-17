@@ -449,16 +449,15 @@ class CsvViewer(QMainWindow):
                 ax.set_ylabel(self.model_output)
                 ax.set_title('Regresión Lineal')
                 ax.legend()
+                self.canvas.setVisible(True)
             else:
                 QMessageBox.warning(self, "Error", "Debes seleccionar una única columna de entrada para poder mostrar la gráfica")
-            formula = f"{self.model_output} = {self.model_input[0]} * {self.model.coef_[0]} + {self.model.intercept_}"
             self.label_r2_mse.setVisible(True)
-            self.label_formula.setText(f"La fórmula del modelo es:\n{formula}")
+            self.label_formula.setText(f"La fórmula del modelo es:\n{self.formula()}")
             self.label_formula.setVisible(True)
             self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
             self.canvas.draw()
             self.save_button.setEnabled(True)  # Habilitar el botón de guardado después de crear el modelo
-            self.canvas.setVisible(True)
             self.btn_count_nulls.setEnabled(False)
             self.btn_remove_nulls.setEnabled(False)
             self.btn_replace_nulls_mean.setEnabled(False)
@@ -584,6 +583,13 @@ class CsvViewer(QMainWindow):
             QMessageBox.warning(self, "Entrada Incorrecta", str(ve))
         except Exception as e:
             QMessageBox.critical(self, "Error en Predicción", f"Error durante la predicción: {e}")
+
+    def formula(self):
+            formula = f"{self.output_col} = "
+            for i in range(len(self.input_col)):
+                formula += f"{self.input_col[i]}  *  {self.model.coef_[i]}  +  "
+            formula += f" {self.model.intercept_}"
+            return formula
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
