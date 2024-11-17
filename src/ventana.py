@@ -20,7 +20,7 @@ class CsvViewer(QMainWindow):
         super().__init__()
         self.df = None  # DataFrame para almacenar el archivo cargado
         self.model = None
-        self.inputs = []
+        self.input_fields = {}
         self.inicializarUI()
 
     def inicializarUI(self):
@@ -32,31 +32,9 @@ class CsvViewer(QMainWindow):
        
         layout = QVBoxLayout()
 
-        # Botón para cargar modelo
-        self.load_model_button = QPushButton("Cargar Modelo")
-        self.load_model_button.clicked.connect(self.load_model)
-        layout.addWidget(self.load_model_button)
-
-        # Área de predicción
-        self.prediction_area = QWidget()
-        self.prediction_layout = QVBoxLayout()
         
-        layout.addWidget(self.prediction_area)
 
-        # Botón de predicción
-        self.predict_button = QPushButton("Realizar Predicción")
-        self.predict_button.setEnabled(False)  # Deshabilitado hasta que un modelo esté disponible
-        self.predict_button.clicked.connect(self.make_prediction)
-        layout.addWidget(self.predict_button)
-
-        self.output_label = QLabel("Salida del Modelo:")
-        self.prediction_layout.addWidget(self.output_label)
-
-        # Mensaje de error
-        self.error_message = QLabel("")
-        self.prediction_layout.addWidget(self.error_message)
-
-        self.prediction_area.setLayout(self.prediction_layout)
+    
 
         container = QWidget()
         container.setLayout(layout)
@@ -122,8 +100,6 @@ class CsvViewer(QMainWindow):
         layout_select.addLayout(layout_salid)
         layout.addLayout(layout_select)
         layout.addWidget(self.load_model_button)
-        layout.addWidget(self.prediction_area)
-        layout.addWidget(self.predict_button)
 
         # Selector para columnas de entrada (features)
         self.features_label = QLabel("Selecciona las columnas de entrada (features):")
@@ -246,13 +222,30 @@ class CsvViewer(QMainWindow):
         scroll_area.setWidget(container)
         self.setCentralWidget(scroll_area)
 
+        
         # Botón para guardar el modelo
         self.save_button = QPushButton("Guardar Modelo")
         self.save_button.setFixedSize(150, 30)
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_model)
-        layout.addWidget(self.save_button,alignment=Qt.AlignmentFlag.AlignCenter)    
+        layout.addWidget(self.save_button) 
 
+        # Área de predicción
+        self.prediction_area = QWidget()
+        self.prediction_layout = QVBoxLayout()
+        self.prediction_area.setLayout(self.prediction_layout)
+        layout.addWidget(self.prediction_area)
+
+        # Botón de predicción
+        self.predict_button = QPushButton("Realizar Predicción")
+        self.predict_button.setEnabled(False)  # Deshabilitado inicialmente
+        self.predict_button.clicked.connect(self.make_prediction)
+        layout.addWidget(self.predict_button)
+        
+        # Área para mostrar el resultado de la predicción
+        self.result_label = QLabel("")
+        layout.addWidget(self.result_label)
+        
 
     # Función para registrar las columnas de entrada
     def registrar_input(self):
@@ -456,16 +449,16 @@ class CsvViewer(QMainWindow):
                 ax.set_ylabel(self.model_output)
                 ax.set_title('Regresión Lineal')
                 ax.legend()
-                formula = f"{self.model_output} = {self.model_input[0]} * {self.model.coef_[0]} + {self.model.intercept_}"
-                self.label_r2_mse.setVisible(True)
-                self.label_formula.setText(f"La fórmula del modelo es:\n{formula}")
-                self.label_formula.setVisible(True)
-                self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
-                self.canvas.draw()
-                self.save_button.setEnabled(True)  # Habilitar el botón de guardado después de crear el modelo
-                self.canvas.setVisible(True)
             else:
                 QMessageBox.warning(self, "Error", "Debes seleccionar una única columna de entrada para poder mostrar la gráfica")
+            formula = f"{self.model_output} = {self.model_input[0]} * {self.model.coef_[0]} + {self.model.intercept_}"
+            self.label_r2_mse.setVisible(True)
+            self.label_formula.setText(f"La fórmula del modelo es:\n{formula}")
+            self.label_formula.setVisible(True)
+            self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
+            self.canvas.draw()
+            self.save_button.setEnabled(True)  # Habilitar el botón de guardado después de crear el modelo
+            self.canvas.setVisible(True)
             self.btn_count_nulls.setEnabled(False)
             self.btn_remove_nulls.setEnabled(False)
             self.btn_replace_nulls_mean.setEnabled(False)
@@ -508,6 +501,7 @@ class CsvViewer(QMainWindow):
                 self.display_loaded_model(loaded_model_data)
                 # Mostrar mensaje de confirmación de carga
                 QMessageBox.information(self, "Modelo Cargado", "El modelo ha sido cargado exitosamente.")
+                self.enable_prediction()
             except Exception as e:
                 # Mostrar mensaje de error si el archivo es inválido
                 QMessageBox.warning(self, "Error al Cargar Modelo", f"No se pudo cargar el modelo: {str(e)}")
@@ -558,52 +552,38 @@ class CsvViewer(QMainWindow):
             self.label_r2_mse.setText(f"R²: {r2_score}  |  MSE: {mse}")
             self.description_text.setText(description)    
 
- 
-    def load_model_predict(self):
-        try:
-            model_path, _ = QFileDialog.getOpenFileName(self, "Seleccionar Modelo", "", "Model Files (*.pkl *.joblib)")
-            if model_path:
-                self.model = joblib.load(model_path)
-                self.update_input_fields()
-                self.predict_button.setEnabled(True)
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudo cargar el modelo: {str(e)}")
-            self.traceback.print_exc()
+    
+    def enable_prediction(self):
+        # Habilita la funcionalidad de predicción cuando un modelo está disponible
+        if self.model:
+            self.predict_button.setEnabled(True)
+            self.generate_input_fields()
 
-    def update_input_fields(self):
-        # Limpiar campos de entrada previos
-        for widget in self.inputs:
-            widget.deleteLater()
-        self.inputs = []
-
-        # Suponiendo que las variables de entrada del modelo están en `self.model.feature_names_in_`
-        if hasattr(self.model, 'feature_names_in_'):
-            for feature in self.model.feature_names_in_:
-                label = QLabel(feature)
-                line_edit = QLineEdit()
-                self.prediction_layout.addWidget(label)
-                self.prediction_layout.addWidget(line_edit)
-                self.inputs.append((feature, line_edit))
-
+    def generate_input_fields(self):
+        # Genera campos de entrada dinámicos basados en las variables de entrada del modelo
+        for field_name in self.model.feature_names_in_:
+            input_label = QLabel(f"Ingrese {field_name}:")
+            input_field = QLineEdit()
+            self.prediction_layout.addWidget(input_label)
+            self.prediction_layout.addWidget(input_field)
+            self.input_fields[field_name] = input_field
     def make_prediction(self):
+        # Realizar predicción utilizando el modelo cargado o creado
         try:
-            # Obtener valores de entrada
             input_values = []
-            for feature, line_edit in self.inputs:
-                text = line_edit.text()
-                if not text:
-                    raise ValueError(f"Por favor, ingrese un valor para {feature}.")
-                input_values.append(float(text))
+            for field_name, input_field in self.input_fields.items():
+                value = input_field.text()
+                if value == "":
+                    raise ValueError(f"Por favor, ingrese un valor para {field_name}")
+                input_values.append(float(value))
 
-            # Realizar predicción
-            prediction = self.model.predict([input_values])[0]
-            self.output_label.setText(f"Salida del Modelo: {prediction:.2f}")
-            self.error_message.setText("")  # Limpiar errores
+            # Realizar la predicción
+            prediction = self.model.predict([input_values])
+            self.result_label.setText(f"Resultado de la Predicción: {prediction[0]:.4f}")
         except ValueError as ve:
-            self.error_message.setText(str(ve))
+            QMessageBox.warning(self, "Entrada Incorrecta", str(ve))
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Ocurrió un error en la predicción: {str(e)}")
-   
+            QMessageBox.critical(self, "Error en Predicción", f"Error durante la predicción: {e}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
