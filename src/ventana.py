@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog,
 QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
 QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit,QFrame)
 from PyQt6.QtCore import QStandardPaths,Qt
+from PyQt6.QtGui import QFont
 import sys
 import pandas as pd
 import sqlite3
@@ -11,6 +12,7 @@ from PyQt6.QtGui import QColor
 from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from PyQt6.QtWidgets import QHeaderView
 
  
 
@@ -40,8 +42,6 @@ class CsvViewer(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
        
-       
-        #self.setStyleSheet("background-color: lightblue;")
 
         self.viewer_title = QLabel("Visualización de los datos")
         self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
@@ -49,7 +49,7 @@ class CsvViewer(QMainWindow):
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1180, 500)
         self.load_button = QPushButton("Abrir")
-        self.load_button.setFixedSize(60, 30)
+        self.load_button.setFixedSize(60, 39)
 
         #self.load_button.setStyleSheet("background-color: green; color: black;")
         self.load_button.clicked.connect(self.load_file)
@@ -81,7 +81,7 @@ class CsvViewer(QMainWindow):
 
         # Botón de carga de modelo
         self.load_model_button = QPushButton("Cargar Modelo")
-        self.load_model_button.setFixedSize(150, 25)
+        self.load_model_button.setFixedSize(123, 44)
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         
         # Añadir el botón al layout
@@ -113,13 +113,13 @@ class CsvViewer(QMainWindow):
         self.target_label = QLabel("Selecciona la columna de salida (target):")
         layout_salid.addWidget(self.target_label)
         self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(215, 60)
+        self.target_combo.setFixedSize(215, 62)
         self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         layout_salid.addWidget(self.target_combo)
         
         # Botón para confimar la selección de las columnas 
         self.confirm = QPushButton("Confirmar selección")
-        self.confirm.setFixedSize(150, 25)
+        self.confirm.setFixedSize(156, 47)
         self.input_col = [] # Lista con las columnas de entrada
         self.output_col = [] # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
@@ -181,7 +181,7 @@ class CsvViewer(QMainWindow):
 
         #Botón para iniciar el modelo de regresión lineal
         self.model_button =  QPushButton("Iniciar modelo")
-        self.model_button.setFixedSize(150, 30)
+        self.model_button.setFixedSize(150, 50)
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
         layout.addWidget(self.model_title)
@@ -225,7 +225,7 @@ class CsvViewer(QMainWindow):
         
         # Botón para guardar el modelo
         self.save_button = QPushButton("Guardar Modelo")
-        self.save_button.setFixedSize(150, 30)
+        self.save_button.setFixedSize(150, 50)
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_model)
         layout.addWidget(self.save_button) 
@@ -590,6 +590,64 @@ class CsvViewer(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyleSheet("""
+        QMainWindow {
+            background-color: #000000;  /* Fondo negro */
+        }
+        QWidget {
+            background-color: #000000;  /* Fondo negro para widget principal */
+        }
+        QLabel {
+            color: #FFFFFF;            /* Título en blanco */
+            font-size: 20px;
+            font-weight: bold;
+        }
+        QLineEdit, QTextEdit {
+            background-color: #1E1E1E; /* Gris oscuro para entrada */
+            color: #FFFFFF;            /* Texto blanco */
+            border: 1px solid #444444; /* Borde gris oscuro */
+            padding: 5px;
+            font-size: 14px;
+        }
+        QLineEdit:focus, QTextEdit:focus {
+            border: 1px solid #00C853; /* Verde vibrante al enfocar */
+        }
+        QTableWidget {
+            background-color: #1E1E1E; /* Gris oscuro para fondo de tabla */
+            color: #FFFFFF;            /* Texto blanco */
+            border: 2px solid #00C853; /* Borde verde vibrante */
+            gridline-color: #444444;   /* Líneas de cuadrícula grises */
+        }
+        QHeaderView::section {
+            background-color: #2E2E2E; /* Gris oscuro para encabezados */
+            color: #FFFFFF;            /* Texto blanco en encabezados */
+            font-weight: bold;
+            border: 1px solid #444444; /* Borde gris oscuro */
+            padding: 4px;
+        }
+        QPushButton {
+            background-color: #00C853; /* Verde vibrante */
+            color: #FFFFFF;            /* Texto blanco */
+            border: 1px solid #00E676; /* Borde verde más claro */
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        QPushButton:hover {
+            background-color: #00E676; /* Verde más claro al pasar el ratón */
+        }
+        QPushButton:pressed {
+            background-color: #00BFA5; /* Verde intenso al presionar */
+        }
+        QPushButton:disabled {
+            background-color: #555555; /* Gris oscuro para botones desactivados */
+            color: #AAAAAA;            /* Texto gris claro para botones desactivados */
+            border: 1px solid #444444; /* Borde gris más oscuro */
+        }
+    """)
+
+
     viewer = CsvViewer()
     viewer.show()
     sys.exit(app.exec())
