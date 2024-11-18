@@ -43,12 +43,12 @@ class CsvViewer(QMainWindow):
        
         #self.setStyleSheet("background-color: lightblue;")
 
-        self.viewer_title = QLabel("Visualización de los datos")
+        self.viewer_title = QLabel("Data visualization")
         self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
         
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1180, 500)
-        self.load_button = QPushButton("Abrir")
+        self.load_button = QPushButton("Open")
         self.load_button.setFixedSize(60, 30)
 
         #self.load_button.setStyleSheet("background-color: green; color: black;")
@@ -76,18 +76,18 @@ class CsvViewer(QMainWindow):
         layout_entrad.setContentsMargins(0,20,20,20)
         layout_salid.setContentsMargins(20,20,0,20)
         # Añadir etiqueta para mostrar la ruta del archivo
-        self.file_path_label = QLabel("Ruta del archivo: Ningún archivo cargado.")
+        self.file_path_label = QLabel("File path: No file uploaded.")
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
         # Botón de carga de modelo
-        self.load_model_button = QPushButton("Cargar Modelo")
+        self.load_model_button = QPushButton("Load model")
         self.load_model_button.setFixedSize(150, 25)
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         
         # Añadir el botón al layout
         layoutaux.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
 
-        self.inout_title = QLabel("Elija las columnas de entrada y salida")
+        self.inout_title = QLabel("Select input and output columns")
         self.inout_title.setStyleSheet("font-size: 20px; font-weight: bold;")
 
         # Creamos el layout principal y le añadimos los auxiliares
@@ -102,7 +102,7 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.load_model_button)
 
         # Selector para columnas de entrada (features)
-        self.features_label = QLabel("Selecciona las columnas de entrada (features):")
+        self.features_label = QLabel("Select input columns (features):")
         layout_entrad.addWidget(self.features_label)
         self.features_list = QListWidget()
         self.features_list.setFixedSize(245, 60)
@@ -110,7 +110,7 @@ class CsvViewer(QMainWindow):
         layout_entrad.addWidget(self.features_list)
              
         # Selector único para la columna de salida
-        self.target_label = QLabel("Selecciona la columna de salida (target):")
+        self.target_label = QLabel("Select output columns (target):")
         layout_salid.addWidget(self.target_label)
         self.target_combo = QListWidget()
         self.target_combo.setFixedSize(215, 60)
@@ -118,7 +118,7 @@ class CsvViewer(QMainWindow):
         layout_salid.addWidget(self.target_combo)
         
         # Botón para confimar la selección de las columnas 
-        self.confirm = QPushButton("Confirmar selección")
+        self.confirm = QPushButton("Confirm selection")
         self.confirm.setFixedSize(150, 25)
         self.input_col = [] # Lista con las columnas de entrada
         self.output_col = [] # Variable str que contiene la columna de salida
@@ -126,7 +126,7 @@ class CsvViewer(QMainWindow):
         self.confirm.clicked.connect(self.almacenar)
         layout_select.addWidget(self.confirm)
        
-        self.prep_title = QLabel("Preprocesado de datos")
+        self.prep_title = QLabel("Data preprocessing")
         self.prep_title.setStyleSheet("font-size: 20px; font-weight: bold;")
         layout.addWidget(self.prep_title)
 
@@ -134,31 +134,31 @@ class CsvViewer(QMainWindow):
         preprocesado_layout = QHBoxLayout()
 
         # Botón para contar valores nulos
-        self.btn_count_nulls = QPushButton("Contar Valores Nulos")
+        self.btn_count_nulls = QPushButton("Count null values")
         self.btn_count_nulls.setEnabled(False)
         self.btn_count_nulls.clicked.connect(self.count_nulls)
         preprocesado_layout.addWidget(self.btn_count_nulls)
 
         # Botón para eliminar filas con nulos
-        self.btn_remove_nulls = QPushButton("Eliminar Filas con Nulos")
+        self.btn_remove_nulls = QPushButton("Delete rows with nulls")
         self.btn_remove_nulls.setEnabled(False)
         self.btn_remove_nulls.clicked.connect(self.remove_nulls)
         preprocesado_layout.addWidget(self.btn_remove_nulls)
 
         # Botón para reemplazar nulos por media
-        self.btn_replace_nulls_mean = QPushButton("Reemplazar Nulos por Media")
+        self.btn_replace_nulls_mean = QPushButton("Replace nulls with mean")
         self.btn_replace_nulls_mean.setEnabled(False)
         self.btn_replace_nulls_mean.clicked.connect(self.replace_nulls_with_mean)
         preprocesado_layout.addWidget(self.btn_replace_nulls_mean)
 
         # Botón para reemplazar nulos por mediana
-        self.btn_replace_nulls_median = QPushButton("Reemplazar Nulos por Mediana")
+        self.btn_replace_nulls_median = QPushButton("Replace nulls with median")
         self.btn_replace_nulls_median.setEnabled(False)
         self.btn_replace_nulls_median.clicked.connect(self.replace_nulls_with_median)
         preprocesado_layout.addWidget(self.btn_replace_nulls_median)
 
         # Botón para reemplazar nulos por un valor específico
-        self.btn_replace_nulls_value = QPushButton("Reemplazar Nulos por Valor")
+        self.btn_replace_nulls_value = QPushButton("Replace nulls with constant value")
         self.btn_replace_nulls_value.setEnabled(False)
         self.btn_replace_nulls_value.clicked.connect(self.replace_nulls_with_value)
         preprocesado_layout.addWidget(self.btn_replace_nulls_value)
@@ -172,15 +172,15 @@ class CsvViewer(QMainWindow):
 
         # Campo para que el usuario introduzca un valor constante
         self.constant_input = QLineEdit()
-        self.constant_input.setPlaceholderText("Valor constante")
+        self.constant_input.setPlaceholderText("Constant value")
         options_layout.addWidget(self.constant_input)
 
         model_layout = QHBoxLayout()
-        self.model_title = QLabel("Visualizar e iniciar modelo")
+        self.model_title = QLabel("View and start model")
         self.model_title.setStyleSheet("font-size: 20px; font-weight: bold;")
 
         #Botón para iniciar el modelo de regresión lineal
-        self.model_button =  QPushButton("Iniciar modelo")
+        self.model_button =  QPushButton("Start model")
         self.model_button.setFixedSize(150, 30)
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
@@ -210,10 +210,10 @@ class CsvViewer(QMainWindow):
 
 
         #Campo de texto para la descripcion del modelo
-        self.description_label = QLabel("Descripcion del modelo (opcional): ")
+        self.description_label = QLabel("Model description (optional): ")
         layout.addWidget(self.description_label)
         self.description_text = QTextEdit()
-        self.description_text.setPlaceholderText("Agrega una descripcion para el modelo...")
+        self.description_text.setPlaceholderText("Add a description for the model...")
         layout.addWidget(self.description_text)
         container = QWidget()
         container.setLayout(layout)
@@ -224,7 +224,7 @@ class CsvViewer(QMainWindow):
 
         
         # Botón para guardar el modelo
-        self.save_button = QPushButton("Guardar Modelo")
+        self.save_button = QPushButton("Save Model")
         self.save_button.setFixedSize(150, 30)
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_model)
@@ -237,7 +237,7 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.prediction_area)
 
         # Botón de predicción
-        self.predict_button = QPushButton("Realizar Predicción")
+        self.predict_button = QPushButton("Make Prediction")
         self.predict_button.setEnabled(False)  # Deshabilitado inicialmente
         self.predict_button.clicked.connect(self.make_prediction)
         layout.addWidget(self.predict_button)
@@ -272,19 +272,19 @@ class CsvViewer(QMainWindow):
         self.output_col = self.target_combo.currentItem().text()
         self.model_description = self.description_text.toPlainText()
         if self.output_col == [] or self.input_col == []:
-            QMessageBox.warning(self,"Advertencia","Por favor seleccione al menos una columna de entrada y una de salida")
+            QMessageBox.warning(self,"Warning","Please select at least an input and an output column")
         else:
-            message = "Tu seleccion se ha guardado correactamente.\n"
-            QMessageBox.information(self,"Información", message)
+            message = "Your selection has been successfully saved.\n"
+            QMessageBox.information(self,"Information", message)
             self.habilitar_botones_preprocesado(True)  
 
     def load_file(self):
-        file_name, _ = QFileDialog.getOpenFileName(self, "Abrir CSV/XLSX/SQLite", "",
+        file_name, _ = QFileDialog.getOpenFileName(self, "Open CSV/XLSX/SQLite", "",
                                                     "CSV Files (*.csv);;Excel Files (*.xlsx);;SQLite Files (*.sqlite);;All Files (*)")
         try:
             if file_name:
                 # Mostrar la ruta del archivo en la etiqueta
-                self.file_path_label.setText(f"Ruta del archivo: {file_name}")
+                self.file_path_label.setText(f"File path: {file_name}")
 
                 if file_name.endswith('.csv'):
                     self.df = pd.read_csv(file_name)
@@ -293,12 +293,12 @@ class CsvViewer(QMainWindow):
                 elif file_name.endswith('.sqlite'):
                     self.load_sqlite(file_name)
                 else:
-                    QMessageBox.warning(self, "Advertencia", "Formato de archivo no soportado.")
+                    QMessageBox.warning(self, "Warning", "Unsupported file format.")
                     return
                 self.update_table()  # Actualizamos la tabla al cargar el archivo
                 self.mostrar_columnas()
         except Exception as e:
-            QMessageBox.warning(self,"Error",f"Error al leer el archivo: {str(e)}")
+            QMessageBox.warning(self,"Error",f"Error reading file: {str(e)}")
 
  
     def load_sqlite(self, file_name):
@@ -309,7 +309,7 @@ class CsvViewer(QMainWindow):
         query = "SELECT name FROM sqlite_master WHERE type='table';"
         tables = pd.read_sql_query(query, conn)
         if tables.empty:
-            QMessageBox.warning(self, "Advertencia", "No se encontraron tablas en la base de datos SQLite.")
+            QMessageBox.warning(self, "Warning", "No tables found in SQLite database.")
 
     # Función para mostrar columnas en la tabla
     def mostrar_columnas(self):
@@ -320,7 +320,7 @@ class CsvViewer(QMainWindow):
             self.target_combo.clear()  # Limpiar la selección anterior del target
             self.target_combo.addItems(self.df.columns)  # Añadir las columnas al combo de target
         else:
-            QMessageBox.warning(self, "Advertencia", "No hay un archivo cargado.")
+            QMessageBox.warning(self, "Warning", "There is no file uploaded.")
 
    
     def update_table(self):
@@ -339,22 +339,6 @@ class CsvViewer(QMainWindow):
 
  
 
-    def execute_action(self):
-        action = self.action_combo_box.currentText()
-        
-        if action == "Contar Valores Nulos":
-            self.count_nulls()
-        elif action == "Eliminar Filas con Nulos":
-            self.remove_nulls()
-        elif action == "Reemplazar Nulos por Media":
-            self.replace_nulls_with_mean()
-        elif action == "Reemplazar Nulos por Mediana":
-            self.replace_nulls_with_median()
-        elif action == "Reemplazar Nulos por Valor":
-            self.replace_nulls_with_value()
-        else:
-            QMessageBox.warning(self, "Advertencia", "Por favor, selecciona una acción válida.")
-
 
     def count_nulls(self):
 
@@ -365,10 +349,10 @@ class CsvViewer(QMainWindow):
             null_counts = self.df[columns_to_process].isnull().sum()
             # Crear el mensaje con el conteo de valores nulos por cada columna
             null_info = "\n".join([f"{col}: {count}" for col, count in null_counts.items()])
-            QMessageBox.information(self, "Valores Nulos", f"Cantidad de valores nulos por columna:\n{null_info}")
+            QMessageBox.information(self, "Null values", f"Number of null values ​​per column:\n{null_info}")
             self.model_button.setEnabled(True)
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(self, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
    
     def remove_nulls(self):
@@ -378,10 +362,10 @@ class CsvViewer(QMainWindow):
             original_shape = self.df.shape
             self.df.dropna(subset=columns_to_process, inplace=True)
             self.update_table()
-            QMessageBox.information(self, "Filas Eliminadas", f"Se eliminaron {original_shape[0] - self.df.shape[0]} filas con valores nulos en las columnas seleccionadas.")
+            QMessageBox.information(self, "Deleted Rows", f" {original_shape[0] - self.df.shape[0]} rows with null values in the selectd columns were deleted.")
             self.model_button.setEnabled(True)
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(self, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
     def replace_nulls_with_mean(self):
 
@@ -394,10 +378,10 @@ class CsvViewer(QMainWindow):
                     mean_value = self.df[col].mean()
                     self.df[col].fillna(mean_value, inplace=True)
             self.update_table()
-            QMessageBox.information(self, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la media de las columnas seleccionadas.")
+            QMessageBox.information(self, "Replaced values", "Null values ​​have been replaced by the mean of the selected columns.")
             self.model_button.setEnabled(True)
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(self, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
  
     def replace_nulls_with_median(self):
@@ -410,15 +394,15 @@ class CsvViewer(QMainWindow):
                     median_value = self.df[col].median()
                     self.df[col].fillna(median_value, inplace=True)
             self.update_table()
-            QMessageBox.information(self, "Valores Reemplazados", "Los valores nulos han sido reemplazados por la mediana de las columnas seleccionadas.")
+            QMessageBox.information(self, "Replaced values", "Null values ​​have been replaced by the median of the selected columns.")
             self.model_button.setEnabled(True)
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(self, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
     def replace_nulls_with_value(self):
 
         if self.df is not None:
-            value, ok = QInputDialog.getText(self, "Reemplazar Nulos por Valor", "Ingrese el valor para reemplazar los nulos:")
+            value, ok = QInputDialog.getText(self, "Replace nulls with constant value", "Enter the value to replace nulls:")
             if ok and value:
                 columns_to_process = self.input_col + [self.output_col]
 
@@ -426,12 +410,12 @@ class CsvViewer(QMainWindow):
                     if self.df[col].isnull().any():
                         self.df[col].fillna(value, inplace=True)
                 self.update_table()
-                QMessageBox.information(self, "Valores Reemplazados", f"Los valores nulos han sido reemplazados por '{value}' en las columnas seleccionadas.")
+                QMessageBox.information(self, "Replaced values", f"Null values has been replaced by '{value}' in the selected columns.")
                 self.model_button.setEnabled(True)
             else:
-                QMessageBox.warning(self, "Advertencia", "Por favor, ingrese un valor válido para reemplazar los nulos.")
+                QMessageBox.warning(self, "Warning", "Please enter a valid value to replace nulls.")
         else:
-            QMessageBox.warning(self, "Advertencia", "Primero debes cargar un archivo CSV, XLSX o SQLite.")
+            QMessageBox.warning(self, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
 
     # Método para crear el modelo y mostrar la gráfica
@@ -443,17 +427,17 @@ class CsvViewer(QMainWindow):
             if len(self.model_input) == 1:
                 self.figure.clear()
                 ax = self.figure.add_subplot(111)
-                ax.scatter(self.df[self.model_input], self.df[self.model_output], label='Datos')
-                ax.plot(self.df[self.model_input], self.model.predict(self.df[self.model_input]), color='red', label='Ajuste')
+                ax.scatter(self.df[self.model_input], self.df[self.model_output], label='Data')
+                ax.plot(self.df[self.model_input], self.model.predict(self.df[self.model_input]), color='red', label='Adjustment')
                 ax.set_xlabel(self.model_input[0])
                 ax.set_ylabel(self.model_output)
-                ax.set_title('Regresión Lineal')
+                ax.set_title('Lineal regression')
                 ax.legend()
                 self.canvas.setVisible(True)
             else:
-                QMessageBox.warning(self, "Error", "Debes seleccionar una única columna de entrada para poder mostrar la gráfica")
+                QMessageBox.warning(self, "Error", "You must select a single input column to be able to display the graph")
             self.label_r2_mse.setVisible(True)
-            self.label_formula.setText(f"La fórmula del modelo es:\n{self.formula(self.input_col,self.output_col)}")
+            self.label_formula.setText(f"The model formula is:\n{self.formula(self.input_col,self.output_col)}")
             self.label_formula.setVisible(True)
             self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
             self.canvas.draw()
@@ -469,7 +453,7 @@ class CsvViewer(QMainWindow):
     # Método para guardar el modelo y sus metadatos en un archivo .joblib
     def save_model(self):
         
-        file_path, _ = QFileDialog.getSaveFileName(self, "Guardar Modelo", "", "Joblib Files (*.joblib)")
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save model", "", "Joblib Files (*.joblib)")
         
         if file_path:
             model_data = {
@@ -482,13 +466,13 @@ class CsvViewer(QMainWindow):
             }
             try:
                 dump(model_data, file_path)
-                QMessageBox.information(self, "Guardado Exitoso", "El modelo se ha guardado correctamente.")
+                QMessageBox.information(self, "Saved Successfully", "The model has been saved successfully.")
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"No se pudo guardar el modelo: {str(e)}")
+                QMessageBox.critical(self, "Error", f"Could not save model: {str(e)}")
 
     def load_model(self):
         # Abrir el diálogo de selección de archivo
-        file_name, _ = QFileDialog.getOpenFileName(self, "Cargar Modelo", "", "Model Files (*.pkl *.joblib)")
+        file_name, _ = QFileDialog.getOpenFileName(self, "Load model", "", "Model Files (*.pkl *.joblib)")
 
        
 
@@ -499,11 +483,11 @@ class CsvViewer(QMainWindow):
                 # Actualizar la interfaz con la información del modelo cargado
                 self.display_loaded_model(loaded_model_data)
                 # Mostrar mensaje de confirmación de carga
-                QMessageBox.information(self, "Modelo Cargado", "El modelo ha sido cargado exitosamente.")
+                QMessageBox.information(self, "Load model", "The model has been loaded successfully.")
                 self.enable_prediction()
             except Exception as e:
                 # Mostrar mensaje de error si el archivo es inválido
-                QMessageBox.warning(self, "Error al Cargar Modelo", f"No se pudo cargar el modelo: {str(e)}")
+                QMessageBox.warning(self, "Error Loading Model", f"Could not load model: {str(e)}")
 
     def display_loaded_model(self, model_data,):
         # Ocultar secciones de carga de datos y selección de columnas
@@ -539,12 +523,12 @@ class CsvViewer(QMainWindow):
             self.model_output = model_data["output_column"]
             r2_score = model_data.get("r2_score", "N/A")
             mse = model_data.get("mse", "N/A")
-            description = model_data.get("description", "No hay descripción disponible.")
+            description = model_data.get("description", "No description available.")
 
             
     
             # Actualizar etiquetas
-            self.label_formula.setText(f"Fórmula del Modelo: {self.formula(self.model_input,self.model_output)}")
+            self.label_formula.setText(f"Model formula: {self.formula(self.model_input,self.model_output)}")
             self.label_r2_mse.setText(f"R²: {r2_score}  |  MSE: {mse}")
             self.description_text.setText(description)    
 
@@ -558,7 +542,7 @@ class CsvViewer(QMainWindow):
     def generate_input_fields(self):
         # Genera campos de entrada dinámicos basados en las variables de entrada del modelo
         for field_name in self.model.feature_names_in_:
-            input_label = QLabel(f"Ingrese {field_name}:")
+            input_label = QLabel(f"Enter {field_name}:")
             input_field = QLineEdit()
             self.prediction_layout.addWidget(input_label)
             self.prediction_layout.addWidget(input_field)
@@ -570,16 +554,16 @@ class CsvViewer(QMainWindow):
             for field_name, input_field in self.input_fields.items():
                 value = input_field.text()
                 if value == "":
-                    raise ValueError(f"Por favor, ingrese un valor para {field_name}")
+                    raise ValueError(f"Please enter a value for {field_name}")
                 input_values.append(float(value))
 
             # Realizar la predicción
             prediction = self.model.predict([input_values])
-            self.result_label.setText(f"Resultado de la Predicción: {prediction[0]:.4f}")
+            self.result_label.setText(f"Prediction result: {prediction[0]:.4f}")
         except ValueError as ve:
-            QMessageBox.warning(self, "Entrada Incorrecta", str(ve))
+            QMessageBox.warning(self, "Incorrect input", str(ve))
         except Exception as e:
-            QMessageBox.critical(self, "Error en Predicción", f"Error durante la predicción: {e}")
+            QMessageBox.critical(self, "Prediction error", f"Error during prediction: {e}")
 
     def formula(self, input_col,output_col):
             formula = f"{output_col} = "
