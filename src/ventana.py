@@ -48,13 +48,11 @@ class CsvViewer(QMainWindow):
         
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1180, 500)
-<<<<<<< HEAD
-        self.load_button = QPushButton("Abrir")
-        self.load_button.setFixedSize(60, 39)
-=======
+
+
         self.load_button = QPushButton("Open")
-        self.load_button.setFixedSize(60, 30)
->>>>>>> a3fe9c5040188ff9df5a4955fd50ea21bac00639
+        self.load_button.setFixedSize(60, 42)
+
 
         #self.load_button.setStyleSheet("background-color: green; color: black;")
         self.load_button.clicked.connect(self.load_file)
@@ -85,13 +83,10 @@ class CsvViewer(QMainWindow):
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
         # Botón de carga de modelo
-<<<<<<< HEAD
-        self.load_model_button = QPushButton("Cargar Modelo")
-        self.load_model_button.setFixedSize(123, 44)
-=======
+
         self.load_model_button = QPushButton("Load model")
-        self.load_model_button.setFixedSize(150, 25)
->>>>>>> a3fe9c5040188ff9df5a4955fd50ea21bac00639
+        self.load_model_button.setFixedSize(117, 44)
+
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         
         # Añadir el botón al layout
@@ -128,13 +123,10 @@ class CsvViewer(QMainWindow):
         layout_salid.addWidget(self.target_combo)
         
         # Botón para confimar la selección de las columnas 
-<<<<<<< HEAD
-        self.confirm = QPushButton("Confirmar selección")
-        self.confirm.setFixedSize(156, 47)
-=======
+
         self.confirm = QPushButton("Confirm selection")
-        self.confirm.setFixedSize(150, 25)
->>>>>>> a3fe9c5040188ff9df5a4955fd50ea21bac00639
+        self.confirm.setFixedSize(145, 50)
+
         self.input_col = [] # Lista con las columnas de entrada
         self.output_col = [] # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
@@ -195,13 +187,10 @@ class CsvViewer(QMainWindow):
         self.model_title.setStyleSheet("font-size: 20px; font-weight: bold;")
 
         #Botón para iniciar el modelo de regresión lineal
-<<<<<<< HEAD
-        self.model_button =  QPushButton("Iniciar modelo")
-        self.model_button.setFixedSize(150, 50)
-=======
+
         self.model_button =  QPushButton("Start model")
-        self.model_button.setFixedSize(150, 30)
->>>>>>> a3fe9c5040188ff9df5a4955fd50ea21bac00639
+        self.model_button.setFixedSize(135, 40)
+
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
         layout.addWidget(self.model_title)
@@ -244,13 +233,10 @@ class CsvViewer(QMainWindow):
 
         
         # Botón para guardar el modelo
-<<<<<<< HEAD
-        self.save_button = QPushButton("Guardar Modelo")
-        self.save_button.setFixedSize(150, 50)
-=======
+
         self.save_button = QPushButton("Save Model")
-        self.save_button.setFixedSize(150, 30)
->>>>>>> a3fe9c5040188ff9df5a4955fd50ea21bac00639
+        self.save_button.setFixedSize(135, 40)
+
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_model)
         layout.addWidget(self.save_button) 
