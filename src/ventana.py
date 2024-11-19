@@ -640,7 +640,34 @@ if __name__ == "__main__":
             color: #AAAAAA;            /* Texto gris claro para botones desactivados */
             border: 1px solid #444444; /* Borde gris más oscuro */
         }
+        QListWidget {
+            background-color: #2E2E2E; /* Gris oscuro para fondo */
+            color: #FFFFFF;            /* Texto blanco */
+            border: 2px solid #00C853; /* Borde verde vibrante */
+            padding: 5px;
+        }
+        QListWidget::item {
+            color: #FFFFFF;            /* Texto blanco */
+            padding: 4px;
+        }
+        QListWidget::item:selected {
+            background-color: #00C853; /* Verde para elemento seleccionado */
+            color: #000000;            /* Texto negro en selección */
+        }
+        QScrollBar:vertical {
+            background: #1E1E1E;       /* Fondo oscuro */
+            width: 10px;
+        }
+        QScrollBar::handle:vertical {
+            background: #00C853;       /* Verde para el scroll */
+            min-height: 20px;
+        }
+        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+            background: none;          /* Sin flechas */
+        }
     """)
+
+  
 
 
     viewer = CsvViewer()
