@@ -548,6 +548,7 @@ class CsvViewer(QMainWindow):
         self.canvas.hide()
         self.label_formula.setVisible(True)
         self.label_r2_mse.setVisible(True)
+        self.result_label.setVisible(False)
         
         # Mostrar los detalles del modelo cargado
         if "model" in model_data:
@@ -593,6 +594,7 @@ class CsvViewer(QMainWindow):
 
             # Realizar la predicción
             prediction = self.model.predict([input_values])
+            self.result_label.setVisible(True)
             if self.model_output == None:
                 self.result_label.setText(f"Prediction result ({self.output_col}): {prediction[0]:.4f}")
             else:
