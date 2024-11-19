@@ -46,12 +46,15 @@ class CsvViewer(QMainWindow):
         self.viewer_title = QLabel("Data visualization")
         self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
         
+        layout.addSpacing(15)
+        
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1180, 500)
 
 
         self.load_button = QPushButton("Open")
         self.load_button.setFixedSize(60, 42)
+        layout.addSpacing(10)
 
 
         #self.load_button.setStyleSheet("background-color: green; color: black;")
@@ -80,12 +83,15 @@ class CsvViewer(QMainWindow):
         layout_salid.setContentsMargins(20,20,0,20)
         # Añadir etiqueta para mostrar la ruta del archivo
         self.file_path_label = QLabel("File path: No file uploaded.")
+        self.file_path_label.setStyleSheet("font-size: 16px; font-weight: bold;")
         layoutaux.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
 
         # Botón de carga de modelo
 
         self.load_model_button = QPushButton("Load model")
         self.load_model_button.setFixedSize(117, 44)
+        layout.addSpacing(10)
+
 
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         
@@ -93,7 +99,9 @@ class CsvViewer(QMainWindow):
         layoutaux.addWidget(self.load_model_button, alignment=Qt.AlignmentFlag.AlignRight)
 
         self.inout_title = QLabel("Select input and output columns")
-        self.inout_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.inout_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout.addSpacing(-5)
+   
 
         # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
@@ -108,17 +116,19 @@ class CsvViewer(QMainWindow):
 
         # Selector para columnas de entrada (features)
         self.features_label = QLabel("Select input columns (features):")
+        self.features_label.setStyleSheet("font-size: 16px;")  # Subtítulo más pequeño
         layout_entrad.addWidget(self.features_label)
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(245, 60)
+        self.features_list.setFixedSize(240, 60)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout_entrad.addWidget(self.features_list)
              
         # Selector único para la columna de salida
         self.target_label = QLabel("Select output columns (target):")
+        self.target_label.setStyleSheet("font-size: 16px;")
         layout_salid.addWidget(self.target_label)
         self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(215, 62)
+        self.target_combo.setFixedSize(240, 60)
         self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         layout_salid.addWidget(self.target_combo)
         
@@ -134,8 +144,9 @@ class CsvViewer(QMainWindow):
         layout_select.addWidget(self.confirm)
        
         self.prep_title = QLabel("Data preprocessing")
-        self.prep_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
         layout.addWidget(self.prep_title)
+        layout.addSpacing(5)
 
         # Layout para botones de preprocesado
         preprocesado_layout = QHBoxLayout()
@@ -184,8 +195,10 @@ class CsvViewer(QMainWindow):
 
         model_layout = QHBoxLayout()
         self.model_title = QLabel("View and start model")
-        self.model_title.setStyleSheet("font-size: 20px; font-weight: bold;")
-
+        self.model_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout.addWidget(self.model_title)
+        layout.addSpacing(-5)
+       
         #Botón para iniciar el modelo de regresión lineal
 
         self.model_button =  QPushButton("Start model")
@@ -220,12 +233,14 @@ class CsvViewer(QMainWindow):
 
         #Campo de texto para la descripcion del modelo
         self.description_label = QLabel("Model description (optional): ")
+        self.description_label.setStyleSheet("font-size: 18px; font-weight: bold;")
         layout.addWidget(self.description_label)
         self.description_text = QTextEdit()
         self.description_text.setPlaceholderText("Add a description for the model...")
         layout.addWidget(self.description_text)
         container = QWidget()
         container.setLayout(layout)
+        layout.addSpacing(20)
 
         self.setCentralWidget(container)
         scroll_area.setWidget(container)
@@ -252,6 +267,7 @@ class CsvViewer(QMainWindow):
         self.predict_button.setEnabled(False)  # Deshabilitado inicialmente
         self.predict_button.clicked.connect(self.make_prediction)
         layout.addWidget(self.predict_button)
+        layout.addSpacing(10)
         
         # Área para mostrar el resultado de la predicción
         self.result_label = QLabel("")
