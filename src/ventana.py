@@ -41,8 +41,7 @@ class CsvViewer(QMainWindow):
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
-        scroll_area.setWidget(container)
-        self.setCentralWidget(scroll_area)
+        
 
         self.viewer_title = QLabel("Data visualization")
         self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
@@ -58,15 +57,7 @@ class CsvViewer(QMainWindow):
         
         
         
-        # Creamos el layout principal y le añadimos los auxiliares
-        layout = QVBoxLayout()
-        layout.addWidget(self.viewer_title)
-        layout.addLayout(layout_open_load)
-        layout.addLayout(layout_tabla)
-        layout.addLayout(layout_entrada_salida_preprocesado)
-        layout.addLayout(layout_visualizar_iniciar_modelo)
-        layout.addLayout(layout_guardarmodelo_prediccion)
-        layout.addLayout(layout_mostrar_prediccion)
+        
 
 
 
@@ -96,7 +87,7 @@ class CsvViewer(QMainWindow):
 
         
         # Layout tabla
-        layout_tabla= QHBoxLayout()
+        layout_tabla = QHBoxLayout()
         # Añadir etiqueta para mostrar la tabla
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1500, 500)
@@ -105,18 +96,45 @@ class CsvViewer(QMainWindow):
         layout_tabla.setContentsMargins(0,20,0,0)
 
         
+        # Layout entrada
+        layout_entrada = QVBoxLayout()
+        # Añadir etiqueta para el titulo
+        self.features_label = QLabel("Select input columns (features):")
+        self.features_label.setStyleSheet("font-size: 16px;")
+        layout_entrada.addWidget(self.features_label)
+        # Añadir etiqueta para la seleccion de columnas de entrada
+        self.features_list = QListWidget()
+        self.features_list.setFixedSize(240, 90)
+        self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        layout_entrada.addWidget(self.features_list)
+        # Añadir boton confirmar seleccion
+        self.confirm = QPushButton("Confirm selection")
+        self.confirm.setFixedSize(145, 50)
+        self.input_col = [] # Lista con las columnas de entrada
+        self.output_col = [] # Variable str que contiene la columna de salida
+        self.features_list.clicked.connect(self.registrar_input)
+        self.confirm.clicked.connect(self.almacenar)
+        layout_entrada.addWidget(self.confirm)
+        # Limites layout entrada
+        layout_entrada.setContentsMargins(0,20,20,0)
         
-        
-        
-        # Layout principal entrada y salida y preprocesado
-        layout_entrada_salida_preprocesado = QHBoxLayout
-        #Añadir layout entrada_salida
-        layout_entrada_salida_preprocesado.addLayout(layout_entrada_salida)
-        # Añadir layout preprocesado
-        layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)        
-        # Limites layout principal entrada y salida y preprocesado       
-        layout_entrada_salida_preprocesado.setContentsMargins(0,20,0,0)
 
+
+
+
+        # Layout salida
+        layout_salida = QVBoxLayout()
+        # Añadir etiqueta para el titulo
+        self.target_label = QLabel("Select output columns (target):")
+        self.target_label.setStyleSheet("font-size: 16px;")
+        layout_salida.addWidget(self.target_label)
+        # Añadir etiqueta para la seleccion de columna de salida
+        self.target_combo = QListWidget()
+        self.target_combo.setFixedSize(240, 90)
+        self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
+        layout_salida.addWidget(self.target_combo)
+        # Limites layout salida
+        layout_salida.setContentsMargins(20,20,0,0)
         
         
         # Layout secundario entrada y salida
@@ -133,79 +151,19 @@ class CsvViewer(QMainWindow):
         layout_entrada_salida.setContentsMargins(0,20,20,20)
         
         
-
-
-        # Layout entrada
-        layout_entrada = QVBoxLayout()
-        # Añadir etiqueta para el titulo
-        self.features_label = QLabel("Select input columns (features):")
-        self.features_label.setStyleSheet("font-size: 16px;")
-        layout_entrada.addWidget(self.features_label)
-        # Añadir etiqueta para la seleccion de columnas de entrada
-        self.features_list = QListWidget()
-        self.features_list.setFixedSize(240, 90)
-        self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
-        layout_entrada.addWidget(self.features_list)
-        # Añadir boton confirmar seleccion
-        self.confirm = QPushButton("Confirm selection")
-        self.confirm.setFixedSize(145, 50)
-        self.confirm.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.input_col = [] # Lista con las columnas de entrada
-        self.output_col = [] # Variable str que contiene la columna de salida
-        self.features_list.clicked.connect(self.registrar_input)
-        self.confirm.clicked.connect(self.almacenar)
-        layout_entrada.addWidget(self.confirm)
-        # Limites layout entrada
-        layout_entrada.setContentsMargins(0,20,20,0)
-
         
         
-        
-        # Layout salida
-        layout_salida = QVBoxLayout()
-        # Añadir etiqueta para el titulo
-        self.target_label = QLabel("Select output columns (target):")
-        self.target_label.setStyleSheet("font-size: 16px;")
-        layout_salida.addWidget(self.target_label)
-        # Añadir etiqueta para la seleccion de columna de salida
-        self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(240, 90)
-        self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
-        layout_salida.addWidget(self.target_combo)
-        # Limites layout salida
-        layout_salida.setContentsMargins(20,20,0,0)
-
-
-
-        
-        
-        # Layout secundario preprocesado
-        layout_preprocesado = QHBoxLayout()
-        layout_preprocesado.setAlignment(Qt.AlignmentFlag.AlignRight)
-        # Añadir etiqueta con el titulo
-        self.prep_title = QLabel("Data preprocessing")
-        self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
-        layout.addWidget(self.prep_title)
-        # Añadir layouts individuales botones count null values y resto de botones
-        layout_preprocesado.addLayout(layout_count_nulls)
-        layout_preprocesado.addLayout(layout_nulls_buttons)
-
-
-        
-    
         # Layout boton contar valores nulos
-        layout_count_nulls = QHBoxLayout
+        layout_count_nulls = QHBoxLayout()
         # Añadit boton para contar valores nulos
         self.btn_count_nulls = QPushButton("Count null values")
         self.btn_count_nulls.setEnabled(False)
         self.btn_count_nulls.clicked.connect(self.count_nulls)
         layout_count_nulls.addWidget(self.btn_count_nulls)
         
-
         
-
         # Layout resto de botones para nulos
-        layout_nulls_buttons = QHBoxLayout
+        layout_nulls_buttons = QHBoxLayout()
         # Añadir los diversos botones
         # Eliminar filas con nulos
         self.btn_remove_nulls = QPushButton("Delete rows with nulls")
@@ -227,29 +185,37 @@ class CsvViewer(QMainWindow):
         self.btn_replace_nulls_value.setEnabled(False)
         self.btn_replace_nulls_value.clicked.connect(self.replace_nulls_with_value)
         layout_nulls_buttons.addWidget(self.btn_replace_nulls_value)
-
-
-
-
-
-
-
-
-        
-
-       
-             
-        
-     
         
         
-       
-    
+
+
+        # Layout secundario preprocesado
+        layout_preprocesado = QHBoxLayout()
+        layout_preprocesado.setAlignment(Qt.AlignmentFlag.AlignRight)
+        # Añadir etiqueta con el titulo
+        self.prep_title = QLabel("Data preprocessing")
+        self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout.addWidget(self.prep_title)
+        # Añadir layouts individuales botones count null values y resto de botones
+        layout_preprocesado.addLayout(layout_count_nulls)
+        layout_preprocesado.addLayout(layout_nulls_buttons)
+        
+        
+        
+        
+        
+        # Layout principal entrada y salida y preprocesado
+        layout_entrada_salida_preprocesado = QHBoxLayout()
+        #Añadir layout entrada_salida
+        layout_entrada_salida_preprocesado.addLayout(layout_entrada_salida)
+        # Añadir layout preprocesado
+        layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)        
+        # Limites layout principal entrada y salida y preprocesado       
+        layout_entrada_salida_preprocesado.setContentsMargins(0,20,0,0)
 
         
-       
+   
 
-        
 
         # Layout horizontal para las opciones de manejo de NaN
         options_layout = QHBoxLayout()
@@ -258,7 +224,30 @@ class CsvViewer(QMainWindow):
         self.constant_input.setPlaceholderText("Constant value")
         options_layout.addWidget(self.constant_input)
 
-        
+        # Layout formula modelo
+        layout_formula = QVBoxLayout() 
+        # Añadir formula
+        self.label_formula = QLabel("")
+        self.label_formula.setVisible(False)
+        self.label_r2_mse = QLabel("")
+        self.label_r2_mse.setVisible(False)
+        self.label_formula.setStyleSheet("font-weight: bold;")
+        self.label_r2_mse.setStyleSheet("font-weight: bold;")
+        layout_formula.addWidget(self.label_formula)
+        # Añadir formula (2)
+        layout_formula.addWidget(self.label_r2_mse,alignment= Qt.AlignmentFlag.AlignTop)
+
+        # Layout decripcion del modelo
+        layout_descripcion_modelo = QVBoxLayout()
+        layout_descripcion_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        # Añadir etiqueta con el titulo
+        self.description_label = QLabel("Model description (optional): ")
+        self.description_label.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout_descripcion_modelo.addWidget(self.description_label)
+        # Añadir etiqueta para escribir descripcion
+        self.description_text = QTextEdit()
+        self.description_text.setPlaceholderText("Add a description for the model...")
+        layout_descripcion_modelo.addWidget(self.description_text)
         
         # Layout visualizar e iniciar modelo
         layout_visualizar_iniciar_modelo = QHBoxLayout()
@@ -288,39 +277,18 @@ class CsvViewer(QMainWindow):
 
         
         
-        # Layout formula modelo
-        layout_formula = QVBoxLayout() 
-        # Añadir formula
-        self.label_formula = QLabel("")
-        self.label_formula.setVisible(False)
-        self.label_r2_mse = QLabel("")
-        self.label_r2_mse.setVisible(False)
-        self.label_formula.setStyleSheet("font-weight: bold;")
-        self.label_r2_mse.setStyleSheet("font-weight: bold;")
-        layout_formula.addWidget(self.label_formula)
-        # Añadir formula (2)
-        layout_formula.addWidget(self.label_r2_mse,alignment= Qt.AlignmentFlag.AlignTop)
+        
         
         
 
-        # Layout decripcion del modelo
-        layout_descripcion_modelo = QVBoxLayout
-        layout_descripcion_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        # Añadir etiqueta con el titulo
-        self.description_label = QLabel("Model description (optional): ")
-        self.description_label.setStyleSheet("font-size: 18px; font-weight: bold;")
-        layout_descripcion_modelo.addWidget(self.description_label)
-        # Añadir etiqueta para escribir descripcion
-        self.description_text = QTextEdit()
-        self.description_text.setPlaceholderText("Add a description for the model...")
-        layout_descripcion_modelo.addWidget(self.description_text)
+       
         
         
         
         
         
         # Layout botones guardar modelo y hacer prediccion
-        layout_guardarmodelo_prediccion = QHBoxLayout
+        layout_guardarmodelo_prediccion = QHBoxLayout()
         layout_guardarmodelo_prediccion.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # Añadir boton guardar modelo
         self.save_button = QPushButton("Save Model")
@@ -340,7 +308,7 @@ class CsvViewer(QMainWindow):
         
        
         #Layout mostrar prediccion
-        layout_mostrar_prediccion = QVBoxLayout
+        layout_mostrar_prediccion = QVBoxLayout()
         layout_mostrar_prediccion.setAlignment(Qt.AlignmentFlag.AlignLeft)
         # Área de predicción
         self.prediction_area = QWidget()
@@ -353,7 +321,15 @@ class CsvViewer(QMainWindow):
         
 
     
-    
+        # Creamos el layout principal y le añadimos los auxiliares
+        layout = QVBoxLayout()
+        layout.addWidget(self.viewer_title)
+        layout.addLayout(layout_open_load)
+        layout.addLayout(layout_tabla)
+        layout.addLayout(layout_entrada_salida_preprocesado)
+        layout.addLayout(layout_visualizar_iniciar_modelo)
+        layout.addLayout(layout_guardarmodelo_prediccion)
+        layout.addLayout(layout_mostrar_prediccion)
     
     
     
@@ -687,90 +663,86 @@ class CsvViewer(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyleSheet("""
-        QMainWindow {
-            background-color: #000000;  /* Fondo negro */
-        }
-        QWidget {
-            background-color: #000000;  /* Fondo negro para widget principal */
-        }
-        QLabel {
-            color: #FFFFFF;            /* Título en blanco */
-            font-size: 20px;
-            font-weight: bold;
-        }
-        QLineEdit, QTextEdit {
-            background-color: #1E1E1E; /* Gris oscuro para entrada */
-            color: #FFFFFF;            /* Texto blanco */
-            border: 1px solid #444444; /* Borde gris oscuro */
-            padding: 5px;
-            font-size: 14px;
-        }
-        QLineEdit:focus, QTextEdit:focus {
-            border: 1px solid #00C853; /* Verde vibrante al enfocar */
-        }
-        QTableWidget {
-            background-color: #1E1E1E; /* Gris oscuro para fondo de tabla */
-            color: #FFFFFF;            /* Texto blanco */
-            border: 2px solid #00C853; /* Borde verde vibrante */
-            gridline-color: #444444;   /* Líneas de cuadrícula grises */
-        }
-        QHeaderView::section {
-            background-color: #2E2E2E; /* Gris oscuro para encabezados */
-            color: #FFFFFF;            /* Texto blanco en encabezados */
-            font-weight: bold;
-            border: 1px solid #444444; /* Borde gris oscuro */
-            padding: 4px;
-        }
-        QPushButton {
-            background-color: #00C853; /* Verde vibrante */
-            color: #FFFFFF;            /* Texto blanco */
-            border: 1px solid #00E676; /* Borde verde más claro */
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        QPushButton:hover {
-            background-color: #00E676; /* Verde más claro al pasar el ratón */
-        }
-        QPushButton:pressed {
-            background-color: #00BFA5; /* Verde intenso al presionar */
-        }
-        QPushButton:disabled {
-            background-color: #555555; /* Gris oscuro para botones desactivados */
-            color: #AAAAAA;            /* Texto gris claro para botones desactivados */
-            border: 1px solid #444444; /* Borde gris más oscuro */
-        }
-        QListWidget {
-            background-color: #2E2E2E; /* Gris oscuro para fondo */
-            color: #FFFFFF;            /* Texto blanco */
-            border: 2px solid #00C853; /* Borde verde vibrante */
-            padding: 5px;
-        }
-        QListWidget::item {
-            color: #FFFFFF;            /* Texto blanco */
-            padding: 4px;
-        }
-        QListWidget::item:selected {
-            background-color: #00C853; /* Verde para elemento seleccionado */
-            color: #000000;            /* Texto negro en selección */
-        }
-        QScrollBar:vertical {
-            background: #1E1E1E;       /* Fondo oscuro */
-            width: 10px;
-        }
-        QScrollBar::handle:vertical {
-            background: #00C853;       /* Verde para el scroll */
-            min-height: 20px;
-        }
-        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
-            background: none;          /* Sin flechas */
-        }
+    QMainWindow {
+        background-color: #000000;  /* Fondo negro */
+    }
+    QWidget {
+        background-color: #000000;  /* Fondo negro para widget principal */
+    }
+    QLabel {
+        color: #FFFFFF;            /* Título en blanco */
+        font-size: 20px;
+        font-weight: bold;
+    }
+    QLineEdit, QTextEdit {
+        background-color: #1E1E1E; /* Gris oscuro para entrada */
+        color: #FFFFFF;            /* Texto blanco */
+        border: 1px solid #444444; /* Borde gris oscuro */
+        padding: 5px;
+        font-size: 14px;
+    }
+    QLineEdit:focus, QTextEdit:focus {
+        border: 1px solid #00C853; /* Verde vibrante al enfocar */
+    }
+    QTableWidget {
+        background-color: #1E1E1E; /* Gris oscuro para fondo de tabla */
+        color: #FFFFFF;            /* Texto blanco */
+        border: 2px solid #00C853; /* Borde verde vibrante */
+        gridline-color: #444444;   /* Líneas de cuadrícula grises */
+    }
+    QHeaderView::section {
+        background-color: #2E2E2E; /* Gris oscuro para encabezados */
+        color: #FFFFFF;            /* Texto blanco en encabezados */
+        font-weight: bold;
+        border: 1px solid #444444; /* Borde gris oscuro */
+        padding: 4px;
+    }
+    QPushButton {
+        background-color: #00C853; /* Verde vibrante */
+        color: #FFFFFF;            /* Texto blanco */
+        border: 1px solid #00E676; /* Borde verde más claro */
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    QPushButton:hover {
+        background-color: #00E676; /* Verde más claro al pasar el ratón */
+    }
+    QPushButton:pressed {
+        background-color: #00BFA5; /* Verde intenso al presionar */
+    }
+    QPushButton:disabled {
+        background-color: #555555; /* Gris oscuro para botones desactivados */
+        color: #AAAAAA;            /* Texto gris claro para botones desactivados */
+        border: 1px solid #444444; /* Borde gris más oscuro */
+    }
+    QListWidget {
+        background-color: #2E2E2E; /* Gris oscuro para fondo */
+        color: #FFFFFF;            /* Texto blanco */
+        border: 2px solid #00C853; /* Borde verde vibrante */
+        padding: 5px;
+    }
+    QListWidget::item {
+        color: #FFFFFF;            /* Texto blanco */
+        padding: 4px;
+    }
+    QListWidget::item:selected {
+        background-color: #00C853; /* Verde para elemento seleccionado */
+        color: #000000;            /* Texto negro en selección */
+    }
+    QScrollBar:vertical {
+        background: #1E1E1E;       /* Fondo oscuro */
+        width: 10px;
+    }
+    QScrollBar::handle:vertical {
+        background: #00C853;       /* Verde para el scroll */
+        min-height: 20px;
+    }
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+        background: none;          /* Sin flechas */
+    }
     """)
-
-  
-
-
     viewer = CsvViewer()
     viewer.show()
     sys.exit(app.exec())
