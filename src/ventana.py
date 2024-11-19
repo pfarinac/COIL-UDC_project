@@ -23,6 +23,7 @@ class CsvViewer(QMainWindow):
         self.df = None  # DataFrame para almacenar el archivo cargado
         self.model = None
         self.input_fields = {}
+        self.input_labels = {}
         self.inicializarUI()
 
     def inicializarUI(self):
@@ -447,6 +448,8 @@ class CsvViewer(QMainWindow):
 
     # Método para crear el modelo y mostrar la gráfica
     def start_model(self):
+        # Limpiar campos de entrada anteriores antes de iniciar un nuevo modelo
+        self.reset_input_fields()
         self.model_input = self.input_col.copy()
         self.model_output = self.output_col
         if self.df is not None and self.model_input and self.model_output:
@@ -504,7 +507,9 @@ class CsvViewer(QMainWindow):
        
 
         if file_name:
-            try:
+            try:   
+                # Limpiar campos de entrada anteriores antes de iniciar un nuevo modelo
+                self.reset_input_fields()
                 # Cargar el modelo desde el archivo
                 loaded_model_data = joblib.load(file_name)
                 # Actualizar la interfaz con la información del modelo cargado
@@ -574,6 +579,7 @@ class CsvViewer(QMainWindow):
             self.prediction_layout.addWidget(input_label)
             self.prediction_layout.addWidget(input_field)
             self.input_fields[field_name] = input_field
+            self.input_labels[field_name] = input_label
     def make_prediction(self):
         # Realizar predicción utilizando el modelo cargado o creado
         try:
@@ -586,7 +592,10 @@ class CsvViewer(QMainWindow):
 
             # Realizar la predicción
             prediction = self.model.predict([input_values])
-            self.result_label.setText(f"Prediction result: {prediction[0]:.4f}")
+            if self.model_output == None:
+                self.result_label.setText(f"Prediction result ({self.output_col}): {prediction[0]:.4f}")
+            else:
+                self.result_label.setText(f"Prediction result ({self.model_output}): {prediction[0]:.4f}")
         except ValueError as ve:
             QMessageBox.warning(self, "Incorrect input", str(ve))
         except Exception as e:
@@ -598,6 +607,13 @@ class CsvViewer(QMainWindow):
                 formula += f"{input_col[i]}  *  {self.model.coef_[i]}  +  "
             formula += f" {self.model.intercept_}"
             return formula
+    def reset_input_fields(self):
+    # Eliminar todos los campos de entrada actuales
+        for field in self.input_labels.values():
+            field.deleteLater()
+        for field in self.input_fields.values():
+            field.deleteLater()
+        self.input_fields.clear()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
