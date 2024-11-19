@@ -49,7 +49,7 @@ class CsvViewer(QMainWindow):
         layout.addSpacing(15)
         
         self.table_widget = QTableWidget()
-        self.table_widget.setFixedSize(1180, 500)
+        self.table_widget.setFixedSize(1500, 500)
 
 
         self.load_button = QPushButton("Open")
@@ -119,7 +119,7 @@ class CsvViewer(QMainWindow):
         self.features_label.setStyleSheet("font-size: 16px;")  # Subtítulo más pequeño
         layout_entrad.addWidget(self.features_label)
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(240, 60)
+        self.features_list.setFixedSize(240, 90)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout_entrad.addWidget(self.features_list)
              
@@ -128,7 +128,7 @@ class CsvViewer(QMainWindow):
         self.target_label.setStyleSheet("font-size: 16px;")
         layout_salid.addWidget(self.target_label)
         self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(240, 60)
+        self.target_combo.setFixedSize(240, 90)
         self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         layout_salid.addWidget(self.target_combo)
         
@@ -264,6 +264,7 @@ class CsvViewer(QMainWindow):
 
         # Botón de predicción
         self.predict_button = QPushButton("Make Prediction")
+        self.predict_button.setFixedSize(135, 40)
         self.predict_button.setEnabled(False)  # Deshabilitado inicialmente
         self.predict_button.clicked.connect(self.make_prediction)
         layout.addWidget(self.predict_button)
@@ -361,7 +362,7 @@ class CsvViewer(QMainWindow):
                 table_item = QTableWidgetItem(str(value))
                 # Si el valor es NaN, lo detectamos y coloreamos la celda
                 if pd.isna(value):
-                    table_item.setBackground(QColor("yellow"))  # Resaltar la celda en amarillo
+                    table_item.setBackground(QColor("red"))  # Resaltar la celda en amarillo
                 self.table_widget.setItem(i, j, table_item)
 
  
