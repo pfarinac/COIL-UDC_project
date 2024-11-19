@@ -38,9 +38,7 @@ class CsvViewer(QMainWindow):
 
     
 
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
+        
         
 
         self.viewer_title = QLabel("Data visualization")
@@ -50,10 +48,6 @@ class CsvViewer(QMainWindow):
 
       
 
-        # Crear un área de scroll
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
         
         
         
@@ -332,7 +326,14 @@ class CsvViewer(QMainWindow):
         layout.addLayout(layout_mostrar_prediccion)
     
     
-    
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+        
+        # Crear un área de scroll
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
     
     
     # Función para registrar las columnas de entrada
