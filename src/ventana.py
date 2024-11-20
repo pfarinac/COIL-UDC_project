@@ -47,19 +47,18 @@ class CsvViewer(QMainWindow):
         self.load_button.setFixedSize(60, 44)
         layout_open_load.addWidget(self.load_button)
         self.load_button.clicked.connect(self.load_file) # Conectar el boton a la funcion
+        # Añadir etiqueta para mostrar la ruta del archivo
+        self.file_path_label = QLabel("File path: No file uploaded.")
+        self.file_path_label.setStyleSheet("font-size: 16px; font-weight: bold;")
+        layout_open_load.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
         # Añadir botón de carga de modelo
         self.load_model_button = QPushButton("Load model")
         self.load_model_button.setFixedSize(120, 44)
         layout_open_load.addWidget(self.load_model_button)
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
-        # Añadir etiqueta para mostrar la ruta del archivo
-        self.file_path_label = QLabel("File path: No file uploaded.")
-        self.file_path_label.setStyleSheet("font-size: 16px; font-weight: bold;")
-        layout_open_load.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
-
         
         self.table_widget = QTableWidget()
-        self.table_widget.setFixedSize(1230, 300)
+        self.table_widget.setFixedSize(1490, 300)
         
         # Layout entrada y salida
         layout_entrada_salida = QVBoxLayout()
@@ -82,7 +81,7 @@ class CsvViewer(QMainWindow):
 
         # Añadir etiqueta para la seleccion de columnas de entrada
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(300, 90)
+        self.features_list.setFixedSize(405, 90)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout_entrada.addWidget(self.features_list)
 
@@ -94,7 +93,7 @@ class CsvViewer(QMainWindow):
         layout_salida.addWidget(self.target_label)
         # Añadir etiqueta para la seleccion de columna de salida
         self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(300, 90)
+        self.target_combo.setFixedSize(405, 90)
         self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         layout_salida.addWidget(self.target_combo)
         
@@ -102,6 +101,8 @@ class CsvViewer(QMainWindow):
         layout_selectores.addLayout(layout_entrada)
         layout_selectores.addLayout(layout_salida)
         layout_entrada_salida.addLayout(layout_selectores)
+
+        layout_entrada_salida.setContentsMargins(0,20,0,0)
         
         self.confirm = QPushButton("Confirm selection")
         self.confirm.setFixedSize(145, 50)
@@ -114,7 +115,7 @@ class CsvViewer(QMainWindow):
         # Layout secundario preprocesado
         layout_preprocesado = QVBoxLayout()
         layout_preprocesado.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        layout_preprocesado.setContentsMargins(0, 0, 100, 0)
+        layout_preprocesado.setContentsMargins(5, 20, 0, 0)
 
         # Añadir etiqueta con el titulo
         self.prep_title = QLabel("Data preprocessing")
@@ -122,7 +123,7 @@ class CsvViewer(QMainWindow):
         layout_preprocesado.addWidget(self.prep_title)
 
         self.btn_count_nulls = QPushButton("Count null values")
-        self.btn_count_nulls.setFixedSize(145, 40)
+        self.btn_count_nulls.setFixedSize(645, 40)
         self.btn_count_nulls.setEnabled(False)
         self.btn_count_nulls.clicked.connect(self.count_nulls)
         layout_preprocesado.addWidget(self.btn_count_nulls)
@@ -131,23 +132,25 @@ class CsvViewer(QMainWindow):
         layout_nulls_buttons = QGridLayout()
         # Eliminar filas con nulos
         self.btn_remove_nulls = QPushButton("Delete rows with nulls")
-        self.btn_remove_nulls.setFixedSize(300, 40)
+        self.btn_remove_nulls.setFixedSize(320, 40)
         self.btn_remove_nulls.setEnabled(False)
         self.btn_remove_nulls.clicked.connect(self.remove_nulls)
         layout_nulls_buttons.addWidget(self.btn_remove_nulls, 0, 0)
         # Reemplazar nulos por media
         self.btn_replace_nulls_mean = QPushButton("Replace nulls with mean")
-        self.btn_replace_nulls_mean.setFixedSize(300, 40)
+        self.btn_replace_nulls_mean.setFixedSize(320, 40)
         self.btn_replace_nulls_mean.setEnabled(False)
         self.btn_replace_nulls_mean.clicked.connect(self.replace_nulls_with_mean)
         layout_nulls_buttons.addWidget(self.btn_replace_nulls_mean, 0, 1)
         # Reemplazar nulos por mediana
         self.btn_replace_nulls_median = QPushButton("Replace nulls with median")
+        self.btn_replace_nulls_median.setFixedSize(320, 40)
         self.btn_replace_nulls_median.setEnabled(False)
         self.btn_replace_nulls_median.clicked.connect(self.replace_nulls_with_median)
         layout_nulls_buttons.addWidget(self.btn_replace_nulls_median, 1,0)
         # Reemplazar nulos por un valor específico
         self.btn_replace_nulls_value = QPushButton("Replace nulls with constant value")
+        self.btn_replace_nulls_value.setFixedSize(320, 40)
         self.btn_replace_nulls_value.setEnabled(False)
         self.btn_replace_nulls_value.clicked.connect(self.replace_nulls_with_value)
         layout_nulls_buttons.addWidget(self.btn_replace_nulls_value, 1,1)
@@ -158,7 +161,8 @@ class CsvViewer(QMainWindow):
         # Layout principal entrada y salida y preprocesado
         layout_entrada_salida_preprocesado = QHBoxLayout()
         layout_entrada_salida_preprocesado.addLayout(layout_entrada_salida)
-        layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)        
+        layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)      
+        layout_entrada_salida_preprocesado.setContentsMargins(0,20,0,0)
 
         # Layout formula modelo
         layout_formula = QVBoxLayout() 
@@ -259,8 +263,8 @@ class CsvViewer(QMainWindow):
         layout.addWidget(self.table_widget)
         layout.addLayout(layout_entrada_salida_preprocesado)
         layout.addLayout(layout_visualizar_iniciar_modelo)
-        layout.addLayout(layout_guardarmodelo_prediccion)
         layout.addLayout(layout_mostrar_prediccion)
+        layout.addLayout(layout_guardarmodelo_prediccion)
     
     
         container = QWidget()
