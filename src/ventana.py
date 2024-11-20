@@ -13,6 +13,10 @@ from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt6.QtWidgets import QHeaderView
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+
 
  
 
@@ -28,67 +32,43 @@ class CsvViewer(QMainWindow):
     def inicializarUI(self):
 
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
-        self.setGeometry(100, 100, 1200, 700)
-
-       
-       
-        layout = QVBoxLayout()
-
-        
-
-    
-
-        
-        
-
+        self.setGeometry(100, 100, 1920, 1080)
+     
+        # Titulo principal
         self.viewer_title = QLabel("Data visualization")
         self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
-        
-        layout.addSpacing(15)
-
-      
-
-        
-        
-        
-        
-
-
-
+        self.viewer_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         
         # Layout botones open y load
         layout_open_load = QHBoxLayout()
         # Añadir boton open
         self.load_button = QPushButton("Open")
-        self.load_button.setFixedSize(60, 42)
+        self.load_button.setFixedSize(60, 44)
         layout_open_load.addWidget(self.load_button)
         self.load_button.clicked.connect(self.load_file) # Conectar el boton a la funcion
         # Añadir botón de carga de modelo
         self.load_model_button = QPushButton("Load model")
-        self.load_model_button.setFixedSize(117, 44)
+        self.load_model_button.setFixedSize(120, 44)
         layout_open_load.addWidget(self.load_model_button)
         self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
         # Añadir etiqueta para mostrar la ruta del archivo
         self.file_path_label = QLabel("File path: No file uploaded.")
         self.file_path_label.setStyleSheet("font-size: 16px; font-weight: bold;")
         layout_open_load.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
-        # Limites del layout open y load
-        layout_open_load.setContentsMargins(0,20,0,0)
-
-
-
 
         
-        # Layout tabla
-        layout_tabla = QHBoxLayout()
-        # Añadir etiqueta para mostrar la tabla
         self.table_widget = QTableWidget()
-        self.table_widget.setFixedSize(1500, 500)
-        layout_tabla.addWidget(self.table_widget)
-        # Limites del layout de la tabla
-        layout_tabla.setContentsMargins(0,20,0,0)
-
+        self.table_widget.setFixedSize(1230, 300)
+        
+        # Layout entrada y salida
+        layout_entrada_salida = QVBoxLayout()
+        layout_entrada_salida.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        # Añadir etiqueta con el titulo
+        self.entrada_salida_titulo = QLabel("Select input and output columns")
+        self.entrada_salida_titulo.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout_entrada_salida.addWidget(self.entrada_salida_titulo)
+        layout_selectores = QHBoxLayout()
         
         # Layout entrada
         layout_entrada = QVBoxLayout()
@@ -96,25 +76,15 @@ class CsvViewer(QMainWindow):
         self.features_label = QLabel("Select input columns (features):")
         self.features_label.setStyleSheet("font-size: 16px;")
         layout_entrada.addWidget(self.features_label)
+        layout_entrada_selectores = QHBoxLayout()
+        layout_entrada_izq = QVBoxLayout()
+        layout_entrada_dcha = QVBoxLayout()
+
         # Añadir etiqueta para la seleccion de columnas de entrada
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(240, 90)
+        self.features_list.setFixedSize(300, 90)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout_entrada.addWidget(self.features_list)
-        # Añadir boton confirmar seleccion
-        self.confirm = QPushButton("Confirm selection")
-        self.confirm.setFixedSize(145, 50)
-        self.input_col = [] # Lista con las columnas de entrada
-        self.output_col = [] # Variable str que contiene la columna de salida
-        self.features_list.clicked.connect(self.registrar_input)
-        self.confirm.clicked.connect(self.almacenar)
-        layout_entrada.addWidget(self.confirm)
-        # Limites layout entrada
-        layout_entrada.setContentsMargins(0,20,20,0)
-        
-
-
-
 
         # Layout salida
         layout_salida = QVBoxLayout()
@@ -124,99 +94,71 @@ class CsvViewer(QMainWindow):
         layout_salida.addWidget(self.target_label)
         # Añadir etiqueta para la seleccion de columna de salida
         self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(240, 90)
+        self.target_combo.setFixedSize(300, 90)
         self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         layout_salida.addWidget(self.target_combo)
-        # Limites layout salida
-        layout_salida.setContentsMargins(20,20,0,0)
         
-        
-        # Layout secundario entrada y salida
-        layout_entrada_salida = QHBoxLayout()
-        layout_entrada_salida.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        # Añadir etiqueta con el titulo
-        self.entrada_salida_titulo = QLabel("Select input and output columns")
-        self.entrada_salida_titulo.setStyleSheet("font-size: 18px; font-weight: bold;")
-        layout_entrada_salida.addWidget(self.entrada_salida_titulo)
         # Añadir layouts individuales de entrada y salida
-        layout_entrada_salida.addLayout(layout_entrada)
-        layout_entrada_salida.addLayout(layout_salida)
-         # Limites layout entrada_salida
-        layout_entrada_salida.setContentsMargins(0,20,20,20)
+        layout_selectores.addLayout(layout_entrada)
+        layout_selectores.addLayout(layout_salida)
+        layout_entrada_salida.addLayout(layout_selectores)
         
+        self.confirm = QPushButton("Confirm selection")
+        self.confirm.setFixedSize(145, 50)
+        self.input_col = [] # Lista con las columnas de entrada
+        self.output_col = [] # Variable str que contiene la columna de salida
+        self.features_list.clicked.connect(self.registrar_input)
+        self.confirm.clicked.connect(self.almacenar)
+        layout_entrada_salida.addWidget(self.confirm)        
         
-        
-        
-        # Layout boton contar valores nulos
-        layout_count_nulls = QHBoxLayout()
-        # Añadit boton para contar valores nulos
+        # Layout secundario preprocesado
+        layout_preprocesado = QVBoxLayout()
+        layout_preprocesado.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        layout_preprocesado.setContentsMargins(0, 0, 100, 0)
+
+        # Añadir etiqueta con el titulo
+        self.prep_title = QLabel("Data preprocessing")
+        self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout_preprocesado.addWidget(self.prep_title)
+
         self.btn_count_nulls = QPushButton("Count null values")
+        self.btn_count_nulls.setFixedSize(145, 40)
         self.btn_count_nulls.setEnabled(False)
         self.btn_count_nulls.clicked.connect(self.count_nulls)
-        layout_count_nulls.addWidget(self.btn_count_nulls)
-        
+        layout_preprocesado.addWidget(self.btn_count_nulls)
         
         # Layout resto de botones para nulos
-        layout_nulls_buttons = QHBoxLayout()
-        # Añadir los diversos botones
+        layout_nulls_buttons = QGridLayout()
         # Eliminar filas con nulos
         self.btn_remove_nulls = QPushButton("Delete rows with nulls")
+        self.btn_remove_nulls.setFixedSize(300, 40)
         self.btn_remove_nulls.setEnabled(False)
         self.btn_remove_nulls.clicked.connect(self.remove_nulls)
-        layout_nulls_buttons.addWidget(self.btn_remove_nulls)
+        layout_nulls_buttons.addWidget(self.btn_remove_nulls, 0, 0)
         # Reemplazar nulos por media
         self.btn_replace_nulls_mean = QPushButton("Replace nulls with mean")
+        self.btn_replace_nulls_mean.setFixedSize(300, 40)
         self.btn_replace_nulls_mean.setEnabled(False)
         self.btn_replace_nulls_mean.clicked.connect(self.replace_nulls_with_mean)
-        layout_nulls_buttons.addWidget(self.btn_replace_nulls_mean)
+        layout_nulls_buttons.addWidget(self.btn_replace_nulls_mean, 0, 1)
         # Reemplazar nulos por mediana
         self.btn_replace_nulls_median = QPushButton("Replace nulls with median")
         self.btn_replace_nulls_median.setEnabled(False)
         self.btn_replace_nulls_median.clicked.connect(self.replace_nulls_with_median)
-        layout_nulls_buttons.addWidget(self.btn_replace_nulls_median)
+        layout_nulls_buttons.addWidget(self.btn_replace_nulls_median, 1,0)
         # Reemplazar nulos por un valor específico
         self.btn_replace_nulls_value = QPushButton("Replace nulls with constant value")
         self.btn_replace_nulls_value.setEnabled(False)
         self.btn_replace_nulls_value.clicked.connect(self.replace_nulls_with_value)
-        layout_nulls_buttons.addWidget(self.btn_replace_nulls_value)
+        layout_nulls_buttons.addWidget(self.btn_replace_nulls_value, 1,1)
         
-        
-
-
-        # Layout secundario preprocesado
-        layout_preprocesado = QHBoxLayout()
-        layout_preprocesado.setAlignment(Qt.AlignmentFlag.AlignRight)
-        # Añadir etiqueta con el titulo
-        self.prep_title = QLabel("Data preprocessing")
-        self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
-        layout.addWidget(self.prep_title)
         # Añadir layouts individuales botones count null values y resto de botones
-        layout_preprocesado.addLayout(layout_count_nulls)
-        layout_preprocesado.addLayout(layout_nulls_buttons)
-        
-        
-        
-        
+        layout_preprocesado.addLayout(layout_nulls_buttons)        
         
         # Layout principal entrada y salida y preprocesado
         layout_entrada_salida_preprocesado = QHBoxLayout()
-        #Añadir layout entrada_salida
         layout_entrada_salida_preprocesado.addLayout(layout_entrada_salida)
-        # Añadir layout preprocesado
         layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)        
-        # Limites layout principal entrada y salida y preprocesado       
-        layout_entrada_salida_preprocesado.setContentsMargins(0,20,0,0)
-
-        
-   
-
-
-        # Layout horizontal para las opciones de manejo de NaN
-        options_layout = QHBoxLayout()
-        # Campo para que el usuario introduzca un valor constante
-        self.constant_input = QLineEdit()
-        self.constant_input.setPlaceholderText("Constant value")
-        options_layout.addWidget(self.constant_input)
 
         # Layout formula modelo
         layout_formula = QVBoxLayout() 
@@ -245,34 +187,29 @@ class CsvViewer(QMainWindow):
         
         # Layout visualizar e iniciar modelo
         layout_visualizar_iniciar_modelo = QHBoxLayout()
-        layout_visualizar_iniciar_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        #layout_visualizar_iniciar_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
         # Añadir etiqueta con el titulo
         self.model_title = QLabel("View and start model")
         self.model_title.setStyleSheet("font-size: 18px; font-weight: bold;")
-        layout.addWidget(self.model_title)
+        layout_visualizar_iniciar_modelo.addWidget(self.model_title)
         #Añadir etiqueta para el boton start model
         self.model_button =  QPushButton("Start model")
         self.model_button.setFixedSize(135, 40)
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
-        layout.addWidget(self.model_button)
+        layout_visualizar_iniciar_modelo.addWidget(self.model_button)
         # Añadir widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
         self.canvas.setFixedSize(700, 400)
         self.canvas.setVisible(False)
-        layout_visualizar_iniciar_modelo.addWidget(self.canvas)
+        #layout_visualizar_iniciar_modelo.addWidget(self.canvas)
         # Añadir layout de la formula
         layout_visualizar_iniciar_modelo.addLayout(layout_formula)
         # Añadir layout descripcion
         layout_visualizar_iniciar_modelo.addLayout(layout_descripcion_modelo)
         # Limites layout visualizar e iniciar modelo
         layout_visualizar_iniciar_modelo.setContentsMargins(0,20,0,20)
-
-        
-        
-        
-        
         
 
        
@@ -319,7 +256,7 @@ class CsvViewer(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.viewer_title)
         layout.addLayout(layout_open_load)
-        layout.addLayout(layout_tabla)
+        layout.addWidget(self.table_widget)
         layout.addLayout(layout_entrada_salida_preprocesado)
         layout.addLayout(layout_visualizar_iniciar_modelo)
         layout.addLayout(layout_guardarmodelo_prediccion)
@@ -328,12 +265,21 @@ class CsvViewer(QMainWindow):
     
         container = QWidget()
         container.setLayout(layout)
-        self.setCentralWidget(container)
         
         # Crear un área de scroll
         scroll_area = QScrollArea()
+        scroll_area.setWidget(container)
         scroll_area.setWidgetResizable(True)
-        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)  # Desactiva el scroll horizontal
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)  # Activa el scroll vertical solo si es necesario
+
+        # Crear el diseño principal y añadir el área de scroll
+        main_widget = QWidget()
+        main_layout = QVBoxLayout(main_widget)
+        main_layout.addWidget(scroll_area)
+        
+        # Configurar el diseño principal para la ventana
+        self.setCentralWidget(main_widget)
     
     # Función para registrar las columnas de entrada
     def registrar_input(self):
