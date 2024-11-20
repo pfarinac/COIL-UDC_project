@@ -26,158 +26,314 @@ class CsvViewer(QMainWindow):
         self.inicializarUI()
 
     def inicializarUI(self):
+
         self.setWindowTitle("CSV/XLSX/SQLite Viewer")
-        self.setGeometry(100, 100, 1200, 800)
+        self.setGeometry(100, 100, 1200, 700)
 
-        # Layout principal
-        main_layout = QVBoxLayout()
+       
+       
+        layout = QVBoxLayout()
 
-        # Título
-        self.viewer_title = QLabel("Data Visualization")
-        self.viewer_title.setStyleSheet("font-size: 24px; font-weight: bold; margin-bottom: 15px;")
-        self.viewer_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        main_layout.addWidget(self.viewer_title)
-
-        # Botones para abrir archivo y cargar modelo
-        layout_open_load = QHBoxLayout()
-        self.load_button = QPushButton("Open")
-        self.load_button.setFixedSize(100, 42)
-        self.load_button.clicked.connect(self.load_file)
-        layout_open_load.addWidget(self.load_button)
-
-        self.file_path_label = QLabel("File path: No file uploaded.")
-        self.file_path_label.setStyleSheet("font-size: 16px; font-weight: bold; margin-left: 20px;")
-        layout_open_load.addWidget(self.file_path_label)
-        layout_open_load.addStretch()
         
+
+    
+
+        
+        
+
+        self.viewer_title = QLabel("Data visualization")
+        self.viewer_title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        
+        layout.addSpacing(15)
+
+      
+
+        
+        
+        
+        
+
+
+
+        
+        
+        # Layout botones open y load
+        layout_open_load = QHBoxLayout()
+        # Añadir boton open
+        self.load_button = QPushButton("Open")
+        self.load_button.setFixedSize(60, 42)
+        layout_open_load.addWidget(self.load_button)
+        self.load_button.clicked.connect(self.load_file) # Conectar el boton a la funcion
+        # Añadir botón de carga de modelo
         self.load_model_button = QPushButton("Load model")
-        self.load_model_button.setFixedSize(150, 42)
-        self.load_model_button.clicked.connect(self.load_model)
+        self.load_model_button.setFixedSize(117, 44)
         layout_open_load.addWidget(self.load_model_button)
+        self.load_model_button.clicked.connect(self.load_model)  # Conectar el botón a la función de carga
+        # Añadir etiqueta para mostrar la ruta del archivo
+        self.file_path_label = QLabel("File path: No file uploaded.")
+        self.file_path_label.setStyleSheet("font-size: 16px; font-weight: bold;")
+        layout_open_load.addWidget(self.file_path_label)  # Añadir la etiqueta al layout
+        # Limites del layout open y load
+        layout_open_load.setContentsMargins(0,20,0,0)
 
-        main_layout.addLayout(layout_open_load)
 
-        # Tabla de datos
+
+
+        
+        # Layout tabla
+        layout_tabla = QHBoxLayout()
+        # Añadir etiqueta para mostrar la tabla
         self.table_widget = QTableWidget()
-        self.table_widget.setMinimumHeight(300)
-        main_layout.addWidget(self.table_widget)
+        self.table_widget.setFixedSize(1500, 500)
+        layout_tabla.addWidget(self.table_widget)
+        # Limites del layout de la tabla
+        layout_tabla.setContentsMargins(0,20,0,0)
 
-        # Selección de columnas (features y target)
-        layout_column_selection = QHBoxLayout()
-
-        # Features (entrada)
-        layout_input = QVBoxLayout()
+        
+        # Layout entrada
+        layout_entrada = QVBoxLayout()
+        # Añadir etiqueta para el titulo
         self.features_label = QLabel("Select input columns (features):")
-        self.features_label.setStyleSheet("font-size: 16px; margin-bottom: 5px;")
-        layout_input.addWidget(self.features_label)
-
+        self.features_label.setStyleSheet("font-size: 16px;")
+        layout_entrada.addWidget(self.features_label)
+        # Añadir etiqueta para la seleccion de columnas de entrada
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(240, 120)
+        self.features_list.setFixedSize(240, 90)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
-        layout_input.addWidget(self.features_list)
+        layout_entrada.addWidget(self.features_list)
+        # Añadir boton confirmar seleccion
+        self.confirm = QPushButton("Confirm selection")
+        self.confirm.setFixedSize(145, 50)
+        self.input_col = [] # Lista con las columnas de entrada
+        self.output_col = [] # Variable str que contiene la columna de salida
+        self.features_list.clicked.connect(self.registrar_input)
+        self.confirm.clicked.connect(self.almacenar)
+        layout_entrada.addWidget(self.confirm)
+        # Limites layout entrada
+        layout_entrada.setContentsMargins(0,20,20,0)
+        
 
-        self.confirm_button = QPushButton("Confirm selection")
-        self.confirm_button.setFixedSize(150, 40)
-        layout_input.addWidget(self.confirm_button)
 
-        layout_column_selection.addLayout(layout_input)
 
-        # Target (salida)
-        layout_output = QVBoxLayout()
-        self.target_label = QLabel("Select output column (target):")
-        self.target_label.setStyleSheet("font-size: 16px; margin-bottom: 5px;")
-        layout_output.addWidget(self.target_label)
 
+        # Layout salida
+        layout_salida = QVBoxLayout()
+        # Añadir etiqueta para el titulo
+        self.target_label = QLabel("Select output columns (target):")
+        self.target_label.setStyleSheet("font-size: 16px;")
+        layout_salida.addWidget(self.target_label)
+        # Añadir etiqueta para la seleccion de columna de salida
         self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(240, 120)
+        self.target_combo.setFixedSize(240, 90)
         self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
-        layout_output.addWidget(self.target_combo)
-
-        layout_column_selection.addLayout(layout_output)
-        layout_column_selection.addStretch()
-
-        main_layout.addLayout(layout_column_selection)
-
-        # Título para preprocesamiento
-        preprocessing_title = QLabel("Data Preprocessing")
-        preprocessing_title.setStyleSheet("font-size: 18px; font-weight: bold; margin-top: 20px;")
-        main_layout.addWidget(preprocessing_title)
-
-        # Opciones de preprocesamiento
-        layout_preprocessing = QHBoxLayout()
-
+        layout_salida.addWidget(self.target_combo)
+        # Limites layout salida
+        layout_salida.setContentsMargins(20,20,0,0)
+        
+        
+        # Layout secundario entrada y salida
+        layout_entrada_salida = QHBoxLayout()
+        layout_entrada_salida.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        # Añadir etiqueta con el titulo
+        self.entrada_salida_titulo = QLabel("Select input and output columns")
+        self.entrada_salida_titulo.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout_entrada_salida.addWidget(self.entrada_salida_titulo)
+        # Añadir layouts individuales de entrada y salida
+        layout_entrada_salida.addLayout(layout_entrada)
+        layout_entrada_salida.addLayout(layout_salida)
+         # Limites layout entrada_salida
+        layout_entrada_salida.setContentsMargins(0,20,20,20)
+        
+        
+        
+        
+        # Layout boton contar valores nulos
+        layout_count_nulls = QHBoxLayout()
+        # Añadit boton para contar valores nulos
         self.btn_count_nulls = QPushButton("Count null values")
         self.btn_count_nulls.setEnabled(False)
-        layout_preprocessing.addWidget(self.btn_count_nulls)
-
+        self.btn_count_nulls.clicked.connect(self.count_nulls)
+        layout_count_nulls.addWidget(self.btn_count_nulls)
+        
+        
+        # Layout resto de botones para nulos
+        layout_nulls_buttons = QHBoxLayout()
+        # Añadir los diversos botones
+        # Eliminar filas con nulos
         self.btn_remove_nulls = QPushButton("Delete rows with nulls")
         self.btn_remove_nulls.setEnabled(False)
-        layout_preprocessing.addWidget(self.btn_remove_nulls)
-
+        self.btn_remove_nulls.clicked.connect(self.remove_nulls)
+        layout_nulls_buttons.addWidget(self.btn_remove_nulls)
+        # Reemplazar nulos por media
         self.btn_replace_nulls_mean = QPushButton("Replace nulls with mean")
         self.btn_replace_nulls_mean.setEnabled(False)
-        layout_preprocessing.addWidget(self.btn_replace_nulls_mean)
-
+        self.btn_replace_nulls_mean.clicked.connect(self.replace_nulls_with_mean)
+        layout_nulls_buttons.addWidget(self.btn_replace_nulls_mean)
+        # Reemplazar nulos por mediana
         self.btn_replace_nulls_median = QPushButton("Replace nulls with median")
         self.btn_replace_nulls_median.setEnabled(False)
-        layout_preprocessing.addWidget(self.btn_replace_nulls_median)
-
+        self.btn_replace_nulls_median.clicked.connect(self.replace_nulls_with_median)
+        layout_nulls_buttons.addWidget(self.btn_replace_nulls_median)
+        # Reemplazar nulos por un valor específico
         self.btn_replace_nulls_value = QPushButton("Replace nulls with constant value")
         self.btn_replace_nulls_value.setEnabled(False)
-        layout_preprocessing.addWidget(self.btn_replace_nulls_value)
+        self.btn_replace_nulls_value.clicked.connect(self.replace_nulls_with_value)
+        layout_nulls_buttons.addWidget(self.btn_replace_nulls_value)
+        
+        
 
-        main_layout.addLayout(layout_preprocessing)
 
-        # Campo para ingresar un valor constante
+        # Layout secundario preprocesado
+        layout_preprocesado = QHBoxLayout()
+        layout_preprocesado.setAlignment(Qt.AlignmentFlag.AlignRight)
+        # Añadir etiqueta con el titulo
+        self.prep_title = QLabel("Data preprocessing")
+        self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout.addWidget(self.prep_title)
+        # Añadir layouts individuales botones count null values y resto de botones
+        layout_preprocesado.addLayout(layout_count_nulls)
+        layout_preprocesado.addLayout(layout_nulls_buttons)
+        
+        
+        
+        
+        
+        # Layout principal entrada y salida y preprocesado
+        layout_entrada_salida_preprocesado = QHBoxLayout()
+        #Añadir layout entrada_salida
+        layout_entrada_salida_preprocesado.addLayout(layout_entrada_salida)
+        # Añadir layout preprocesado
+        layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)        
+        # Limites layout principal entrada y salida y preprocesado       
+        layout_entrada_salida_preprocesado.setContentsMargins(0,20,0,0)
+
+        
+   
+
+
+        # Layout horizontal para las opciones de manejo de NaN
+        options_layout = QHBoxLayout()
+        # Campo para que el usuario introduzca un valor constante
         self.constant_input = QLineEdit()
         self.constant_input.setPlaceholderText("Constant value")
-        self.constant_input.setEnabled(False)
-        self.constant_input.setFixedSize(200, 40)
-        main_layout.addWidget(self.constant_input)
+        options_layout.addWidget(self.constant_input)
 
-        # Descripción del modelo
-        self.description_label = QLabel("Model Description (Optional):")
-        self.description_label.setStyleSheet("font-size: 18px; font-weight: bold; margin-top: 20px;")
-        main_layout.addWidget(self.description_label)
+        # Layout formula modelo
+        layout_formula = QVBoxLayout() 
+        # Añadir formula
+        self.label_formula = QLabel("")
+        self.label_formula.setVisible(False)
+        self.label_r2_mse = QLabel("")
+        self.label_r2_mse.setVisible(False)
+        self.label_formula.setStyleSheet("font-weight: bold;")
+        self.label_r2_mse.setStyleSheet("font-weight: bold;")
+        layout_formula.addWidget(self.label_formula)
+        # Añadir formula (2)
+        layout_formula.addWidget(self.label_r2_mse,alignment= Qt.AlignmentFlag.AlignTop)
 
+        # Layout decripcion del modelo
+        layout_descripcion_modelo = QVBoxLayout()
+        layout_descripcion_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        # Añadir etiqueta con el titulo
+        self.description_label = QLabel("Model description (optional): ")
+        self.description_label.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout_descripcion_modelo.addWidget(self.description_label)
+        # Añadir etiqueta para escribir descripcion
         self.description_text = QTextEdit()
         self.description_text.setPlaceholderText("Add a description for the model...")
-        self.description_text.setFixedHeight(100)
-        main_layout.addWidget(self.description_text)
-
-        # Gráfica para visualización futura
+        layout_descripcion_modelo.addWidget(self.description_text)
+        
+        # Layout visualizar e iniciar modelo
+        layout_visualizar_iniciar_modelo = QHBoxLayout()
+        layout_visualizar_iniciar_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        # Añadir etiqueta con el titulo
+        self.model_title = QLabel("View and start model")
+        self.model_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        layout.addWidget(self.model_title)
+        #Añadir etiqueta para el boton start model
+        self.model_button =  QPushButton("Start model")
+        self.model_button.setFixedSize(135, 40)
+        self.model_button.setEnabled(False)
+        self.model_button.clicked.connect(self.start_model)
+        layout.addWidget(self.model_button)
+        # Añadir widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
         self.canvas.setFixedSize(700, 400)
         self.canvas.setVisible(False)
-        main_layout.addWidget(self.canvas, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout_visualizar_iniciar_modelo.addWidget(self.canvas)
+        # Añadir layout de la formula
+        layout_visualizar_iniciar_modelo.addLayout(layout_formula)
+        # Añadir layout descripcion
+        layout_visualizar_iniciar_modelo.addLayout(layout_descripcion_modelo)
+        # Limites layout visualizar e iniciar modelo
+        layout_visualizar_iniciar_modelo.setContentsMargins(0,20,0,20)
 
-        # Botones para guardar modelo y hacer predicción
-        layout_buttons = QHBoxLayout()
+        
+        
+        
+        
+        
 
+       
+        
+        
+        
+        
+        
+        # Layout botones guardar modelo y hacer prediccion
+        layout_guardarmodelo_prediccion = QHBoxLayout()
+        layout_guardarmodelo_prediccion.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Añadir boton guardar modelo
         self.save_button = QPushButton("Save Model")
         self.save_button.setFixedSize(135, 40)
         self.save_button.setEnabled(False)
-        layout_buttons.addWidget(self.save_button)
-
+        self.save_button.clicked.connect(self.save_model)
+        layout_guardarmodelo_prediccion.addWidget(self.save_button)
+        #Añadir boton prediccion
         self.predict_button = QPushButton("Make Prediction")
         self.predict_button.setFixedSize(135, 40)
-        self.predict_button.setEnabled(False)
-        layout_buttons.addWidget(self.predict_button)
+        self.predict_button.setEnabled(False)  # Deshabilitado inicialmente
+        self.predict_button.clicked.connect(self.make_prediction)
+        layout_guardarmodelo_prediccion.addWidget(self.predict_button)
 
-        layout_buttons.addStretch()
-        main_layout.addLayout(layout_buttons)
+        
 
-        # Contenedor con scroll
-        container = QWidget()
-        container.setLayout(main_layout)
+        
+       
+        #Layout mostrar prediccion
+        layout_mostrar_prediccion = QVBoxLayout()
+        layout_mostrar_prediccion.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        # Área de predicción
+        self.prediction_area = QWidget()
+        self.prediction_layout = QVBoxLayout()
+        self.prediction_area.setLayout(self.prediction_layout)
+        layout_mostrar_prediccion.addWidget(self.prediction_area)
+        # Área para mostrar el resultado de la predicción
+        self.result_label = QLabel("")
+        layout_mostrar_prediccion.addWidget(self.result_label)
+        
 
-        scroll_area = QScrollArea()
-        scroll_area.setWidget(container)
-        scroll_area.setWidgetResizable(True)
-
-        self.setCentralWidget(scroll_area)
     
+        # Creamos el layout principal y le añadimos los auxiliares
+        layout = QVBoxLayout()
+        layout.addWidget(self.viewer_title)
+        layout.addLayout(layout_open_load)
+        layout.addLayout(layout_tabla)
+        layout.addLayout(layout_entrada_salida_preprocesado)
+        layout.addLayout(layout_visualizar_iniciar_modelo)
+        layout.addLayout(layout_guardarmodelo_prediccion)
+        layout.addLayout(layout_mostrar_prediccion)
+    
+    
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+        
+        # Crear un área de scroll
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
     
     # Función para registrar las columnas de entrada
     def registrar_input(self):
