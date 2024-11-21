@@ -183,6 +183,23 @@ class CsvViewer(QMainWindow):
         layout_formula.addWidget(self.label_r2_mse,alignment= Qt.AlignmentFlag.AlignTop)
         
         
+        # Caja para la gráfica
+        self.graph_box = QGroupBox("Graph")
+        self.graph_box.setStyleSheet("font-size: 16px; font-weight: bold;")
+        self.graph_box_layout = QVBoxLayout(self.graph_box)
+        self.canvas = FigureCanvas(Figure())
+        self.canvas.setFixedSize(700, 300)
+        self.graph_box_layout.addWidget(self.canvas)
+        
+
+        # Caja para la fórmula
+        self.formula_box = QGroupBox("Formula")
+        self.formula_box.setStyleSheet("font-size: 16px; font-weight: bold;")
+        self.formula_box_layout = QVBoxLayout(self.formula_box)
+        self.label_formula = QLabel("")
+        self.label_formula.setStyleSheet("font-weight: bold;")
+        self.formula_box_layout.addWidget(self.label_formula)
+        
         
         # Layout decripcion del modelo
         layout_descripcion_modelo = QVBoxLayout()
@@ -220,12 +237,9 @@ class CsvViewer(QMainWindow):
         #layout_visualizar_iniciar_modelo.addWidget(self.canvas)
         # Añadir layout de la formula
         layout_visualizar_iniciar_modelo.addLayout(layout_formula)
-        #Añadir cuadrados para la formula y la grafica
-        self.grafic_widget = QTableWidget()
-        self.grafic_widget.setFixedSize(700, 300)
-        self.formula_widget = QTableWidget()
-        self.formula_widget.setFixedSize(700, 300)
         # Añadir layout descripcion
+        layout_visualizar_iniciar_modelo.addWidget(self.graph_box)
+        layout_visualizar_iniciar_modelo.addWidget(self.formula_box)
         layout_visualizar_iniciar_modelo.addLayout(layout_descripcion_modelo)
         # Limites layout visualizar e iniciar modelo
         layout_visualizar_iniciar_modelo.setContentsMargins(0,20,0,20)
