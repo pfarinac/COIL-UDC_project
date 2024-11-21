@@ -181,7 +181,9 @@ class CsvViewer(QMainWindow):
         layout_formula.addWidget(self.label_formula)
         # Añadir formula (2)
         layout_formula.addWidget(self.label_r2_mse,alignment= Qt.AlignmentFlag.AlignTop)
-
+        
+        
+        
         # Layout decripcion del modelo
         layout_descripcion_modelo = QVBoxLayout()
         layout_descripcion_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -195,18 +197,21 @@ class CsvViewer(QMainWindow):
         layout_descripcion_modelo.addWidget(self.description_text)
         
         # Layout visualizar e iniciar modelo
-        layout_visualizar_iniciar_modelo = QHBoxLayout()
+        layout_visualizar_iniciar_modelo = QVBoxLayout()
         #layout_visualizar_iniciar_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
         # Añadir etiqueta con el titulo
         self.model_title = QLabel("View and start model")
         self.model_title.setStyleSheet("font-size: 18px; font-weight: bold;")
         layout_visualizar_iniciar_modelo.addWidget(self.model_title)
         #Añadir etiqueta para el boton start model
+        layout_boton_start = QGridLayout()
         self.model_button =  QPushButton("Start model")
         self.model_button.setFixedSize(135, 40)
         self.model_button.setEnabled(False)
         self.model_button.clicked.connect(self.start_model)
-        layout_visualizar_iniciar_modelo.addWidget(self.model_button)
+        layout_boton_start.addWidget(self.model_button)
+        layout_boton_start.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        layout_visualizar_iniciar_modelo.addLayout(layout_boton_start)
         # Añadir widget para mostrar la gráfica de matplotlib
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -215,6 +220,11 @@ class CsvViewer(QMainWindow):
         #layout_visualizar_iniciar_modelo.addWidget(self.canvas)
         # Añadir layout de la formula
         layout_visualizar_iniciar_modelo.addLayout(layout_formula)
+        #Añadir cuadrados para la formula y la grafica
+        self.grafic_widget = QTableWidget()
+        self.grafic_widget.setFixedSize(700, 300)
+        self.formula_widget = QTableWidget()
+        self.formula_widget.setFixedSize(700, 300)
         # Añadir layout descripcion
         layout_visualizar_iniciar_modelo.addLayout(layout_descripcion_modelo)
         # Limites layout visualizar e iniciar modelo
