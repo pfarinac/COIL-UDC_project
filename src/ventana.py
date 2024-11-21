@@ -81,7 +81,7 @@ class CsvViewer(QMainWindow):
 
         # Añadir etiqueta para la seleccion de columnas de entrada
         self.features_list = QListWidget()
-        self.features_list.setFixedSize(405, 90)
+        self.features_list.setFixedSize(370, 90)
         self.features_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
         layout_entrada.addWidget(self.features_list)
 
@@ -93,7 +93,7 @@ class CsvViewer(QMainWindow):
         layout_salida.addWidget(self.target_label)
         # Añadir etiqueta para la seleccion de columna de salida
         self.target_combo = QListWidget()
-        self.target_combo.setFixedSize(405, 90)
+        self.target_combo.setFixedSize(370, 90)
         self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         layout_salida.addWidget(self.target_combo)
         
@@ -110,7 +110,8 @@ class CsvViewer(QMainWindow):
         self.output_col = [] # Variable str que contiene la columna de salida
         self.features_list.clicked.connect(self.registrar_input)
         self.confirm.clicked.connect(self.almacenar)
-        layout_entrada_salida.addWidget(self.confirm)        
+        layout_entrada_salida.addWidget(self.confirm)
+        layout_entrada_salida.setContentsMargins(0,20,0,0)        
         
         # Layout secundario preprocesado
         layout_preprocesado = QVBoxLayout()
@@ -122,11 +123,14 @@ class CsvViewer(QMainWindow):
         self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
         layout_preprocesado.addWidget(self.prep_title)
 
+        layout_count_nulls = QGridLayout()
         self.btn_count_nulls = QPushButton("Count null values")
         self.btn_count_nulls.setFixedSize(645, 40)
         self.btn_count_nulls.setEnabled(False)
         self.btn_count_nulls.clicked.connect(self.count_nulls)
-        layout_preprocesado.addWidget(self.btn_count_nulls)
+        layout_count_nulls.addWidget(self.btn_count_nulls)
+        layout_count_nulls.setContentsMargins(0,7,0,0)
+        layout_preprocesado.addLayout(layout_count_nulls)
         
         # Layout resto de botones para nulos
         layout_nulls_buttons = QGridLayout()
@@ -156,13 +160,14 @@ class CsvViewer(QMainWindow):
         layout_nulls_buttons.addWidget(self.btn_replace_nulls_value, 1,1)
         
         # Añadir layouts individuales botones count null values y resto de botones
-        layout_preprocesado.addLayout(layout_nulls_buttons)        
+        layout_preprocesado.addLayout(layout_nulls_buttons)
+        layout_preprocesado.setContentsMargins(0,20,0,0)       
         
         # Layout principal entrada y salida y preprocesado
         layout_entrada_salida_preprocesado = QHBoxLayout()
         layout_entrada_salida_preprocesado.addLayout(layout_entrada_salida)
         layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)      
-        layout_entrada_salida_preprocesado.setContentsMargins(0,20,0,0)
+        layout_entrada_salida_preprocesado.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Layout formula modelo
         layout_formula = QVBoxLayout() 
