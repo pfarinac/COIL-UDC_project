@@ -206,7 +206,7 @@ class CsvViewer(QMainWindow):
         self.formula_layout = QVBoxLayout()
         
         # Título y etiqueta para la fórmula
-        self.formula_title = QLabel("Fórmula")
+        self.formula_title = QLabel("Formula")
         self.formula_title.setStyleSheet("font-weight: bold; font-size: 16px; color: white;")
         self.label_formula = QLabel("")
         self.label_formula.setStyleSheet("font-weight: bold; font-size: 14px; color: white;")
