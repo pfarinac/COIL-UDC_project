@@ -169,36 +169,75 @@ class CsvViewer(QMainWindow):
         layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)      
         layout_entrada_salida_preprocesado.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Layout formula modelo
-        layout_formula = QVBoxLayout() 
-        # Añadir formula
+        #Layout para gráfica y fórmula
+        layout_graph_formula = QHBoxLayout()
+        
+        self.graph_widget = QWidget()  # Usamos QWidget en lugar de QGroupBox
+        self.graph_widget.setStyleSheet("""
+            QWidget {
+                font-size: 16px;
+                font-weight: bold;
+                color: white; /* Texto en blanco */
+                background-color: #1E1E1E; /* Fondo gris oscuro */
+                border: 2px solid #00C853; /* Borde verde vibrante */
+                border-radius: 5px; /* Esquinas redondeadas */
+                padding: 10px; /* Espaciado interno */
+            }
+        """)
+        
+        # Layout interno para la gráfica
+        self.graph_layout = QVBoxLayout()
+        self.graph_widget.setLayout(self.graph_layout)
+        
+        # Título y canvas para la gráfica
+        self.graph_title = QLabel("Graph")
+        self.graph_title.setStyleSheet("font-weight: bold; font-size: 16px; color: white; background: transparent; border: none;")
+        
+        self.figure = Figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.canvas.setFixedSize(700, 400)
+        self.canvas.setVisible(False)
+        
+        # Agregar widgets al layout de la gráfica
+        self.graph_layout.addWidget(self.graph_title)
+        self.graph_layout.addWidget(self.canvas)
+        
+        # Layout para la fórmula
+        self.formula_layout = QVBoxLayout()
+        
+        # Título y etiqueta para la fórmula
+        self.formula_title = QLabel("Fórmula")
+        self.formula_title.setStyleSheet("font-weight: bold; font-size: 16px; color: white;")
         self.label_formula = QLabel("")
+        self.label_formula.setStyleSheet("font-weight: bold; font-size: 14px; color: white;")
         self.label_formula.setVisible(False)
         self.label_r2_mse = QLabel("")
+        self.label_r2_mse.setStyleSheet("font-weight: bold; font-size: 14px; color: white;")
         self.label_r2_mse.setVisible(False)
-        self.label_formula.setStyleSheet("font-weight: bold;")
-        self.label_r2_mse.setStyleSheet("font-weight: bold;")
-        layout_formula.addWidget(self.label_formula)
-        # Añadir formula (2)
-        layout_formula.addWidget(self.label_r2_mse,alignment= Qt.AlignmentFlag.AlignTop)
-        
-        
-        # Caja para la gráfica
-        self.graph_box = QGroupBox("Graph")
-        self.graph_box.setStyleSheet("font-size: 16px; font-weight: bold;")
-        self.graph_box_layout = QVBoxLayout(self.graph_box)
-        self.canvas = FigureCanvas(Figure())
-        self.canvas.setFixedSize(700, 300)
-        self.graph_box_layout.addWidget(self.canvas)
-        
 
-        # Caja para la fórmula
-        self.formula_box = QGroupBox("Formula")
-        self.formula_box.setStyleSheet("font-size: 16px; font-weight: bold;")
-        self.formula_box_layout = QVBoxLayout(self.formula_box)
-        self.label_formula = QLabel("")
-        self.label_formula.setStyleSheet("font-weight: bold;")
-        self.formula_box_layout.addWidget(self.label_formula)
+        
+        # Agregar widgets al layout de la fórmula
+        self.formula_layout.addWidget(self.formula_title)
+        self.formula_layout.addWidget(self.label_formula)
+        self.formula_layout.addWidget(self.label_r2_mse)
+        
+        # Crear un widget contenedor para la fórmula (opcional)
+        self.formula_widget = QWidget()
+        self.formula_widget.setLayout(self.formula_layout)
+        
+        # Estilos solo para el contenedor del widget
+        self.formula_widget.setStyleSheet("""QWidget {
+            background-color: #1E1E1E;  /* Gris oscuro para fondo */
+            border: 2px solid #00C853;  /* Borde verde vibrante */
+            border-radius: 5px;         /* Esquinas redondeadas */
+            padding: 10px;              /* Espaciado interno */
+            }
+            QLabel {border: 0px}
+        """)
+
+        # Agregar el widget de fórmula al layout principal
+        layout_graph_formula.addWidget(self.graph_widget)
+        layout_graph_formula.addWidget(self.formula_widget)
         
         
         # Layout decripcion del modelo
@@ -229,17 +268,9 @@ class CsvViewer(QMainWindow):
         layout_boton_start.addWidget(self.model_button)
         layout_boton_start.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout_visualizar_iniciar_modelo.addLayout(layout_boton_start)
-        # Añadir widget para mostrar la gráfica de matplotlib
-        self.figure = Figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.canvas.setFixedSize(700, 400)
-        self.canvas.setVisible(False)
-        #layout_visualizar_iniciar_modelo.addWidget(self.canvas)
         # Añadir layout de la formula
-        layout_visualizar_iniciar_modelo.addLayout(layout_formula)
+        layout_visualizar_iniciar_modelo.addLayout(layout_graph_formula)
         # Añadir layout descripcion
-        layout_visualizar_iniciar_modelo.addWidget(self.graph_box)
-        layout_visualizar_iniciar_modelo.addWidget(self.formula_box)
         layout_visualizar_iniciar_modelo.addLayout(layout_descripcion_modelo)
         # Limites layout visualizar e iniciar modelo
         layout_visualizar_iniciar_modelo.setContentsMargins(0,20,0,20)
