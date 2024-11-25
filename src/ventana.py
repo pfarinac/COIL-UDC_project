@@ -595,7 +595,6 @@ class CsvViewer(QMainWindow):
         self.target_label.hide()
         self.target_combo.hide()
         self.viewer_title.hide()
-        self.inout_title.hide()
         self.prep_title.hide()
         self.model_title.hide()
         # Botones de preprocesado
@@ -611,6 +610,8 @@ class CsvViewer(QMainWindow):
         self.save_button.setEnabled(True)
         # Modelo
         self.canvas.hide()
+        self.graph_widget.hide()
+        self.entrada_salida_titulo.hide()
         self.label_formula.setVisible(True)
         self.label_r2_mse.setVisible(True)
         
