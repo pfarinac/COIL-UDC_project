@@ -6,6 +6,7 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtGui import QColor
 import pandas as pd    
 import sqlite3
+
 # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
 class Funcs:
     def __init__(self,target_combo:QListWidget, btn_count_nulls:QPushButton, features_list:QListWidget, path:QLabel, table) -> None:

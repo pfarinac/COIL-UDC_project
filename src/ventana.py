@@ -18,6 +18,7 @@ from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from data_func import *
 from data_UI import *
+from prepro_UI import *
 
  
 
@@ -37,61 +38,11 @@ class CsvViewer(QMainWindow):
         self.setGeometry(100, 100, 1920, 1080)
      
         self.d_u = UI()
+        self.p_u = PUI(self.d_u.d_f)
 
-        layout_count_nulls = QGridLayout()
-
-        # Layout secundario preprocesado
-        layout_preprocesado = QVBoxLayout()
-        layout_preprocesado.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        layout_preprocesado.setContentsMargins(5, 20, 0, 0)
-
-        # Añadir etiqueta con el titulo
-        self.prep_title = QLabel("Data preprocessing")
-        self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
-        layout_preprocesado.addWidget(self.prep_title)
-
-
-        #layout_count_nulls.addWidget(self.btn_count_nulls)
-        layout_count_nulls.setContentsMargins(0,7,0,0)
-        layout_preprocesado.addLayout(layout_count_nulls)
-        
-        # Layout resto de botones para nulos
-        layout_nulls_buttons = QGridLayout()
-        # Eliminar filas con nulos
-        self.btn_remove_nulls = QPushButton("Delete rows with nulls")
-        self.btn_remove_nulls.setFixedSize(320, 40)
-        self.btn_remove_nulls.setEnabled(False)
-        self.btn_remove_nulls.clicked.connect(self.remove_nulls)
-        layout_nulls_buttons.addWidget(self.btn_remove_nulls, 0, 0)
-        # Reemplazar nulos por media
-        self.btn_replace_nulls_mean = QPushButton("Replace nulls with mean")
-        self.btn_replace_nulls_mean.setFixedSize(320, 40)
-        self.btn_replace_nulls_mean.setEnabled(False)
-        self.btn_replace_nulls_mean.clicked.connect(self.replace_nulls_with_mean)
-        layout_nulls_buttons.addWidget(self.btn_replace_nulls_mean, 0, 1)
-        # Reemplazar nulos por mediana
-        self.btn_replace_nulls_median = QPushButton("Replace nulls with median")
-        self.btn_replace_nulls_median.setFixedSize(320, 40)
-        self.btn_replace_nulls_median.setEnabled(False)
-        self.btn_replace_nulls_median.clicked.connect(self.replace_nulls_with_median)
-        layout_nulls_buttons.addWidget(self.btn_replace_nulls_median, 1,0)
-        # Reemplazar nulos por un valor específico
-        self.btn_replace_nulls_value = QPushButton("Replace nulls with constant value")
-        self.btn_replace_nulls_value.setFixedSize(320, 40)
-        self.btn_replace_nulls_value.setEnabled(False)
-        self.btn_replace_nulls_value.clicked.connect(self.replace_nulls_with_value)
-        layout_nulls_buttons.addWidget(self.btn_replace_nulls_value, 1,1)
-        
-        # Añadir layouts individuales botones count null values y resto de botones
-        layout_preprocesado.addLayout(layout_nulls_buttons)
-        layout_preprocesado.setContentsMargins(0,20,0,0)       
-        
-        # Layout principal entrada y salida y preprocesado
-        layout_entrada_salida_preprocesado = QHBoxLayout()
-        layout_entrada_salida_preprocesado.addLayout(self.d_u.layout_entrada_salida)
-        layout_entrada_salida_preprocesado.addLayout(layout_preprocesado)      
-        layout_entrada_salida_preprocesado.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
+        self.p_u.layout_entrada_salida_preprocesado.addLayout(self.d_u.layout_entrada_salida)
+        self.p_u.layout_entrada_salida_preprocesado.addLayout(self.p_u.layout_preprocesado)
+        self.p_u.layout_entrada_salida_preprocesado.setAlignment(Qt.AlignmentFlag.AlignCenter)
         #Layout para gráfica y fórmula
         layout_graph_formula = QHBoxLayout()
         
@@ -242,7 +193,7 @@ class CsvViewer(QMainWindow):
         # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
         layout.addLayout(self.d_u.layout)
-        layout.addLayout(layout_entrada_salida_preprocesado)
+        layout.addLayout(self.p_u.layout_entrada_salida_preprocesado)
         layout.addLayout(layout_visualizar_iniciar_modelo)
         layout.addLayout(layout_mostrar_prediccion)
         layout.addLayout(layout_guardarmodelo_prediccion)
