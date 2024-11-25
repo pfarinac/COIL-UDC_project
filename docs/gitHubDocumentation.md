@@ -92,7 +92,6 @@ Linear regression is a [supervised machine learning algorithm](https://www.ibm.c
 *Figure 2: Visualization of the best fit line for a linear regression model. Image from [What is Linear Regression? Types, Equation, Examples, and Best Practices for 2022](https://www.spiceworks.com/tech/artificial-intelligence/articles/what-is-linear-regression/)*
 
 [Linear regression](https://www.spiceworks.com/tech/artificial-intelligence/articles/what-is-linear-regression/) helps businesses evaluate trends, make estimates, and forecast outcomes before making decisions. Some [basic examples](https://datatab.net/tutorial/linear-regression) where linear regression models can be used for information analysis and predictions include:
-
 * Does height have an influence on the weight of a person?
 * What is the relationship between pollution levels and rising temperatures?
 * How does the age of a home affect the purchase price?
@@ -101,7 +100,6 @@ Linear regression is a [supervised machine learning algorithm](https://www.ibm.c
 The above are examples of simple linear regression as there is only 1 dependent and 1 independent variable. If there are multiple independent variables, then it would be called multiple linear regression.
 
 The regression line is described by the equation **ŷ = bx + a**, where:
-
 * **ŷ** is the estimated dependent variable
 * **b** is the slope (the gradient of the straight line)
 * **x** is the independent variable
@@ -127,34 +125,27 @@ The following stakeholders and cross-functional teams in Table 3 were involved i
 ### Considerations for New Developers 
 
 The following considerations should be kept in mind when developing future iterations of the Linear Reg application: 
-
 * **Follow coding best practices**
     * Code includes clear naming conventions, modularization and uses appropriate comments with necessary. 
     * Code is well structured and follows the [PEP 8](https://peps.python.org/pep-0008/) style guide formatting standards (Python). 
     * All Github commits should have clear, descriptive messages. 
-
 * **Consolidate UI elements** 
     * UI elements with similar functions/implementations, like the data visualizer and column selector, can be integrated into the same body of code for better organization and efficiency. 
-
 * **Select versatile libraries** 
     * Choose libraries that are simple to implement but also include a wide range of features to enhance the user interface and provide a richer experience. 
-
 * **Focus on continuous improvement**  
     * Look for ways to improve the application by adding new visual features and upgrade or remove code that is outdated or no longer needed or useful. 
 
 ### Considerations for New Technical Writers 
 
 The following considerations should be kept in mind when expanding Linear Reg's documentation: 
-
 * **Follow technical writing best practices**
     * Continuously analyse audience and purpose to determine best approach to meet user needs.
     * Help topics include concept, task and reference information types.
     * Use direct and purposeful language.
     * Formatting should promote scanability and readability.
-    
  * **Refer to the [Microsoft Style Guide](https://learn.microsoft.com/en-us/style-guide/welcome/)**
     * Identify proper terminology for software documentation. 
-    
  * **Write in Markdown** 
     * If comfortable, write or append new documentation directly in Markdown, commit the changes, then make a pull request. 
     * If not, then you can write documentation on Microsoft Word and contact one of the documentation writers to convert it into Markdown. 
@@ -162,7 +153,6 @@ The following considerations should be kept in mind when expanding Linear Reg's 
 ### Linear Reg Localization
 
 Localization efforts were performed throughout the development and documentation of Linear Reg. To support translation, best practices in User Experience (UX) writing were followed. User Interface (UI) elements and associated microcopy is:
-
 * **Concise:** efficient and focused.
 * **Purposeful:** goal-oriented and valuable.
 * **Clear:** simple and specific language, void of jargon.
