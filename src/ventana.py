@@ -39,6 +39,9 @@ class CsvViewer(QMainWindow):
      
         self.d_u = UI()
         self.p_u = PUI(self.d_u.d_f)
+        
+        self.d_u.confirm.clicked.connect(self.habilitar_count_nulls)
+        
 
         self.p_u.layout_entrada_salida_preprocesado.addLayout(self.d_u.layout_entrada_salida)
         self.p_u.layout_entrada_salida_preprocesado.addLayout(self.p_u.layout_preprocesado)
@@ -221,7 +224,8 @@ class CsvViewer(QMainWindow):
 
    
    
-
+    def habilitar_count_nulls(self):
+        self.p_u.btn_count_nulls.setEnabled(True)
     # Método para crear el modelo y mostrar la gráfica
     def start_model(self):
         # Limpiar campos de entrada anteriores antes de iniciar un nuevo modelo

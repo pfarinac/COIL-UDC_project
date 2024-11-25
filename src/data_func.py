@@ -9,11 +9,10 @@ import sqlite3
 
 # Función para almacenar las selecciones de las columnas e imprimir el mensaje por pantalla
 class Funcs:
-    def __init__(self,target_combo:QListWidget, btn_count_nulls:QPushButton, features_list:QListWidget, path:QLabel, table) -> None:
+    def __init__(self,target_combo:QListWidget, features_list:QListWidget, path:QLabel, table) -> None:
         self.df = None
         self.input_col = []
         self.target_combo = target_combo
-        self.btn_count_nulls = btn_count_nulls
         self.features_list = features_list
         self.file_path_label = path
         self.table_widget = table
@@ -26,7 +25,7 @@ class Funcs:
             else:
                 message = "Your selection has been successfully saved.\n"
                 QMessageBox.information(None,"Information", message)
-                self.btn_count_nulls.setEnabled(True)  
+                
 
     def load_file(self):
             file_name, _ = QFileDialog.getOpenFileName(None, "Open CSV/XLSX/SQLite", "",
@@ -74,6 +73,7 @@ class Funcs:
 
     
     def update_table(self, table_widget:QTableWidget,df):
+            print("PRUEBA")
             table_widget.setRowCount(df.shape[0])
             table_widget.setColumnCount(df.shape[1])
             table_widget.setHorizontalHeaderLabels(df.columns)
@@ -86,6 +86,7 @@ class Funcs:
                     if pd.isna(value):
                         table_item.setBackground(QColor("red"))  # Resaltar la celda en amarillo
                     table_widget.setItem(i, j, table_item)
+            
 
         # Función para registrar las columnas de entrada
     def registrar_input(self):
@@ -95,4 +96,3 @@ class Funcs:
                 self.input_col.remove(input_col_text)
             else:
                 self.input_col.append(input_col_text)
-                self.btn_count_nulls.setEnabled(False)

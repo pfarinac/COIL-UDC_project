@@ -30,9 +30,17 @@ class PUI:
         self.prep_title.setStyleSheet("font-size: 18px; font-weight: bold;")
         self.layout_preprocesado.addWidget(self.prep_title)
 
-        #layout_count_nulls.addWidget(self.btn_count_nulls)
+
+
         layout_count_nulls.setContentsMargins(0,7,0,0)
         self.layout_preprocesado.addLayout(layout_count_nulls)
+
+        self.btn_count_nulls = QPushButton("Count null values")
+        self.btn_count_nulls.setFixedSize(645, 40)
+        self.btn_count_nulls.setEnabled(False)
+        self.btn_count_nulls.clicked.connect(self.funcs.count_nulls)
+        self.btn_count_nulls.clicked.connect(self.habilitar_botones_preprocesado)
+        layout_count_nulls.addWidget(self.btn_count_nulls)
         
         # Layout resto de botones para nulos
         layout_nulls_buttons = QGridLayout()
@@ -57,7 +65,7 @@ class PUI:
         # Reemplazar nulos por un valor específico
         self.btn_replace_nulls_value = QPushButton("Replace nulls with constant value")
         self.btn_replace_nulls_value.setFixedSize(320, 40)
-        #self.btn_replace_nulls_value.setEnabled(False)
+        self.btn_replace_nulls_value.setEnabled(False)
         self.btn_replace_nulls_value.clicked.connect(self.funcs.replace_nulls_with_value)
         layout_nulls_buttons.addWidget(self.btn_replace_nulls_value, 1,1)
         
@@ -67,3 +75,8 @@ class PUI:
         
         # Layout principal entrada y salida y preprocesado
         self.layout_entrada_salida_preprocesado = QHBoxLayout()
+    def habilitar_botones_preprocesado(self):
+        self.btn_remove_nulls.setEnabled(True)
+        self.btn_replace_nulls_mean.setEnabled(True)
+        self.btn_replace_nulls_median.setEnabled(True)
+        self.btn_replace_nulls_value.setEnabled(True)

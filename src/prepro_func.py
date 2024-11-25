@@ -8,13 +8,6 @@ class PFuncs:
         self.table_widget = None
         self.d_f = data
 
-
-    def habilitar_botones_preprocesado(self, habilitar):
-        self.btn_remove_nulls.setEnabled(habilitar)
-        self.btn_replace_nulls_mean.setEnabled(habilitar)
-        self.btn_replace_nulls_median.setEnabled(habilitar)
-        self.btn_replace_nulls_value.setEnabled(habilitar)
-
     def count_nulls(self):
         self.update_df()
         self.update_input_output()
@@ -26,7 +19,7 @@ class PFuncs:
             null_counts = self.df[columns_to_process].isnull().sum()
             # Crear el mensaje con el conteo de valores nulos por cada columna
             null_info = "\n".join([f"{col}: {count}" for col, count in null_counts.items()])
-            QMessageBox.information(self, "Null values", f"Number of null values ​​per column:\n{null_info}")
+            QMessageBox.information(None, "Null values", f"Number of null values ​​per column:\n{null_info}")
             #self.habilitar_botones_preprocesado(True)
             #self.model_button.setEnabled(True)
         else:
@@ -87,6 +80,7 @@ class PFuncs:
         self.update_df()
         self.update_input_output()
         self.update_wtable()
+        print(self.input_col)
         if self.df is not None:
             value, ok = QInputDialog.getText(None, "Replace nulls with constant value", "Enter the value to replace nulls:")
             if ok and value:
@@ -94,6 +88,7 @@ class PFuncs:
 
                 for col in columns_to_process:
                     if self.df[col].isnull().any():
+                        print("prueba valor")
                         self.df[col].fillna(value, inplace=True)
                 self.d_f.update_table(self.table_widget,self.df)
                 QMessageBox.information(None, "Replaced values", f"Null values has been replaced by '{value}' in the selected columns.")

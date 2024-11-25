@@ -22,15 +22,10 @@ class UI:
         self.target_combo.setFixedSize(370, 90)
         self.target_combo.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
 
-        self.btn_count_nulls = QPushButton("Count null values")
-        self.btn_count_nulls.setFixedSize(645, 40)
-        self.btn_count_nulls.setEnabled(False)
-        #self.btn_count_nulls.clicked.connect(self.count_nulls)
-
         self.file_path_label = QLabel("File path: No file uploaded.")
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1490, 300)
-        self.d_f = Funcs(self.target_combo,self.btn_count_nulls, self.features_list, self.file_path_label, self.table_widget)
+        self.d_f = Funcs(self.target_combo, self.features_list, self.file_path_label, self.table_widget)
         # Layout botones open y load
         layout_open_load = QHBoxLayout()
         # Añadir boton open
