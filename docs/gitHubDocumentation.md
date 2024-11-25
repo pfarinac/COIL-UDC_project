@@ -29,6 +29,7 @@ The following tools and equipment in Table 1 were used in the development of Lin
 | Taiga | Project task management website to track sprints, user stories, and tasks. |
 | TWP - Translate Web Pages | Firefox extension to translate text in Spanish to English to quickly read user stories and tasks. |
 | Windows-based PC (Windows 10 or Windows 11) | Computer to test Linear Reg, as it is available only on PC. |
+
 *Table 1: List of software and equipment used in development*
 
 ## Agile Development Process with Linear Reg
@@ -50,6 +51,7 @@ Table 2 contains a shortlist of essential terms used in Agile development projec
 | Standup | A brief meeting for the software team to share updates and align workflows. |
 | Retrospective | A review of what did and didn't go well in the last sprint. Specific actions to improve the next sprint are confirmed. |
 | Scrum master | Oversees the scrum framework by facilitating standups, consults with the team and internal stakeholders to ensure the project stays on course. |
+
 *Table 2: List of essential Agile terms*
 
 ### Linear Reg Development Sprints
@@ -73,14 +75,12 @@ Linear Reg allows both inexperienced users and developers to gain experience wor
 People tend to use the terms AI and ML [interchangeably](https://cloud.google.com/learn/artificial-intelligence-vs-machine-learning), but they are not the same thing. AI is the **concept** of enabling a machine to reason like a human, while ML is one of the **applications** of AI that allows machines to extract knowledge and learn from data.
 
 ![Image of an umbrella labeled 'Artificial Intelligence' above terms including 'Machine Learning'.](/docs/assets/images/ai-umbrella.png "Artificial intelligence umbrella")
+
 *Figure 1: Artificial intelligence is a broad topic that covers many applications. Image taken from [Why Business Leaders Should Think of AI as an Umbrella Term](https://medium.com/opex-analytics/why-business-leaders-should-think-of-ai-as-an-umbrella-term-dba8badc55e4)*
 
 There are [three categories](https://www.ibm.com/topics/machine-learning) of ML models:
-
 * **Supervised learning**, which uses labeled datasets to train algorithms to classify data.
-
 * **Unsupervised learning**, which uses algorithms to analyze and group unlabeled datasets and to find hidden patterns or groupings.
-
 * **Semi-supervised learning**, which is a midpoint between supervised and unsupervised learning and uses smaller labeled datasets to help classify the larger unlabeled datasets.
 
 ### What is Linear Regression?
@@ -88,16 +88,14 @@ There are [three categories](https://www.ibm.com/topics/machine-learning) of ML 
 Linear regression is a [supervised machine learning algorithm](https://www.ibm.com/topics/supervised-learning) used to identify a linear relationship between a dependent variable and one or more independent variables by plotting a line of best fit. It's typically used to make predictions.
 
 ![Screenshot visualizing the line of regression](/docs/assets/images/regression-line.png "Line of regression")
+
 *Figure 2: Visualization of the best fit line for a linear regression model. Image from [What is Linear Regression? Types, Equation, Examples, and Best Practices for 2022](https://www.spiceworks.com/tech/artificial-intelligence/articles/what-is-linear-regression/)*
 
 [Linear regression](https://www.spiceworks.com/tech/artificial-intelligence/articles/what-is-linear-regression/) helps businesses evaluate trends, make estimates, and forecast outcomes before making decisions. Some [basic examples](https://datatab.net/tutorial/linear-regression) where linear regression models can be used for information analysis and predictions include:
 
 * Does height have an influence on the weight of a person?
-
 * What is the relationship between pollution levels and rising temperatures?
-
 * How does the age of a home affect the purchase price?
-
 * How does RAM capacity affect its cost?
 
 The above are examples of simple linear regression as there is only 1 dependent and 1 independent variable. If there are multiple independent variables, then it would be called multiple linear regression.
@@ -105,11 +103,8 @@ The above are examples of simple linear regression as there is only 1 dependent 
 The regression line is described by the equation **ŷ = bx + a**, where:
 
 * **ŷ** is the estimated dependent variable
-
 * **b** is the slope (the gradient of the straight line)
-
 * **x** is the independent variable
-
 * **a** is the y-intercept (the point of intersection with the y-axis)
 
 ## Linear Reg Project Team 
@@ -126,6 +121,7 @@ The following stakeholders and cross-functional teams in Table 3 were involved i
 | Documentation Manager | Amy Briggs | Oversee documentation milestones |
 | Technical Writers | <ul><li>Katie Wallace</li><li>Nina Sanchez</li></ul> | Write product documentation |
 | Developers | <ul><li>Pedro Martinez Ferrer</li><li>Alberto Benito Gómez</li><li>Miguel Armesto Dapena</li><li>Pablo Fariña Clemente</li> | Research and develop product |
+
 *Table 3: Names, roles, and responsibilities of the Linear Reg development team*
 
 ### Considerations for New Developers 
@@ -168,7 +164,5 @@ The following considerations should be kept in mind when expanding Linear Reg's 
 Localization efforts were performed throughout the development and documentation of Linear Reg. To support translation, best practices in User Experience (UX) writing were followed. User Interface (UI) elements and associated microcopy is:
 
 * **Concise:** efficient and focused.
-
 * **Purposeful:** goal-oriented and valuable.
-
 * **Clear:** simple and specific language, void of jargon.
