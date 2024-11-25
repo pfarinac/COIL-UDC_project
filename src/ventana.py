@@ -19,7 +19,7 @@ from PyQt6.QtGui import *
 from data_func import *
 from data_UI import *
 from prepro_UI import *
-
+from model_UI import*
  
 
 class CsvViewer(QMainWindow):
@@ -39,83 +39,14 @@ class CsvViewer(QMainWindow):
      
         self.d_u = UI()
         self.p_u = PUI(self.d_u.d_f)
-        
+        self.m_u = MUI(self.d_u.d_f)
         self.d_u.confirm.clicked.connect(self.habilitar_count_nulls)
-        
+        self.p_u.btn_count_nulls.clicked.connect(self.habilitar_model_button)
+        self.m_u.model_button.clicked.connect(self.deshabilitar_buttons)
 
         self.p_u.layout_entrada_salida_preprocesado.addLayout(self.d_u.layout_entrada_salida)
         self.p_u.layout_entrada_salida_preprocesado.addLayout(self.p_u.layout_preprocesado)
         self.p_u.layout_entrada_salida_preprocesado.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        #Layout para gráfica y fórmula
-        layout_graph_formula = QHBoxLayout()
-        
-        self.graph_widget = QWidget()  # Usamos QWidget en lugar de QGroupBox
-        self.graph_widget.setStyleSheet("""
-            QWidget {
-                font-size: 16px;
-                font-weight: bold;
-                color: white; /* Texto en blanco */
-                background-color: #1E1E1E; /* Fondo gris oscuro */
-                border: 2px solid #00C853; /* Borde verde vibrante */
-                border-radius: 5px; /* Esquinas redondeadas */
-                padding: 10px; /* Espaciado interno */
-            }
-        """)
-        
-        # Layout interno para la gráfica
-        self.graph_layout = QVBoxLayout()
-        self.graph_widget.setLayout(self.graph_layout)
-        
-        # Título y canvas para la gráfica
-        self.graph_title = QLabel("Graph")
-        self.graph_title.setStyleSheet("font-weight: bold; font-size: 16px; color: white; background: transparent; border: none;")
-        
-        self.figure = Figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.canvas.setFixedSize(700, 400)
-        self.canvas.setVisible(False)
-        
-        # Agregar widgets al layout de la gráfica
-        self.graph_layout.addWidget(self.graph_title)
-        self.graph_layout.addWidget(self.canvas)
-        
-        # Layout para la fórmula
-        self.formula_layout = QVBoxLayout()
-        
-        # Título y etiqueta para la fórmula
-        self.formula_title = QLabel("Formula")
-        self.formula_title.setStyleSheet("font-weight: bold; font-size: 16px; color: white;")
-        self.label_formula = QLabel("")
-        self.label_formula.setStyleSheet("font-weight: bold; font-size: 14px; color: white;")
-        self.label_formula.setVisible(False)
-        self.label_r2_mse = QLabel("")
-        self.label_r2_mse.setStyleSheet("font-weight: bold; font-size: 14px; color: white;")
-        self.label_r2_mse.setVisible(False)
-
-        
-        # Agregar widgets al layout de la fórmula
-        self.formula_layout.addWidget(self.formula_title)
-        self.formula_layout.addWidget(self.label_formula)
-        self.formula_layout.addWidget(self.label_r2_mse)
-        
-        # Crear un widget contenedor para la fórmula (opcional)
-        self.formula_widget = QWidget()
-        self.formula_widget.setLayout(self.formula_layout)
-        
-        # Estilos solo para el contenedor del widget
-        self.formula_widget.setStyleSheet("""QWidget {
-            background-color: #1E1E1E;  /* Gris oscuro para fondo */
-            border: 2px solid #00C853;  /* Borde verde vibrante */
-            border-radius: 5px;         /* Esquinas redondeadas */
-            padding: 10px;              /* Espaciado interno */
-            }
-            QLabel {border: 0px}
-        """)
-
-        # Agregar el widget de fórmula al layout principal
-        layout_graph_formula.addWidget(self.graph_widget)
-        layout_graph_formula.addWidget(self.formula_widget)
-        
         
         # Layout decripcion del modelo
         layout_descripcion_modelo = QVBoxLayout()
@@ -129,35 +60,7 @@ class CsvViewer(QMainWindow):
         self.description_text.setPlaceholderText("Add a description for the model...")
         layout_descripcion_modelo.addWidget(self.description_text)
         
-        # Layout visualizar e iniciar modelo
-        layout_visualizar_iniciar_modelo = QVBoxLayout()
-        #layout_visualizar_iniciar_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        # Añadir etiqueta con el titulo
-        self.model_title = QLabel("View and start model")
-        self.model_title.setStyleSheet("font-size: 18px; font-weight: bold;")
-        layout_visualizar_iniciar_modelo.addWidget(self.model_title)
-        #Añadir etiqueta para el boton start model
-        layout_boton_start = QGridLayout()
-        self.model_button =  QPushButton("Start model")
-        self.model_button.setFixedSize(135, 40)
-        self.model_button.setEnabled(False)
-        self.model_button.clicked.connect(self.start_model)
-        layout_boton_start.addWidget(self.model_button)
-        layout_boton_start.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        layout_visualizar_iniciar_modelo.addLayout(layout_boton_start)
-        # Añadir layout de la formula
-        layout_visualizar_iniciar_modelo.addLayout(layout_graph_formula)
-        # Añadir layout descripcion
-        layout_visualizar_iniciar_modelo.addLayout(layout_descripcion_modelo)
-        # Limites layout visualizar e iniciar modelo
-        layout_visualizar_iniciar_modelo.setContentsMargins(0,20,0,20)
-        
-
-       
-        
-        
-        
-        
+        self.m_u.layout_visualizar_iniciar_modelo.addLayout(layout_descripcion_modelo)
         
         # Layout botones guardar modelo y hacer prediccion
         layout_guardarmodelo_prediccion = QHBoxLayout()
@@ -197,7 +100,7 @@ class CsvViewer(QMainWindow):
         layout = QVBoxLayout()
         layout.addLayout(self.d_u.layout)
         layout.addLayout(self.p_u.layout_entrada_salida_preprocesado)
-        layout.addLayout(layout_visualizar_iniciar_modelo)
+        layout.addLayout(self.m_u.layout_visualizar_iniciar_modelo)
         layout.addLayout(layout_mostrar_prediccion)
         layout.addLayout(layout_guardarmodelo_prediccion)
     
@@ -226,40 +129,17 @@ class CsvViewer(QMainWindow):
    
     def habilitar_count_nulls(self):
         self.p_u.btn_count_nulls.setEnabled(True)
-    # Método para crear el modelo y mostrar la gráfica
-    def start_model(self):
-        # Limpiar campos de entrada anteriores antes de iniciar un nuevo modelo
-        self.reset_input_fields()
-        self.model_input = self.input_col.copy()
-        self.model_output = self.output_col
-        if self.df is not None and self.model_input and self.model_output:
-            self.model, self.r2, self.mse = model(self.df[self.model_input], self.df[self.model_output])
-            if len(self.model_input) == 1:
-                self.figure.clear()
-                ax = self.figure.add_subplot(111)
-                ax.scatter(self.df[self.model_input], self.df[self.model_output], label='Data')
-                ax.plot(self.df[self.model_input], self.model.predict(self.df[self.model_input]), color='red', label='Adjustment')
-                ax.set_xlabel(self.model_input[0])
-                ax.set_ylabel(self.model_output)
-                ax.set_title('Lineal regression')
-                ax.legend()
-                self.canvas.setVisible(True)
-            else:
-                QMessageBox.warning(self, "Error", "You must select a single input column to be able to display the graph")
-            self.label_r2_mse.setVisible(True)
-            self.label_formula.setText(f"The model formula is:\n{self.formula(self.input_col,self.output_col)}")
-            self.label_formula.setVisible(True)
-            self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
-            self.canvas.draw()
-            self.save_button.setEnabled(True)  # Habilitar el botón de guardado después de crear el modelo
-            self.btn_count_nulls.setEnabled(False)
-            self.btn_remove_nulls.setEnabled(False)
-            self.btn_replace_nulls_mean.setEnabled(False)
-            self.btn_replace_nulls_median.setEnabled(False)
-            self.btn_replace_nulls_value.setEnabled(False)
-            self.model_button.setEnabled(False)
-            self.predict_button.setEnabled(True)
-            self.enable_prediction()
+
+    def habilitar_model_button(self):
+        self.m_u.model_button.setEnabled(True)
+
+    def deshabilitar_buttons(self):
+        self.p_u.btn_count_nulls.setEnabled(False)
+        self.p_u.btn_remove_nulls.setEnabled(False)
+        self.p_u.btn_replace_nulls_mean.setEnabled(False)
+        self.p_u.btn_replace_nulls_median.setEnabled(False)
+        self.p_u.btn_replace_nulls_value.setEnabled(False)
+        self.m_u.model_button.setEnabled(False)
     # Método para guardar el modelo y sus metadatos en un archivo .joblib
     def save_model(self):
         
@@ -384,12 +264,7 @@ class CsvViewer(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Prediction error", f"Error during prediction: {e}")
 
-    def formula(self, input_col,output_col):
-            formula = f"{output_col} = "
-            for i in range(len(input_col)):
-                formula += f"{input_col[i]}  *  {self.model.coef_[i]}  +  "
-            formula += f" {self.model.intercept_}"
-            return formula
+    
     def reset_input_fields(self):
     # Eliminar todos los campos de entrada actuales
         for field in self.input_labels.values():
