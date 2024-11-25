@@ -75,9 +75,7 @@ class CsvViewer(QMainWindow):
         self.features_label = QLabel("Select input columns (features):")
         self.features_label.setStyleSheet("font-size: 16px;")
         layout_entrada.addWidget(self.features_label)
-        layout_entrada_selectores = QHBoxLayout()
-        layout_entrada_izq = QVBoxLayout()
-        layout_entrada_dcha = QVBoxLayout()
+        
 
         # Añadir etiqueta para la seleccion de columnas de entrada
         self.features_list = QListWidget()
@@ -353,11 +351,10 @@ class CsvViewer(QMainWindow):
             self.input_col.remove(input_col_text)
         else:
             self.input_col.append(input_col_text)
-            self.habilitar_botones_preprocesado(False)
+            self.btn_count_nulls.setEnabled(False)
 
    
     def habilitar_botones_preprocesado(self, habilitar):
-        self.btn_count_nulls.setEnabled(habilitar)
         self.btn_remove_nulls.setEnabled(habilitar)
         self.btn_replace_nulls_mean.setEnabled(habilitar)
         self.btn_replace_nulls_median.setEnabled(habilitar)
@@ -374,7 +371,7 @@ class CsvViewer(QMainWindow):
         else:
             message = "Your selection has been successfully saved.\n"
             QMessageBox.information(self,"Information", message)
-            self.habilitar_botones_preprocesado(True)  
+            self.btn_count_nulls.setEnabled(True)  
 
     def load_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open CSV/XLSX/SQLite", "",
@@ -448,6 +445,7 @@ class CsvViewer(QMainWindow):
             # Crear el mensaje con el conteo de valores nulos por cada columna
             null_info = "\n".join([f"{col}: {count}" for col, count in null_counts.items()])
             QMessageBox.information(self, "Null values", f"Number of null values ​​per column:\n{null_info}")
+            self.habilitar_botones_preprocesado(True)
             self.model_button.setEnabled(True)
         else:
             QMessageBox.warning(self, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
@@ -597,6 +595,7 @@ class CsvViewer(QMainWindow):
         self.viewer_title.hide()
         self.prep_title.hide()
         self.model_title.hide()
+        self.entrada_salida_titulo.hide()
         # Botones de preprocesado
         self.btn_count_nulls.hide()
         self.btn_remove_nulls.hide()
@@ -607,11 +606,10 @@ class CsvViewer(QMainWindow):
         self.model_button.hide()
         self.load_button.hide()
         self.file_path_label.hide()
+        self.graph_widget.hide()
         self.save_button.setEnabled(True)
         # Modelo
         self.canvas.hide()
-        self.graph_widget.hide()
-        self.entrada_salida_titulo.hide()
         self.label_formula.setVisible(True)
         self.label_r2_mse.setVisible(True)
         
