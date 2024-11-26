@@ -19,7 +19,8 @@ from PyQt6.QtGui import *
 from data_func import *
 from data_UI import *
 from prepro_UI import *
-from model_UI import*
+from model_UI import *
+from SLD_UI import *
  
 
 class CsvViewer(QMainWindow):
@@ -27,9 +28,7 @@ class CsvViewer(QMainWindow):
     def __init__(self):
         super().__init__()
         self.df = None  # DataFrame para almacenar el archivo cargado
-        self.model = None
-        self.input_fields = {}
-        self.input_labels = {}
+        
         self.inicializarUI()
 
     def inicializarUI(self):
@@ -40,59 +39,29 @@ class CsvViewer(QMainWindow):
         self.d_u = UI()
         self.p_u = PUI(self.d_u.d_f)
         self.m_u = MUI(self.d_u.d_f)
+        self.sld_u = SLDUI(self.m_u.funcs)
         self.d_u.confirm.clicked.connect(self.habilitar_count_nulls)
         self.p_u.btn_count_nulls.clicked.connect(self.habilitar_model_button)
+
         self.m_u.model_button.clicked.connect(self.deshabilitar_buttons)
+        self.m_u.model_button.clicked.connect(self.sld_u.funcs.reset_input_fields)
+        self.m_u.model_button.clicked.connect(self.enable_model)
+        
+
+        self.d_u.load_model_button.clicked.connect(self.sld_u.funcs.load_model)
+        self.d_u.load_model_button.clicked.connect(self.display_loaded_model)
+        self.d_u.load_model_button.clicked.connect(self.sld_u.enable_prediction)
+
 
         self.p_u.layout_entrada_salida_preprocesado.addLayout(self.d_u.layout_entrada_salida)
         self.p_u.layout_entrada_salida_preprocesado.addLayout(self.p_u.layout_preprocesado)
         self.p_u.layout_entrada_salida_preprocesado.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
-        # Layout decripcion del modelo
-        layout_descripcion_modelo = QVBoxLayout()
-        layout_descripcion_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        # Añadir etiqueta con el titulo
-        self.description_label = QLabel("Model description (optional): ")
-        self.description_label.setStyleSheet("font-size: 18px; font-weight: bold;")
-        layout_descripcion_modelo.addWidget(self.description_label)
-        # Añadir etiqueta para escribir descripcion
-        self.description_text = QTextEdit()
-        self.description_text.setPlaceholderText("Add a description for the model...")
-        layout_descripcion_modelo.addWidget(self.description_text)
+    
         
-        self.m_u.layout_visualizar_iniciar_modelo.addLayout(layout_descripcion_modelo)
-        
-        # Layout botones guardar modelo y hacer prediccion
-        layout_guardarmodelo_prediccion = QHBoxLayout()
-        layout_guardarmodelo_prediccion.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        # Añadir boton guardar modelo
-        self.save_button = QPushButton("Save Model")
-        self.save_button.setFixedSize(135, 40)
-        self.save_button.setEnabled(False)
-        self.save_button.clicked.connect(self.save_model)
-        layout_guardarmodelo_prediccion.addWidget(self.save_button)
-        #Añadir boton prediccion
-        self.predict_button = QPushButton("Make Prediction")
-        self.predict_button.setFixedSize(135, 40)
-        self.predict_button.setEnabled(False)  # Deshabilitado inicialmente
-        self.predict_button.clicked.connect(self.make_prediction)
-        layout_guardarmodelo_prediccion.addWidget(self.predict_button)
-
-        
-
+        self.m_u.layout_visualizar_iniciar_modelo.addLayout(self.sld_u.layout_descripcion_modelo)
         
        
-        #Layout mostrar prediccion
-        layout_mostrar_prediccion = QVBoxLayout()
-        layout_mostrar_prediccion.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        # Área de predicción
-        self.prediction_area = QWidget()
-        self.prediction_layout = QVBoxLayout()
-        self.prediction_area.setLayout(self.prediction_layout)
-        layout_mostrar_prediccion.addWidget(self.prediction_area)
-        # Área para mostrar el resultado de la predicción
-        self.result_label = QLabel("")
-        layout_mostrar_prediccion.addWidget(self.result_label)
         
 
     
@@ -101,8 +70,8 @@ class CsvViewer(QMainWindow):
         layout.addLayout(self.d_u.layout)
         layout.addLayout(self.p_u.layout_entrada_salida_preprocesado)
         layout.addLayout(self.m_u.layout_visualizar_iniciar_modelo)
-        layout.addLayout(layout_mostrar_prediccion)
-        layout.addLayout(layout_guardarmodelo_prediccion)
+        layout.addLayout(self.sld_u.layout_mostrar_prediccion)
+        layout.addLayout(self.sld_u.layout_guardarmodelo_prediccion)
     
     
         container = QWidget()
@@ -140,138 +109,52 @@ class CsvViewer(QMainWindow):
         self.p_u.btn_replace_nulls_median.setEnabled(False)
         self.p_u.btn_replace_nulls_value.setEnabled(False)
         self.m_u.model_button.setEnabled(False)
-    # Método para guardar el modelo y sus metadatos en un archivo .joblib
-    def save_model(self):
-        
-        file_path, _ = QFileDialog.getSaveFileName(self, "Save model", "", "Joblib Files (*.joblib)")
-        
-        if file_path:
-            model_data = {
-                "model": self.model,
-                "description": self.description_text.toPlainText(),
-                "input_columns": self.model_input,
-                "output_column": self.model_output,
-                "r2_score": self.r2,
-                "mse": self.mse
-            }
-            try:
-                dump(model_data, file_path)
-                QMessageBox.information(self, "Saved Successfully", "The model has been saved successfully.")
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Could not save model: {str(e)}")
-
-    def load_model(self):
-        # Abrir el diálogo de selección de archivo
-        file_name, _ = QFileDialog.getOpenFileName(self, "Load model", "", "Model Files (*.pkl *.joblib)")
-
-       
-
-        if file_name:
-            try:
-                # Limpiar campos de entrada anteriores antes de iniciar un nuevo modelo
-                self.reset_input_fields()
-                # Cargar el modelo desde el archivo
-                loaded_model_data = joblib.load(file_name)
-                # Actualizar la interfaz con la información del modelo cargado
-                self.display_loaded_model(loaded_model_data)
-                # Mostrar mensaje de confirmación de carga
-                QMessageBox.information(self, "Load model", "The model has been loaded successfully.")
-                self.enable_prediction()
-            except Exception as e:
-                # Mostrar mensaje de error si el archivo es inválido
-                QMessageBox.warning(self, "Error Loading Model", f"Could not load model: {str(e)}")
-
-    def display_loaded_model(self, model_data,):
+    
+    def display_loaded_model(self, model_data):
         # Ocultar secciones de carga de datos y selección de columnas
-        self.table_widget.hide()
-        self.features_label.hide()
-        self.features_list.hide()
-        self.target_label.hide()
-        self.target_combo.hide()
-        self.viewer_title.hide()
-        self.prep_title.hide()
-        self.model_title.hide()
-        self.entrada_salida_titulo.hide()
+        self.d_u.table_widget.hide()
+        self.d_u.features_label.hide()
+        self.d_u.features_list.hide()
+        self.d_u.target_label.hide()
+        self.d_u.target_combo.hide()
+        self.d_u.viewer_title.hide()
+        self.p_u.prep_title.hide()
+        self.m_u.model_title.hide()
+        self.d_u.entrada_salida_titulo.hide()
         # Botones de preprocesado
-        self.btn_count_nulls.hide()
-        self.btn_remove_nulls.hide()
-        self.btn_replace_nulls_mean.hide()
-        self.btn_replace_nulls_median.hide()
-        self.btn_replace_nulls_value.hide()
-        self.confirm.hide()
-        self.model_button.hide()
-        self.load_button.hide()
-        self.file_path_label.hide()
-        self.save_button.setEnabled(True)
+        self.p_u.btn_count_nulls.hide()
+        self.p_u.btn_remove_nulls.hide()
+        self.p_u.btn_replace_nulls_mean.hide()
+        self.p_u.btn_replace_nulls_median.hide()
+        self.p_u.btn_replace_nulls_value.hide()
+        self.d_u.confirm.hide()
+        self.m_u.model_button.hide()
+        self.d_u.load_button.hide()
+        self.d_u.file_path_label.hide()
+        self.sld_u.save_button.setEnabled(True)
         # Modelo
-        self.canvas.hide()
-        self.graph_widget.hide()
-        self.label_formula.setVisible(True)
-        self.label_r2_mse.setVisible(True)
-        self.result_label.setVisible(False)
+        self.m_u.canvas.hide()
+        self.m_u.graph_widget.hide()
+        self.m_u.label_formula.setVisible(True)
+        self.m_u.label_r2_mse.setVisible(True)
+        self.sld_u.result_label.setVisible(False)
 
         # Mostrar los detalles del modelo cargado
-        if "model" in model_data:
-            self.model = model_data["model"]
-            self.model_input = model_data["input_columns"]
-            self.model_output = model_data["output_column"]
-            r2_score = model_data.get("r2_score", "N/A")
-            mse = model_data.get("mse", "N/A")
-            description = model_data.get("description", "No description available.")
-
-            
-    
+        if "model" in self.sld_u.funcs.loaded_model_data:
             # Actualizar etiquetas
-            self.label_formula.setText(f"Model formula: {self.formula(self.model_input,self.model_output)}")
-            self.label_r2_mse.setText(f"R²: {r2_score}  |  MSE: {mse}")
-            self.description_text.setText(description)    
+            self.m_u.label_formula.setText(f"Model formula: {self.m_u.funcs.formula(self.sld_u.funcs.model_input,self.sld_u.funcs.model_output)}")
+            self.m_u.label_r2_mse.setText(f"R²: {self.sld_u.funcs.r2_score}  |  MSE: {self.sld_u.funcs.mse}")
+            self.sld_u.description_text.setText(self.sld_u.funcs.description)    
+    def enable_model(self):
+        self.sld_u.save_button.setEnabled(True)
+        self.sld_u.predict_button.setEnabled(True)
+        self.sld_u.enable_prediction()
+   
 
     
-    def enable_prediction(self):
-        # Habilita la funcionalidad de predicción cuando un modelo está disponible
-        if self.model:
-            self.predict_button.setEnabled(True)
-            self.generate_input_fields()
 
-    def generate_input_fields(self):
-        # Genera campos de entrada dinámicos basados en las variables de entrada del modelo
-        for field_name in self.model.feature_names_in_:
-            input_label = QLabel(f"Enter {field_name}:")
-            input_field = QLineEdit()
-            self.prediction_layout.addWidget(input_label)
-            self.prediction_layout.addWidget(input_field)
-            self.input_fields[field_name] = input_field
-            self.input_labels[field_name] = input_label
-    def make_prediction(self):
-        # Realizar predicción utilizando el modelo cargado o creado
-        try:
-            input_values = []
-            for field_name, input_field in self.input_fields.items():
-                value = input_field.text()
-                if value == "":
-                    raise ValueError(f"Please enter a value for {field_name}")
-                input_values.append(float(value))
 
-            # Realizar la predicción
-            prediction = self.model.predict([input_values])
-            self.result_label.setVisible(True)
-            if self.model_output == None:
-                self.result_label.setText(f"Prediction result ({self.output_col}): {prediction[0]:.4f}")
-            else:
-                self.result_label.setText(f"Prediction result ({self.model_output}): {prediction[0]:.4f}")
-        except ValueError as ve:
-            QMessageBox.warning(self, "Incorrect input", str(ve))
-        except Exception as e:
-            QMessageBox.critical(self, "Prediction error", f"Error during prediction: {e}")
 
-    
-    def reset_input_fields(self):
-    # Eliminar todos los campos de entrada actuales
-        for field in self.input_labels.values():
-            field.deleteLater()
-        for field in self.input_fields.values():
-            field.deleteLater()
-        self.input_fields.clear()
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyleSheet("""

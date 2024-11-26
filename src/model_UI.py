@@ -24,7 +24,7 @@ class MUI:
         self.canvas = FigureCanvas(self.figure)
         self.label_formula = QLabel("")
         self.label_r2_mse = QLabel("")
-        self.funcs = model_funcs(self.d_f,self.figure,self.canvas,self.label_formula,self.label_r2_mse)
+        self.funcs = MFuncs(self.d_f,self.figure,self.canvas,self.label_formula,self.label_r2_mse)
         self.inicializar()
     def inicializar(self):
         #Layout para gráfica y fórmula

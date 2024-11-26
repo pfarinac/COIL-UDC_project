@@ -15,7 +15,7 @@ from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from modelo_lineal import model
 
-class model_funcs:
+class MFuncs:
     def __init__(self,data,figure:Figure,canvas: FigureCanvas, label_formula:QLabel, label_r2_mse:QLabel) -> None:
         self.d_f = data
         self.figure = figure
@@ -27,7 +27,6 @@ class model_funcs:
         self.update_input_output()
         self.update_df()
         # Limpiar campos de entrada anteriores antes de iniciar un nuevo modelo
-        #self.reset_input_fields()
         self.model_input = self.input_col.copy()
         self.model_output = self.output_col
         if self.df is not None and self.model_input and self.model_output:
@@ -51,10 +50,7 @@ class model_funcs:
             self.label_formula.setVisible(True)
             self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
             self.canvas.draw()
-            #self.save_button.setEnabled(True)  # Habilitar el botón de guardado después de crear el modelo
-            #self.predict_button.setEnabled(True)
-            #self.enable_prediction()
-
+            
     def formula(self, input_col,output_col):
             formula = f"{output_col} = "
             for i in range(len(input_col)):

@@ -20,8 +20,7 @@ class PFuncs:
             # Crear el mensaje con el conteo de valores nulos por cada columna
             null_info = "\n".join([f"{col}: {count}" for col, count in null_counts.items()])
             QMessageBox.information(None, "Null values", f"Number of null values ​​per column:\n{null_info}")
-            #self.habilitar_botones_preprocesado(True)
-            #self.model_button.setEnabled(True)
+            
         else:
             QMessageBox.warning(None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
@@ -36,7 +35,7 @@ class PFuncs:
             self.df.dropna(subset=columns_to_process, inplace=True)
             self.d_f.update_table(self.table_widget,self.df)
             QMessageBox.information(None, "Deleted Rows", f" {original_shape[0] - self.df.shape[0]} rows with null values in the selectd columns were deleted.")
-            #self.model_button.setEnabled(True)
+            
         else:
             QMessageBox.warning(None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
@@ -54,7 +53,7 @@ class PFuncs:
                     self.df[col].fillna(mean_value, inplace=True)
             self.d_f.update_table(self.table_widget,self.df)
             QMessageBox.information(None, "Replaced values", "Null values ​​have been replaced by the mean of the selected columns.")
-            #self.model_button.setEnabled(True)
+            
         else:
             QMessageBox.warning(None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
@@ -72,7 +71,7 @@ class PFuncs:
                     self.df[col].fillna(median_value, inplace=True)
             self.d_f.update_table(self.table_widget,self.df)
             QMessageBox.information(None, "Replaced values", "Null values ​​have been replaced by the median of the selected columns.")
-            #self.model_button.setEnabled(True)
+            
         else:
             QMessageBox.warning(None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
@@ -88,11 +87,10 @@ class PFuncs:
 
                 for col in columns_to_process:
                     if self.df[col].isnull().any():
-                        print("prueba valor")
                         self.df[col].fillna(value, inplace=True)
                 self.d_f.update_table(self.table_widget,self.df)
                 QMessageBox.information(None, "Replaced values", f"Null values has been replaced by '{value}' in the selected columns.")
-                #self.model_button.setEnabled(True)
+                
             else:
                 QMessageBox.warning(None, "Warning", "Please enter a valid value to replace nulls.")
         else:
