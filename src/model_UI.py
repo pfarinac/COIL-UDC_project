@@ -1,15 +1,10 @@
-from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
-QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit,QFrame)
-from PyQt6.QtCore import QStandardPaths,Qt
-from PyQt6.QtGui import QFont 
-import joblib
+from PyQt6.QtWidgets import (QWidget, QPushButton, 
+QVBoxLayout, QLabel, QHBoxLayout)
+from PyQt6.QtCore import Qt
 from joblib import dump
-from PyQt6.QtGui import QColor
 from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from PyQt6.QtWidgets import QHeaderView
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *

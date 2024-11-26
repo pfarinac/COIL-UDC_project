@@ -1,8 +1,6 @@
-from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
-QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, QGridLayout,
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit,QFrame)
-from PyQt6.QtCore import QStandardPaths,Qt
-from PyQt6.QtGui import QFont    
+from PyQt6.QtWidgets import (QPushButton,
+QVBoxLayout, QLabel, QGridLayout, QHBoxLayout)
+from PyQt6.QtCore import Qt   
 from data_func import *  
 from prepro_func import *
 

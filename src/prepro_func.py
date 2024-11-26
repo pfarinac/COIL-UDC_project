@@ -1,8 +1,4 @@
-from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog, 
-QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel, 
-QHeaderView, QMessageBox, QComboBox, QLineEdit, QHBoxLayout, QListWidget,QMainWindow,QInputDialog, QScrollArea, QTextEdit,QFrame)
-from PyQt6.QtCore import QStandardPaths,Qt
-from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (QMessageBox, QInputDialog)
 class PFuncs:
     def __init__(self, data) -> None:
         self.table_widget = None
