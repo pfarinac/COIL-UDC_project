@@ -17,10 +17,10 @@ print("Intercepto:", model.intercept_)
 print("Predicción antes de guardar:", model.predict([[3, 4]]))
 
 # Guardar el modelo en un archivo utilizando joblib
-joblib.dump(model, 'linear_model_joblib.pkl')
+joblib.dump(model, 'linear_model_joblib.joblib')
 
 # Cargar el modelo desde el archivo .pkl con joblib
-loaded_model = joblib.load('linear_model_joblib.pkl')
+loaded_model = joblib.load('linear_model_joblib.joblib')
 
 # Mostrar los detalles del modelo cargado
 print("\n=== Detalles del modelo cargado ===")
