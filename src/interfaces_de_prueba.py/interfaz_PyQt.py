@@ -2,6 +2,8 @@ import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QMessageBox, QLineEdit
 
 # Crear la clase de la ventana principal
+
+
 class VentanaSimple(QWidget):
     def __init__(self):
         super().__init__()
@@ -12,7 +14,7 @@ class VentanaSimple(QWidget):
         self.setWindowTitle('Ventana Simple con PyQt6')
 
         # Tamaño de la ventana
-        self.setGeometry(100,100,250,250)
+        self.setGeometry(100, 100, 250, 250)
         # Crear un layout vertical
         layout = QVBoxLayout()
 
@@ -34,7 +36,9 @@ class VentanaSimple(QWidget):
         texto_ingresado = self.entrada_texto.text()
 
         # Mostrar un mensaje con el texto ingresado
-        QMessageBox.information(self, 'Mensaje', f'Has presionado el botón. Texto ingresado: {texto_ingresado}')
+        QMessageBox.information(
+            self, 'Mensaje', f'Has presionado el botón. Texto ingresado: {texto_ingresado}')
+
 
 # Crear la aplicación y la ventana principal
 app = QApplication(sys.argv)

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import (QPushButton, QFileDialog, QLabel,QMessageBox)
+from PyQt6.QtWidgets import (QPushButton, QFileDialog, QLabel, QMessageBox)
 import joblib
 from joblib import dump
 from modelo_lineal import model
@@ -8,21 +8,23 @@ from PyQt6.QtGui import *
 from data_func import *
 from data_UI import *
 from prepro_UI import *
-from model_UI import*
+from model_UI import *
 
 
 class SLDFuncs:
-    def __init__(self,m_f,description_text, result_label:QLabel,predict_button = QPushButton) -> None:
+    def __init__(self, m_f, description_text, result_label: QLabel, predict_button=QPushButton) -> None:
         self.m_f = m_f
         self.description_text = description_text
         self.result_label = result_label
         self.predict_button = predict_button
         self.input_fields = {}
         self.input_labels = {}
+
     def save_model(self):
         self.update_model()
-        file_path, _ = QFileDialog.getSaveFileName(None, "Save model", "", "Joblib Files (*.joblib)")
-        
+        file_path, _ = QFileDialog.getSaveFileName(
+            None, "Save model", "", "Joblib Files (*.joblib)")
+
         if file_path:
             model_data = {
                 "model": self.model,
@@ -34,14 +36,16 @@ class SLDFuncs:
             }
             try:
                 dump(model_data, file_path)
-                QMessageBox.information(None, "Saved Successfully", "The model has been saved successfully.")
+                QMessageBox.information(
+                    None, "Saved Successfully", "The model has been saved successfully.")
             except Exception as e:
-                QMessageBox.critical(None, "Error", f"Could not save model: {str(e)}")
+                QMessageBox.critical(
+                    None, "Error", f"Could not save model: {str(e)}")
 
     def load_model(self):
         # Abrir el diálogo de selección de archivo
-        file_name, _ = QFileDialog.getOpenFileName(None, "Load model", "", "Model Files (*.pkl *.joblib)")
-       
+        file_name, _ = QFileDialog.getOpenFileName(
+            None, "Load model", "", "Model Files (*.pkl *.joblib)")
 
         if file_name:
             try:
@@ -52,10 +56,13 @@ class SLDFuncs:
                 # Actualizar la interfaz con la información del modelo cargado
                 self.loaded_model(self.loaded_model_data)
                 # Mostrar mensaje de confirmación de carga
-                QMessageBox.information(None, "Load model", "The model has been loaded successfully.")
+                QMessageBox.information(
+                    None, "Load model", "The model has been loaded successfully.")
             except Exception as e:
                 # Mostrar mensaje de error si el archivo es inválido
-                QMessageBox.warning(None, "Error Loading Model", f"Could not load model: {str(e)}")
+                QMessageBox.warning(None, "Error Loading Model",
+                                    f"Could not load model: {str(e)}")
+
     def make_prediction(self):
         self.update_model()
         # Realizar predicción utilizando el modelo cargado o creado
@@ -71,17 +78,19 @@ class SLDFuncs:
             prediction = self.model.predict([input_values])
             self.result_label.setVisible(True)
             if self.model_output == None:
-                self.result_label.setText(f"Prediction result ({self.output_col}): {prediction[0]:.4f}")
+                self.result_label.setText(
+                    f"Prediction result ({self.output_col}): {prediction[0]:.4f}")
             else:
-                self.result_label.setText(f"Prediction result ({self.model_output}): {prediction[0]:.4f}")
+                self.result_label.setText(
+                    f"Prediction result ({self.model_output}): {prediction[0]:.4f}")
         except ValueError as ve:
             QMessageBox.warning(None, "Incorrect input", str(ve))
         except Exception as e:
-            QMessageBox.critical(None, "Prediction error", f"Error during prediction: {e}")
+            QMessageBox.critical(None, "Prediction error",
+                                 f"Error during prediction: {e}")
 
-    
     def reset_input_fields(self):
-    # Eliminar todos los campos de entrada actuales
+        # Eliminar todos los campos de entrada actuales
         for field in self.input_labels.values():
             field.deleteLater()
         for field in self.input_fields.values():
@@ -96,7 +105,8 @@ class SLDFuncs:
             self.model_output = model_data["output_column"]
             self.r2_score = model_data.get("r2_score", "N/A")
             self.mse = model_data.get("mse", "N/A")
-            self.description = model_data.get("description", "No description available.")
+            self.description = model_data.get(
+                "description", "No description available.")
             self.m_f.model = self.model
             self.m_f.model_input = self.model_input
             self.m_f.model_output = self.model_output

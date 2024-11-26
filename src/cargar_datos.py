@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlite3
 
+
 def cargar_datos(archivo):
     # Verificar el tipo de archivo por su extensión
     if archivo.endswith('.csv'):
@@ -30,7 +31,8 @@ def cargar_datos(archivo):
             cursor = conn.cursor()
 
             # Obtener el nombre de la primera tabla automáticamente
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table';")
             tabla = cursor.fetchone()[0]
 
             # Cargar los datos de la tabla
@@ -55,6 +57,8 @@ def cargar_datos(archivo):
     else:
         print("No se pudieron cargar los datos.")
         return None
+
+
 if __name__ == "__main__":
     archivo = 'housing.xlsx'
     cargar_datos(archivo)

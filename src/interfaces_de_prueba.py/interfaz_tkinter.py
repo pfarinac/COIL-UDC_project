@@ -7,8 +7,11 @@ ventana.title("Ventana Simple")
 ventana.geometry("500x500")
 
 # Función para mostrar un mensaje al presionar el botón
+
+
 def mostrar_mensaje():
     messagebox.showinfo("Mensaje", "¡Has presionado el botón!")
+
 
 # Crear el botón y asociarlo a la función 'mostrar_mensaje'
 boton = tk.Button(ventana, text="Presionar", command=mostrar_mensaje)

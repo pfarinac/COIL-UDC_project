@@ -6,6 +6,8 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.popup import Popup
 
 # Definir la clase de la aplicación principal
+
+
 class VentanaSimpleApp(App):
     def build(self):
         # Crear un BoxLayout vertical para organizar los elementos
@@ -28,7 +30,8 @@ class VentanaSimpleApp(App):
 
         # Crear un Popup para mostrar el mensaje
         popup = Popup(title='Mensaje',
-                      content=Label(text=f'Texto ingresado: {texto_ingresado}'),
+                      content=Label(
+                          text=f'Texto ingresado: {texto_ingresado}'),
                       size_hint=(0.8, 0.4))
         popup.open()
 
