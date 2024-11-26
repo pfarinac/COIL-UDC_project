@@ -24,11 +24,12 @@ The following tools and equipment in Table 1 were used in the development of Lin
 
 | **Tools/Equipment**   | **Description** |
 | :-------------------- | :-------------- |
-| Visual Studio Code (version 1.93) | Code editor that will be used to view the developer's code and to edit Markdown files. |
-| GitHub Desktop (version 3.4.5 x64) | Version control client to commit and push Markdown file changes to the repository. |
-| Taiga | Project task management website to track sprints, user stories, and tasks. |
-| TWP - Translate Web Pages | Firefox extension to translate text in Spanish to English to quickly read user stories and tasks. |
+| [Visual Studio Code](https://code.visualstudio.com/) (version 1.93) | Code editor that will be used to view the developer's code and to edit Markdown files. |
+| [GitHub Desktop](https://github.com/apps/desktop) (version 3.4.5 x64) | Version control client to commit and push Markdown file changes to the repository. |
+| [Taiga](https://taiga.io/) | Project task management website to track sprints, user stories, and tasks. |
+| [TWP - Translate Web Pages](https://addons.mozilla.org/en-CA/firefox/addon/traduzir-paginas-web/) | Firefox extension to translate text in Spanish to English to quickly read user stories and tasks. |
 | Windows-based PC (Windows 10 or Windows 11) | Computer to test Linear Reg, as it is available only on PC. |
+| [Python](https://www.python.org/) (version 3.13.0) | Programming language used to develop Linear Reg |
 
 *Table 1: List of software and equipment used in development*
 
@@ -42,7 +43,7 @@ Agile methodology was used throughout the development of Linear Reg.
 
 Table 2 contains a shortlist of essential terms used in Agile development projects:
 
-| Term      | Definition |
+| **Term**  | **Definition** |
 | :-------- | :--------- |
 | [User stories](https://www.atlassian.com/agile/project-management/user-stories#:~:text=Summary:%20A%20user%20story%20is,the%20end%20user%20or%20customer.) | A key part of agile software development. They are used to help teams understand how to build a product from the user's perspective and its value. A collection of user stories is called an “epic,” which is managed by a product owner. |
 | Product backlog | A list of priority features for the product. |
@@ -74,7 +75,7 @@ Linear Reg allows both inexperienced users and developers to gain experience wor
 
 People tend to use the terms AI and ML [interchangeably](https://cloud.google.com/learn/artificial-intelligence-vs-machine-learning), but they are not the same thing. AI is the **concept** of enabling a machine to reason like a human, while ML is one of the **applications** of AI that allows machines to extract knowledge and learn from data.
 
-![Image of an umbrella labeled 'Artificial Intelligence' above terms including 'Machine Learning'.](/docs/assets/images/ai-umbrella.png "Artificial intelligence umbrella")
+![Image of an umbrella labeled 'Artificial Intelligence' above terms including 'Machine Learning'.](./assets/images/ai-umbrella.png "Artificial intelligence umbrella")
 
 *Figure 1: Artificial intelligence is a broad topic that covers many applications. Image taken from [Why Business Leaders Should Think of AI as an Umbrella Term](https://medium.com/opex-analytics/why-business-leaders-should-think-of-ai-as-an-umbrella-term-dba8badc55e4)*
 
@@ -87,7 +88,7 @@ There are [three categories](https://www.ibm.com/topics/machine-learning) of ML 
 
 Linear regression is a [supervised machine learning algorithm](https://www.ibm.com/topics/supervised-learning) used to identify a linear relationship between a dependent variable and one or more independent variables by plotting a line of best fit. It's typically used to make predictions.
 
-![Screenshot visualizing the line of regression](/docs/assets/images/regression-line.png "Line of regression")
+![Screenshot visualizing the line of regression](./assets/images/regression-line.png "Line of regression")
 
 *Figure 2: Visualization of the best fit line for a linear regression model. Image from [What is Linear Regression? Types, Equation, Examples, and Best Practices for 2022](https://www.spiceworks.com/tech/artificial-intelligence/articles/what-is-linear-regression/)*
 
@@ -113,7 +114,7 @@ Linear Reg's development and accompanying documentation was completed by a team 
 
 The following stakeholders and cross-functional teams in Table 3 were involved in the development and documentation of Linear Reg:
 
-| Department | Name | Responsibilities |
+| **Role** | **Name** | **Responsibilities** |
 | :--------- | :--- | :--------------- |
 | Development Manager/Product Owner | Alberto José Alvarellos González | Oversee developer milestones |
 | Documentation Manager | Amy Briggs | Oversee documentation milestones |
