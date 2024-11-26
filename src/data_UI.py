@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (QPushButton,
-                             QVBoxLayout, QTableWidget, QLabel, QHBoxLayout, QListWidget)
+                             QVBoxLayout, QTableWidget, QLabel, QHBoxLayout, QListWidget,QHeaderView)
 from PyQt6.QtCore import Qt
 from data_func import *
 # Titulo principal
@@ -28,6 +28,7 @@ class UI:
         self.file_path_label = QLabel("File path: No file uploaded.")
         self.table_widget = QTableWidget()
         self.table_widget.setFixedSize(1490, 300)
+        self.table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.d_f = Funcs(self.target_combo, self.features_list,
                          self.file_path_label, self.table_widget)
         # Layout botones open y load

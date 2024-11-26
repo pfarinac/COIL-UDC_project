@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (QWidget, QPushButton,
                              QVBoxLayout, QLabel, QHBoxLayout)
 from PyQt6.QtCore import Qt
-from joblib import dump
+
 from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas

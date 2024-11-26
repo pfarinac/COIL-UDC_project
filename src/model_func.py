@@ -1,5 +1,4 @@
 from PyQt6.QtWidgets import (QLabel, QMessageBox)
-from joblib import dump
 from modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
