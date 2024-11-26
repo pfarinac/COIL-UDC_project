@@ -148,8 +148,8 @@ The following considerations should be kept in mind when expanding Linear Reg's 
  * **Refer to the [Microsoft Style Guide](https://learn.microsoft.com/en-us/style-guide/welcome/)**
     * Identify proper terminology for software documentation. 
  * **Write in Markdown** 
-    * If comfortable, write or append new documentation directly in Markdown, commit the changes, then make a pull request. 
-    * If not, then you can write documentation on Microsoft Word and contact one of the documentation writers to convert it into Markdown. 
+    * Documentation for this iteration of Linear Reg was written and appended directly in Markdown. Changes were commit to Github, followed by pull requests.
+    * If your experience with Markdown is limited, then you can write documentation in Microsoft Word and seek developer support to convert it into Markdown.
 
 ### Linear Reg Localization
 
