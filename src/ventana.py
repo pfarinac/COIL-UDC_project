@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QWidget,
                              QVBoxLayout, QMainWindow, QScrollArea)
 from PyQt6.QtCore import Qt
-import sys
 from modelo_lineal import model
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
@@ -81,6 +80,8 @@ class CsvViewer(QMainWindow):
 
         # Configurar el diseño principal para la ventana
         self.setCentralWidget(main_widget)
+
+        
 
     def habilitar_count_nulls(self):
         self.p_u.btn_count_nulls.setEnabled(True)
