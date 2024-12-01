@@ -34,5 +34,3 @@ print("Predicción después de cargar:", loaded_model.predict([[3, 4]]))
 print("\n=== Predicciones adicionales ===")
 predicciones = loaded_model.predict([[5, 6], [7, 8], [9, 10]])
 print("Predicciones para [5, 6], [7, 8], [9, 10]:", predicciones)
-
-
