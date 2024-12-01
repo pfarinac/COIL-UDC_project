@@ -38,6 +38,7 @@ class CsvViewer(QMainWindow):
         self.m_u.model_button.clicked.connect(self.enable_model)
 
         self.d_u.load_model_button.clicked.connect(self.sld_u.funcs.load_model)
+    
         self.d_u.load_model_button.clicked.connect(self.display_loaded_model)
         self.d_u.load_model_button.clicked.connect(
             self.sld_u.enable_prediction)
@@ -99,45 +100,45 @@ class CsvViewer(QMainWindow):
         self.m_u.model_button.setEnabled(False)
 
     def display_loaded_model(self, model_data):
-        # Ocultar secciones de carga de datos y selección de columnas
-        self.d_u.table_widget.hide()
-        self.d_u.features_label.hide()
-        self.d_u.features_list.hide()
-        self.d_u.target_label.hide()
-        self.d_u.target_combo.hide()
-        self.d_u.viewer_title.hide()
-        self.p_u.prep_title.hide()
-        self.m_u.model_title.hide()
-        self.d_u.entrada_salida_titulo.hide()
-        # Botones de preprocesado
-        self.p_u.btn_count_nulls.hide()
-        self.p_u.btn_remove_nulls.hide()
-        self.p_u.btn_replace_nulls_mean.hide()
-        self.p_u.btn_replace_nulls_median.hide()
-        self.p_u.btn_replace_nulls_value.hide()
-        self.d_u.confirm.hide()
-        self.m_u.model_button.hide()
-        self.d_u.load_button.hide()
-        self.d_u.file_path_label.hide()
-        self.sld_u.save_button.setEnabled(True)
-        # Modelo
-        self.m_u.canvas.hide()
-        self.m_u.graph_widget.hide()
-        self.m_u.label_formula.setVisible(True)
-        self.m_u.label_r2_mse.setVisible(True)
-        self.sld_u.result_label.setVisible(False)
-
-        # Mostrar los detalles del modelo cargado
-        if "model" in self.sld_u.funcs.loaded_model_data:
-            # Actualizar etiquetas
-            self.m_u.label_formula.setText(
-                f"Model formula: {self.m_u.funcs.formula(self.sld_u.funcs.model_input,self.sld_u.funcs.model_output)}")
-            self.m_u.label_r2_mse.setText(
-                f"R²: {self.sld_u.funcs.r2_score}  |  MSE: {self.sld_u.funcs.mse}")
-            self.sld_u.description_text.setText(self.sld_u.funcs.description)
+        if self.sld_u.funcs.file_name:
+            # Ocultar secciones de carga de datos y selección de columnas
+            self.d_u.table_widget.hide()
+            self.d_u.features_label.hide()
+            self.d_u.features_list.hide()
+            self.d_u.target_label.hide()
+            self.d_u.target_combo.hide()
+            self.d_u.viewer_title.hide()
+            self.p_u.prep_title.hide()
+            self.m_u.model_title.hide()
+            self.d_u.entrada_salida_titulo.hide()
+            # Botones de preprocesado
+            self.p_u.btn_count_nulls.hide()
+            self.p_u.btn_remove_nulls.hide()
+            self.p_u.btn_replace_nulls_mean.hide()
+            self.p_u.btn_replace_nulls_median.hide()
+            self.p_u.btn_replace_nulls_value.hide()
+            self.d_u.confirm.hide()
+            self.m_u.model_button.hide()
+            self.d_u.load_button.hide()
+            self.d_u.file_path_label.hide()
+            self.sld_u.save_button.setEnabled(True)
+            # Modelo
+            self.m_u.canvas.hide()
+            self.m_u.graph_widget.hide()
+            self.m_u.label_formula.setVisible(True)
+            self.m_u.label_r2_mse.setVisible(True)
+            self.sld_u.result_label.setVisible(False)
+            # Mostrar los detalles del modelo cargado
+            if "model" in self.sld_u.funcs.loaded_model_data:
+                # Actualizar etiquetas
+                self.m_u.label_formula.setText(
+                    f"Model formula: {self.m_u.funcs.formula(self.sld_u.funcs.model_input,self.sld_u.funcs.model_output)}")
+                self.m_u.label_r2_mse.setText(
+                    f"R²: {self.sld_u.funcs.r2_score}  |  MSE: {self.sld_u.funcs.mse}")
+                self.sld_u.description_text.setText(self.sld_u.funcs.description)
 
     def enable_model(self):
         self.sld_u.save_button.setEnabled(True)
         self.sld_u.predict_button.setEnabled(True)
-        self.sld_u.enable_prediction()
+        self.sld_u.enable_prediction(True)
 

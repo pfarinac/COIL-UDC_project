@@ -68,11 +68,12 @@ class SLDUI:
 
         self.layout_mostrar_prediccion.addWidget(self.result_label)
 
-    def enable_prediction(self):
-        # Habilita la funcionalidad de predicción cuando un modelo está disponible
-        if self.m_f.model or self.funcs.model:
-            self.predict_button.setEnabled(True)
-            self.generate_input_fields()
+    def enable_prediction(self, ready = False):
+        if self.funcs.file_name or ready == True:
+            # Habilita la funcionalidad de predicción cuando un modelo está disponible
+            if self.m_f.model or self.funcs.model:
+                self.predict_button.setEnabled(True)
+                self.generate_input_fields()
 
     def generate_input_fields(self):
         # Genera campos de entrada dinámicos basados en las variables de entrada del modelo
