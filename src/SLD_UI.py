@@ -14,6 +14,8 @@ class SLDUI:
         self.layout = QVBoxLayout
         self.m_f = model
         self.description_text = QTextEdit()
+        self.description_text.setFixedSize(1485,150)
+        self.description_text.setContentsMargins(0,0,0,0)
         self.description_text.setPlaceholderText(
             "Add a description for the model...")
         self.result_label = QLabel("")
