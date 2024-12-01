@@ -114,6 +114,7 @@ class SLDFuncs:
             self.m_f.mse = self.mse
             self.m_f.output_col = self.model_output
 
+            
     def update_model(self):
         self.model = self.m_f.model
         self.model_input = self.m_f.model_input

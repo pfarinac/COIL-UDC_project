@@ -14,8 +14,6 @@ class SLDUI:
         self.layout = QVBoxLayout
         self.m_f = model
         self.description_text = QTextEdit()
-        self.description_text.setFixedSize(1485,150)
-        self.description_text.setContentsMargins(0,0,0,0)
         self.description_text.setPlaceholderText(
             "Add a description for the model...")
         self.result_label = QLabel("")
@@ -25,18 +23,22 @@ class SLDUI:
         self.inicializar()
 
     def inicializar(self):
+        self.description_layout = QVBoxLayout()
+        self.description_area = QWidget()
+        self.description_area.setFixedSize(1000,200)
         # Layout decripcion del modelo
         self.layout_descripcion_modelo = QVBoxLayout()
-        self.layout_descripcion_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
         # Añadir etiqueta con el titulo
         self.description_label = QLabel("Model description (optional): ")
         self.description_label.setStyleSheet(
             "font-size: 18px; font-weight: bold;")
+        self.description_text.setFixedSize(750,100)
+        
         self.layout_descripcion_modelo.addWidget(self.description_label)
         # Añadir etiqueta para escribir descripcion
-
         self.layout_descripcion_modelo.addWidget(self.description_text)
-
+        self.description_area.setLayout(self.layout_descripcion_modelo)
+        self.description_layout.addWidget(self.description_area)
         # Layout botones guardar modelo y hacer prediccion
         self.layout_guardarmodelo_prediccion = QHBoxLayout()
         self.layout_guardarmodelo_prediccion.setAlignment(
@@ -77,6 +79,7 @@ class SLDUI:
         for field_name in self.m_f.model.feature_names_in_:
             input_label = QLabel(f"Enter {field_name}:")
             input_field = QLineEdit()
+            input_field.setFixedSize(200,30)
             self.prediction_layout.addWidget(input_label)
             self.prediction_layout.addWidget(input_field)
             self.prediction_layout.update()

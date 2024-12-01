@@ -57,6 +57,7 @@ class CsvViewer(QMainWindow):
         layout.addLayout(self.d_u.layout)
         layout.addLayout(self.p_u.layout_entrada_salida_preprocesado)
         layout.addLayout(self.m_u.layout_visualizar_iniciar_modelo)
+        layout.addLayout(self.sld_u.description_layout)
         layout.addLayout(self.sld_u.layout_mostrar_prediccion)
         layout.addLayout(self.sld_u.layout_guardarmodelo_prediccion)
 
