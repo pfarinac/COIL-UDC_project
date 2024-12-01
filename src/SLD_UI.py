@@ -14,7 +14,7 @@ class SLDUI:
         self.layout = QVBoxLayout
         self.m_f = model
         self.description_text = QTextEdit()
-        self.description_text.setFixedSize(1485,150)
+        self.description_text.setFixedSize(750,100)
         self.description_text.setContentsMargins(0,0,0,0)
         self.description_text.setPlaceholderText(
             "Add a description for the model...")
@@ -66,8 +66,8 @@ class SLDUI:
 
         self.layout_mostrar_prediccion.addWidget(self.result_label)
 
-    def enable_prediction(self):
-        if self.funcs.file_name:
+    def enable_prediction(self, ready = False):
+        if self.funcs.file_name or ready == True:
             # Habilita la funcionalidad de predicción cuando un modelo está disponible
             if self.m_f.model or self.funcs.model:
                 self.predict_button.setEnabled(True)

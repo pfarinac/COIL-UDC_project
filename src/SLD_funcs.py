@@ -19,6 +19,7 @@ class SLDFuncs:
         self.predict_button = predict_button
         self.input_fields = {}
         self.input_labels = {}
+        self.file_name = None
 
     def save_model(self):
         self.update_model()

@@ -139,5 +139,5 @@ class CsvViewer(QMainWindow):
     def enable_model(self):
         self.sld_u.save_button.setEnabled(True)
         self.sld_u.predict_button.setEnabled(True)
-        self.sld_u.enable_prediction()
+        self.sld_u.enable_prediction(True)
 
