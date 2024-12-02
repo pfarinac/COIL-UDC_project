@@ -5,7 +5,7 @@ from modelo_lineal import model
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from data_func import *
+from functions.data_func import *
 from data_UI import *
 from prepro_UI import *
 from model_UI import *
