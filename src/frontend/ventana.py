@@ -1,15 +1,15 @@
 from PyQt6.QtWidgets import (QApplication, QWidget,
                              QVBoxLayout, QMainWindow, QScrollArea)
 from PyQt6.QtCore import Qt
-from modelo_lineal import model
+from backend.modelo_lineal import model
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from data_func import *
-from data_UI import *
-from prepro_UI import *
-from model_UI import *
-from SLD_UI import *
+from backend.data_func import Funcs
+from frontend.data_UI import UI
+from frontend.prepro_UI import PUI
+from frontend.model_UI import MUI
+from frontend.SLD_UI import SLDUI
 
 
 class CsvViewer(QMainWindow):

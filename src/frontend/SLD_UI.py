@@ -2,11 +2,11 @@ from PyQt6.QtWidgets import (QWidget, QPushButton,
                              QVBoxLayout, QLabel, QLineEdit, QHBoxLayout, QTextEdit)
 from PyQt6.QtCore import Qt
 
-from modelo_lineal import model
+from backend.modelo_lineal import model
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from SLD_funcs import *
+from backend.SLD_funcs import SLDFuncs
 
 
 class SLDUI:

@@ -1,5 +1,5 @@
 import statsmodels.api as sm
-from cargar_datos import cargar_datos
+from backend.cargar_datos import cargar_datos
 import pandas as pd
 
 # Almacenamos los datos del archivo en una variable
