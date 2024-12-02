@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (QPushButton,
                              QVBoxLayout, QTableWidget, QLabel, QHBoxLayout, QListWidget,QHeaderView)
 from PyQt6.QtCore import Qt
-from functions.data_func import *
+from data_func import *
 # Titulo principal
 
 
