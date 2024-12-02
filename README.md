@@ -1,16 +1,14 @@
 # Linear Reg
 
 ## Introduction
-
+This guide is intended for anyone using Linear Reg for the first time and serves as an introduction to Linear Reg's User Interface (UI), the primary functions and usage of the tool to make predictions. Users will be able to understand how linear regression supports data-driven decision-making.
 
 ### Overview
-Linear Reg 1.0 is a software application that helps users easily create and work with linear regression models. Using predictive mathematical formulas, this tool is used to predict a result based on specific information variables and datasets. 
-Its intuitive interface will allow users to easily explore relationships between data inputs and outputs. The tool also provides unique insights into the model’s predictive formula, enabling users to assess models for accuracy. Users can save their models for future use and update data entries to suit different scenarios.
-
+Linear Reg 1.0 is a software application that helps users easily create and work with [linear regression models](https://www.spiceworks.com/tech/artificial-intelligence/articles/what-is-linear-regression/ "linear regression models"). The intuitive interface makes it easy to explore relationships between data input and outputs and use basic machine learning alogorithms to build predictive models. Users can quickly grasp how linear regression works and how it can be used effectively in data analysis. 
 ### Features
-
+Using predictive mathematical formulas, Linear Reg can make predictions based on specific datasets and information variables. The tool offers unique insights into the model's predictive formula, enabling users to save their models for future use, update data entries to suit specific scenarios and assess the accuracy of the model's predictions.
 ## Getting Started
-
+This section covers everything you need to know to get started using Linear Reg.
 ### Hardware/System Requirements
 
 ### Installing Python
@@ -64,8 +62,11 @@ pip install matplotlib
 3. Press Enter to install the library.
 4. Repeat steps 2-3 until all libraries have been installed.
 
-## User Interface
-The user interface (UI) is divided into four main components: the data visualization window, input and output selectors, data preprocessing options, and an optional model description field.
+## Introduction to the Linear Reg Interface
+
+Once you have downloaded and locally installed Linear Reg to your computer, click the Linear Reg icon to open the application.
+
+The user interface (UI) is divided into five main components: the data visualization window, input and output selectors, data preprocessing options, tje graph and formula displays, and an optional model description field.
 
 [screenshot with callouts].
 
@@ -77,6 +78,7 @@ The steps to produce a linear regression model are completed in these four secti
 | Input and Output selectors | Where you will select the columns of data you would like the tool to use to make predictions. Input "features" specify the conditional information to be retrieved and the output "targets" specify the outcome to predict. For example, ma model that predicts the price of a home (output) given the number of bedrooms (input). |
 | Data Preprocessing | Where you will indicate how you would like the tool to handle any missing or incomplete spreadsheet data, called "nulls." LinearReg can:<br><ul><li>Count Null Values - use this to include missing data, as is.</li><li>Delete Rows with Nulls - use this to delete the rows where data is missing.</li><li>Replace Nulls with Average - use this to replace missing data with column's average value.</li><li>Replace Nulls with Median - use this to replace the missing data with column's median value.</li><li>Replace Nulls with Value - use this to replace the missing data with a specific value.</li></ul> |
 | Model Description | Where you can write key details related to a specific model, such as what information was used, the relationships to predict, and the accuracy of those predictions. |
+
 
 ## Functions and Usage
 
