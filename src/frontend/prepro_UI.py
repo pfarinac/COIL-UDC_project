@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import (QPushButton,
                              QVBoxLayout, QLabel, QGridLayout, QHBoxLayout)
 from PyQt6.QtCore import Qt
-from backend.data_func import Funcs
 from backend.prepro_func import PFuncs
 
 
