@@ -25,14 +25,15 @@ class SLDUI:
     def inicializar(self):
         self.description_layout = QVBoxLayout()
         self.description_area = QWidget()
-        self.description_area.setFixedSize(1000,200)
+        self.description_area.setFixedSize(1480,160)
+        self.description_area.setContentsMargins(0,0,0,0)
         # Layout decripcion del modelo
         self.layout_descripcion_modelo = QVBoxLayout()
         # Añadir etiqueta con el titulo
         self.description_label = QLabel("Model description (optional): ")
         self.description_label.setStyleSheet(
             "font-size: 18px; font-weight: bold;")
-        self.description_text.setFixedSize(750,100)
+        self.description_text.setFixedSize(1495,100)
         
         self.layout_descripcion_modelo.addWidget(self.description_label)
         # Añadir etiqueta para escribir descripcion
@@ -59,8 +60,10 @@ class SLDUI:
         # Layout mostrar prediccion
         self.layout_mostrar_prediccion = QVBoxLayout()
         self.layout_mostrar_prediccion.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.layout_mostrar_prediccion.setContentsMargins(0,0,0,0)
         # Área de predicción
         self.prediction_area = QWidget()
+        self.prediction_area.setFixedSize(500,80)
         self.prediction_layout = QVBoxLayout()
         self.prediction_area.setLayout(self.prediction_layout)
         self.layout_mostrar_prediccion.addWidget(self.prediction_area)
