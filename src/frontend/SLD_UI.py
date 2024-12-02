@@ -2,11 +2,11 @@ from PyQt6.QtWidgets import (QWidget, QPushButton,
                              QVBoxLayout, QLabel, QLineEdit, QHBoxLayout, QTextEdit)
 from PyQt6.QtCore import Qt
 
-from modelo_lineal import model
+from backend.modelo_lineal import model
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from SLD_funcs import *
+from backend.SLD_funcs import SLDFuncs
 
 
 class SLDUI:
@@ -14,8 +14,6 @@ class SLDUI:
         self.layout = QVBoxLayout
         self.m_f = model
         self.description_text = QTextEdit()
-        self.description_text.setFixedSize(1485,150)
-        self.description_text.setContentsMargins(0,0,0,0)
         self.description_text.setPlaceholderText(
             "Add a description for the model...")
         self.result_label = QLabel("")
@@ -25,18 +23,23 @@ class SLDUI:
         self.inicializar()
 
     def inicializar(self):
+        self.description_layout = QVBoxLayout()
+        self.description_area = QWidget()
+        self.description_area.setFixedSize(1480,160)
+        self.description_area.setContentsMargins(0,0,0,0)
         # Layout decripcion del modelo
         self.layout_descripcion_modelo = QVBoxLayout()
-        self.layout_descripcion_modelo.setAlignment(Qt.AlignmentFlag.AlignLeft)
         # Añadir etiqueta con el titulo
         self.description_label = QLabel("Model description (optional): ")
         self.description_label.setStyleSheet(
             "font-size: 18px; font-weight: bold;")
+        self.description_text.setFixedSize(1495,100)
+        
         self.layout_descripcion_modelo.addWidget(self.description_label)
         # Añadir etiqueta para escribir descripcion
-
         self.layout_descripcion_modelo.addWidget(self.description_text)
-
+        self.description_area.setLayout(self.layout_descripcion_modelo)
+        self.description_layout.addWidget(self.description_area)
         # Layout botones guardar modelo y hacer prediccion
         self.layout_guardarmodelo_prediccion = QHBoxLayout()
         self.layout_guardarmodelo_prediccion.setAlignment(
@@ -57,8 +60,10 @@ class SLDUI:
         # Layout mostrar prediccion
         self.layout_mostrar_prediccion = QVBoxLayout()
         self.layout_mostrar_prediccion.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.layout_mostrar_prediccion.setContentsMargins(0,0,0,0)
         # Área de predicción
         self.prediction_area = QWidget()
+        self.prediction_area.setFixedSize(500,80)
         self.prediction_layout = QVBoxLayout()
         self.prediction_area.setLayout(self.prediction_layout)
         self.layout_mostrar_prediccion.addWidget(self.prediction_area)
@@ -66,17 +71,19 @@ class SLDUI:
 
         self.layout_mostrar_prediccion.addWidget(self.result_label)
 
-    def enable_prediction(self):
-        # Habilita la funcionalidad de predicción cuando un modelo está disponible
-        if self.m_f.model or self.funcs.model:
-            self.predict_button.setEnabled(True)
-            self.generate_input_fields()
+    def enable_prediction(self, ready = False):
+        if self.funcs.file_name or ready == True:
+            # Habilita la funcionalidad de predicción cuando un modelo está disponible
+            if self.m_f.model or self.funcs.model:
+                self.predict_button.setEnabled(True)
+                self.generate_input_fields()
 
     def generate_input_fields(self):
         # Genera campos de entrada dinámicos basados en las variables de entrada del modelo
         for field_name in self.m_f.model.feature_names_in_:
             input_label = QLabel(f"Enter {field_name}:")
             input_field = QLineEdit()
+            input_field.setFixedSize(200,30)
             self.prediction_layout.addWidget(input_label)
             self.prediction_layout.addWidget(input_field)
             self.prediction_layout.update()

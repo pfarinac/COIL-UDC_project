@@ -1,14 +1,11 @@
 from PyQt6.QtWidgets import (QPushButton, QFileDialog, QLabel, QMessageBox)
 import joblib
 from joblib import dump
-from modelo_lineal import model
+from backend.modelo_lineal import model
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from data_func import *
-from data_UI import *
-from prepro_UI import *
-from model_UI import *
+
 
 
 class SLDFuncs:
@@ -19,6 +16,7 @@ class SLDFuncs:
         self.predict_button = predict_button
         self.input_fields = {}
         self.input_labels = {}
+        self.file_name = None
 
     def save_model(self):
         self.update_model()
@@ -44,15 +42,15 @@ class SLDFuncs:
 
     def load_model(self):
         # Abrir el diálogo de selección de archivo
-        file_name, _ = QFileDialog.getOpenFileName(
+        self.file_name, _ = QFileDialog.getOpenFileName(
             None, "Load model", "", "Model Files (*.pkl *.joblib)")
 
-        if file_name:
+        if self.file_name:
             try:
                 # Limpiar campos de entrada anteriores antes de iniciar un nuevo modelo
                 self.reset_input_fields()
                 # Cargar el modelo desde el archivo
-                self.loaded_model_data = joblib.load(file_name)
+                self.loaded_model_data = joblib.load(self.file_name)
                 # Actualizar la interfaz con la información del modelo cargado
                 self.loaded_model(self.loaded_model_data)
                 # Mostrar mensaje de confirmación de carga
@@ -114,6 +112,7 @@ class SLDFuncs:
             self.m_f.mse = self.mse
             self.m_f.output_col = self.model_output
 
+            
     def update_model(self):
         self.model = self.m_f.model
         self.model_input = self.m_f.model_input

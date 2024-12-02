@@ -2,7 +2,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 import pandas as pd
-from cargar_datos import cargar_datos
+from backend.cargar_datos import cargar_datos
 
 # Almacenamos los datos del archivo en una variable
 data = cargar_datos('housing.xlsx')

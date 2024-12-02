@@ -1,11 +1,11 @@
 from PyQt6.QtWidgets import (QLabel, QMessageBox)
-from modelo_lineal import model
+from backend.modelo_lineal import model
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from modelo_lineal import model
+from backend.modelo_lineal import model
 
 
 class MFuncs:
@@ -44,8 +44,7 @@ class MFuncs:
                     None, "Error", "You must select a single input column to be able to display the graph")
 
             self.label_r2_mse.setVisible(True)
-            self.label_formula.setText(
-                f"The model formula is:\n{self.formula(self.input_col,self.output_col)}")
+            self.label_formula.setText(self.formula(self.input_col,self.output_col))
             self.label_formula.setVisible(True)
             self.label_r2_mse.setText(f"R2= {self.r2} \nMSE= {self.mse}")
             self.canvas.draw()
