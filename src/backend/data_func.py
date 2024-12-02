@@ -75,7 +75,6 @@ class Funcs:
             QMessageBox.warning(None, "Warning", "There is no file uploaded.")
 
     def update_table(self, table_widget: QTableWidget, df):
-        print("PRUEBA")
         table_widget.setRowCount(df.shape[0])
         table_widget.setColumnCount(df.shape[1])
         table_widget.setHorizontalHeaderLabels(df.columns)
