@@ -30,7 +30,7 @@ Once you have downloaded Linear Reg to your computer, click the Linear Reg icon 
 ## Introduction to the Linear Reg Interface
 The user interface (UI) is divided into five main components: the data visualization window, input and output selectors, data preprocessing options, the graph and formula displays, and an optional model description field (Figure 1).
 
-![Screenshot of the Linear Reg interface](./docs/assets/images/LinearRegUI.png "Linear Reg interface")
+![Screenshot of the Linear Reg interface](./docs/assets/images/linear-reg-ui.png "Linear Reg interface")
 
 *Figure 1: Screenshot of the Linear Reg interface*
 
@@ -38,16 +38,18 @@ The steps to build a linear regression model are completed in these five section
 
 | UI Component          | Description                                                                   |
 |:----------------------|:------------------------------------------------------------------------------|
-| Data Visualization    | Upload and view your spreadsheet file (.csv. or .xlsx). This information will be used to build the linear regression model.   |
+| Data Visualization display | Upload and view your spreadsheet file (.csv). This information will be used to build the linear regression model.   |
 | Input and Output selectors | Select the columns of data you would like the tool to use to make predictions.   |
-| Data Preprocessing | Indicate how you would like the tool to handle any missing or incomplete spreadsheet data, called "nulls." The **Count Null Values** function identifies how many cells within the selected columns are missing data.<br>If you have missing data, Linear Reg lets you preprocess it in four ways:<br><ul><li>Delete rows with nulls</li><li>Replace nulls with mean</li><li>Replace nulls with median</li><li>Replace nulls with constant value</li></ul> |
-| Graph and Formula windows | View the graph of your linear regression model and prediction formulas. |
+| Data Preprocessing options | Indicate how you would like the tool to handle any missing or incomplete spreadsheet data, called "nulls." The **Count Null Values** function identifies how many cells within the selected columns are missing data.<br>If you have missing data, Linear Reg lets you preprocess it in four ways:<br><ul><li>Delete rows with nulls</li><li>Replace nulls with mean</li><li>Replace nulls with median</li><li>Replace nulls with constant value</li></ul> |
+| Graph and Formula display | View the graph of your linear regression model and prediction formulas. |
 | Model Description | Enter key details related to a specific model. |
 
 *Table 1: Overview of Linear Reg's interface components*
 
 ## Linear Reg Functions and Usage
 This section describes how to use Linear Reg's functions to build linear regression models.
+
+<video src="./docs/assets/videos/linear-reg-walkthrough.mp4" width="800" controls></video>
 
 ### Uploading your Data
 Before you can build your linear regression model, you must upload your dataset. Linear Reg only accepts datasets in the comma-separated values (CSV) format.
@@ -56,16 +58,16 @@ Before you can build your linear regression model, you must upload your dataset.
 1. Click **Open**.
 2. Navigate to your spreadsheet, select the file, and click **Open**.<br>The spreadsheet displays in the Data visualization window (Figure 2).
 
-![Screenshot of the data visualization window](./docs/assets/images/figure2.png "Data Visualization window")
+![Screenshot of the data visualization window](./docs/assets/images/data-visualization.png "Data Visualization window")
 
-*Figure 2: Screenshot of the data visualization window*
+*Figure 2: The Data Visualization window*
 
 ### Choosing your Variables
 Once your dataset has been uploaded, select the input and output columns you would like to isolate to make your prediction (Figure 3). The "input feature(s)" are the variables used to make the prediction, while the "output target" is the outcome you aim to predict.
 
-![Screenshot of the input and output selectors](./docs/assets/images/figure3.png "Data Visualization window")
+![Screenshot of the input and output selectors](./docs/assets/images/variable-columns.png "Data Visualization window")
 
-*Figure 3: Screenshot of the input and output selectors*
+*Figure 3: The input and output selectors*
 
 **To choose your input and output variables**
 1. Select the input column(s). 
@@ -73,7 +75,7 @@ Once your dataset has been uploaded, select the input and output columns you wou
 3. Click **Confirm selection**.<br>The Information dialog box appears to confirm your selection has been saved. 
 4. Click **OK** to dismiss the confirmation window.
 5. Click **Count null values**.<br>The Null Values dialog box appears to tell you how many cells are missing data within your specified columns.
-6. Click **OK** to dismiss the confirmation window.<br>If your data is complete, you can proceed with [building your model](#building-the-model).
+6. Click **OK** to dismiss the confirmation window.<br>If your dataset has no missing values, you can proceed with [building your model](#building-the-model).
 
 ### Preprocessing Missing Data
 If your columns have missing data, Linear Reg must preprocess it before it can build the model. Table 2 describes the four ways Linear Reg can do this. 
@@ -98,9 +100,9 @@ Once your data is preprocessed and ready, you can now build your model.
 1. Click **Start model**.<br>The Model created successfully dialog box appears.
 2. Click **OK** to dismiss the window.<br>The linear regression model (graph) and formula displays (Figure 4).
 
-![Screenshot of the graph and formula section](./docs/assets/images/figure4.png "Graph and Formula sections")
+![Screenshot of the graph and formula section](./docs/assets/images/graph-formula.png "Graph and Formula sections")
 
-*Figure 4: Screenshot of the graph and formula sections*
+*Figure 4: The graph and formula sections*
 
 ### Formula Overview
 The formulas have two values: R2 and MSE.
@@ -131,9 +133,9 @@ In the Model Description box, enter key details, such as what information variab
 ## Making Predictions
 Once you have built or loaded a model, a prediction field (labeled as the input column you selected) appears below the Model description field (Figure 5). You can now enter numerical values in that field to make predictions.
 
-![Screenshot of the prediction field](./docs/assets/images/figure5.png "Prediction field")
+![Screenshot of the prediction field](./docs/assets/images/predictions.png "Prediction field")
 
-*Figure 5: Screenshot of the prediction field*
+*Figure 5: The prediction field*
 
 **To make a prediction**
 
@@ -150,22 +152,22 @@ Antonio gathers a dataset of information from several home sales in his area and
 
 After uploading his dataset, he selects **total_bedrooms** as his input (features) and **median_house_value** as his output (target) and confirms. During preprocessing, Linear Reg shows that there are 200 cells with missing data. He opts to **delete the rows with nulls** then creates his model (Figure 6).
 
-![Screenshot of Antonio's model and formulas](./docs/assets/images/housingmodel.png "Antonio's model and formulas")
+![Screenshot of Antonio's model and formulas](./docs/assets/images/housing-model.png "Antonio's model and formulas")
 
-*Figure 6: Screenshot of Marie's model and formulas*
+*Figure 6: Antonio's model and formulas*
 
 Antonio decides to predict the median house value of 3-bedroom homes. He enters "3" (total_bedrooms), and the model predicts that the median house value for 3-bedroom homes would be approximately 199,575.59 (Figure 7).
 
-![Screenshot of Antonio's prediction result](./docs/assets/images/figure6.png "Antonio's prediction result")
+![Screenshot of Antonio's prediction result](./docs/assets/images/housing-prediction.png "Antonio's prediction result")
 
-*Figure 7: Screenshot of Antonio's prediction result*
+*Figure 7: Antonio's prediction result*
 
 ### Understanding Wine pH and Acidity
 Marie, a statistics student and a beginner wine enthusiast, wants to understand the composition of red wine and how it affects its taste. Using a dataset provided by a local winery, Marie decides to use Linear Reg to find the correlation between **pH** and **fixed acidity**.
 
 After uploading her dataset, she selects **pH** as her input (features) and **fixed acidity** as her output (target) and confirms. Linear Reg reports that there are no null values, so she doesn't need to do any additional preprocessing. She creates the model (Figure 8).
 
-![Screenshot of Marie's model and formulas](./docs/assets/images/winemodel.png "Marie's model and formulas")
+![Screenshot of Marie's model and formulas](./docs/assets/images/wine-model.png "Marie's model and formulas")
 
 *Figure 8: Screenshot of Marie's model and formulas*
 
