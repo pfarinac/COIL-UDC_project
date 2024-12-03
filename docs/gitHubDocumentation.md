@@ -106,6 +106,56 @@ The regression line is described by the equation **ŷ = bx + a**, where:
 * **x** is the independent variable
 * **a** is the y-intercept (the point of intersection with the y-axis)
 
+## Setting Up Linear Reg for Development
+This section covers the set up process for new Linear Reg developers.
+
+### Installing Python
+Python is required to run Linear Reg as it was developed in this language.
+
+1. Download Python from the [official website](https://www.python.org/downloads/ "Official Python website").
+2. Run the Python installer.
+3. Select **custom installation**.
+4. Make sure the following are checked:
+    - Add Python to environment variables.
+    - Install pip.
+5. Finish installing Python.
+
+### Downloading Linear Reg
+You can download Linear Reg in three different ways.
+
+- [Fork](https://github.com/pfarinac/COIL_project/fork) the repository.
+- [Clone the repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) (or clone your own fork) to your local machine.
+- [Download the source code](https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives) and extract the zip file. 
+
+#### Integrated Development Environment
+An integrated development environment (IDE) is not necessary to run Linear Reg, but it can provide helpful features for development.
+
+Here are some tips for using Visual Studio Code to run Python programs:
+- Make sure to restart VS Code after [installing Python](#installing-python).
+- Install the Python extension on VS Code.
+    1. Select **Extensions** on the navigation tab.
+    2. Type "ms-python.python" in the Search Extensions bar.
+    3. Select **Install**.
+
+### Installing Python libraries
+For this section, you'll need to use a terminal. Here are some examples:
+- (Windows) Command Prompt
+- (Windows) PowerShell
+- (MacOS) Terminal
+- Visual Studio Code Terminal
+
+1. Open your terminal of choice to the Linear Reg folder.
+2. Type each of the following lines one at a time.
+
+```
+pip install PyQT6
+pip install pandas
+pip install scikit-learn
+pip install matplotlib
+```
+3. Press **Enter** to install the library.
+4. Repeat steps 2-3 until all libraries have been installed.
+
 ## Linear Reg Project Team 
 
 Linear Reg's development and accompanying documentation was completed by a team of 4 developers, 2 technical writers and 2 overseeing managers. 
