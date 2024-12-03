@@ -51,6 +51,8 @@ This section describes how to use Linear Reg's functions to build linear regress
 
 [![Video walkthrough of Linear Reg](https://img.youtube.com/vi/d7P50OcHdfU/0.jpg)](https://www.youtube.com/watch?v=d7P50OcHdfU)
 
+*Video 1: Walkthrough of Linear Reg*
+
 ### Uploading your Data
 Before you can build your linear regression model, you must upload your dataset. Linear Reg only accepts datasets in the comma-separated values (CSV) format.
 
