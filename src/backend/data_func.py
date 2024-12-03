@@ -17,12 +17,12 @@ class Funcs:
         self.table_widget = table
 
     def almacenar(self):
-        self.output_col = self.target_combo.currentItem().text()
         # model_description = description_text.toPlainText()
-        if self.output_col == [] or self.input_col == []:
+        if self.target_combo.currentItem() == None or self.input_col == []:
             QMessageBox.warning(
                 None, "Warning", "Please select at least an input and an output column")
         else:
+            self.output_col = self.target_combo.currentItem().text()
             message = "Your selection has been successfully saved.\n"
             QMessageBox.information(None, "Information", message)
 
