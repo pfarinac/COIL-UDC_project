@@ -32,7 +32,7 @@ The user interface (UI) is divided into five main components: the data visualiza
 
 ![Screenshot of the Linear Reg interface](./docs/assets/images/linear-reg-ui.png "Linear Reg interface")
 
-*Figure 1: Screenshot of the Linear Reg interface*
+*Figure 1: The Linear Reg interface*
 
 The steps to build a linear regression model are completed in these five sections. Table 1 describes each of the UI components. 
 
@@ -49,7 +49,9 @@ The steps to build a linear regression model are completed in these five section
 ## Linear Reg Functions and Usage
 This section describes how to use Linear Reg's functions to build linear regression models.
 
-<video src="./docs/assets/videos/linear-reg-walkthrough.mp4" width="800" controls></video>
+[![Video walkthrough of Linear Reg](https://img.youtube.com/vi/d7P50OcHdfU/0.jpg)](https://www.youtube.com/watch?v=d7P50OcHdfU)
+
+*Video 1: Walkthrough of Linear Reg*
 
 ### Uploading your Data
 Before you can build your linear regression model, you must upload your dataset. Linear Reg only accepts datasets in the comma-separated values (CSV) format.
@@ -102,7 +104,7 @@ Once your data is preprocessed and ready, you can now build your model.
 
 ![Screenshot of the graph and formula section](./docs/assets/images/graph-formula.png "Graph and Formula sections")
 
-*Figure 4: The graph and formula sections*
+*Figure 4: The Graph and Formula displays*
 
 ### Formula Overview
 The formulas have two values: R2 and MSE.
