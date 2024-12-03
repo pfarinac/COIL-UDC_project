@@ -63,7 +63,6 @@ class SLDUI:
         self.layout_mostrar_prediccion.setContentsMargins(0,0,0,0)
         # Área de predicción
         self.prediction_area = QWidget()
-        self.prediction_area.setFixedSize(500,80)
         self.prediction_layout = QVBoxLayout()
         self.prediction_area.setLayout(self.prediction_layout)
         self.layout_mostrar_prediccion.addWidget(self.prediction_area)
