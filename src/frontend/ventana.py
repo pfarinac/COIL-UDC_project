@@ -37,7 +37,7 @@ class CsvViewer(QMainWindow):
         self.m_u.model_button.clicked.connect(self.enable_model)
 
         self.d_u.load_model_button.clicked.connect(self.sld_u.funcs.load_model)
-    
+
         self.d_u.load_model_button.clicked.connect(self.display_loaded_model)
         self.d_u.load_model_button.clicked.connect(
             self.sld_u.enable_prediction)
@@ -81,8 +81,6 @@ class CsvViewer(QMainWindow):
 
         # Configurar el diseño principal para la ventana
         self.setCentralWidget(main_widget)
-
-        
 
     def habilitar_count_nulls(self):
         self.p_u.btn_count_nulls.setEnabled(True)
@@ -134,10 +132,15 @@ class CsvViewer(QMainWindow):
                     f"Model formula: {self.m_u.funcs.formula(self.sld_u.funcs.model_input,self.sld_u.funcs.model_output)}")
                 self.m_u.label_r2_mse.setText(
                     f"R²: {self.sld_u.funcs.r2_score}  |  MSE: {self.sld_u.funcs.mse}")
-                self.sld_u.description_text.setText(self.sld_u.funcs.description)
+                self.sld_u.description_text.setText(
+                    self.sld_u.funcs.description)
 
     def enable_model(self):
         self.sld_u.save_button.setEnabled(True)
         self.sld_u.predict_button.setEnabled(True)
         self.sld_u.enable_prediction(True)
-
+        QMessageBox.information(
+            None, "Model created succesfully", "Your model has been created succesfully")
+        if self.sld_u.description_text.toPlainText() == "":
+            QMessageBox.information(
+                None, "No description", "You haven't assigned any description to the model")

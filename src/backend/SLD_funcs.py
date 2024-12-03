@@ -7,9 +7,8 @@ from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 
 
-
 class SLDFuncs:
-    def __init__(self, m_f, description_text, result_label: QLabel, predict_button=QPushButton) -> None:
+    def __init__(self, m_f, description_text: QTextEdit, result_label: QLabel, predict_button=QPushButton) -> None:
         self.m_f = m_f
         self.description_text = description_text
         self.result_label = result_label
@@ -112,7 +111,6 @@ class SLDFuncs:
             self.m_f.mse = self.mse
             self.m_f.output_col = self.model_output
 
-            
     def update_model(self):
         self.model = self.m_f.model
         self.model_input = self.m_f.model_input
