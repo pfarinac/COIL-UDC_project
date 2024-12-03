@@ -1,6 +1,29 @@
 # Linear Reg
 This guide is intended for anyone using Linear Reg for the first time and serves as an introduction to Linear Reg's User Interface (UI), primary functions and usage, and making predictions. Users will be able to understand how linear regression can be used to support data-driven decision-making.
 
+## Table of Contents
+- [Linear Reg](#linear-reg)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Features](#features)
+  - [Getting Started](#getting-started)
+    - [Minimum Hardware and System Requirements](#minimum-hardware-and-system-requirements)
+    - [Downloading Linear Reg](#downloading-linear-reg)
+  - [Introduction to the Linear Reg Interface](#introduction-to-the-linear-reg-interface)
+  - [Linear Reg Functions and Usage](#linear-reg-functions-and-usage)
+    - [Uploading your Data](#uploading-your-data)
+    - [Choosing your Variables](#choosing-your-variables)
+    - [Preprocessing Missing Data](#preprocessing-missing-data)
+  - [Building the Model](#building-the-model)
+    - [Formula Overview](#formula-overview)
+  - [Saving and Loading Models](#saving-and-loading-models)
+  - [Making Predictions](#making-predictions)
+  - [Use Case Scenarios for Linear Reg](#use-case-scenarios-for-linear-reg)
+    - [Preparing Real Estate Estimates](#preparing-real-estate-estimates)
+    - [Understanding Wine pH and Acidity](#understanding-wine-ph-and-acidity)
+  - [Support and Contributions](#support-and-contributions)
+
+
 ## Overview
 Linear Reg 1.0 is a software application that helps users easily create and work with [linear regression models](https://www.spiceworks.com/tech/artificial-intelligence/articles/what-is-linear-regression/ "linear regression models"). The intuitive interface makes it easy for users to apply basic machine learning algorithms to build predictive models and conduct data analysis. Users can quickly grasp how linear regression works and how it can be used efficiently.
 
