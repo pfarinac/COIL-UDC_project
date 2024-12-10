@@ -2,13 +2,13 @@ from PyQt6.QtWidgets import (QWidget, QPushButton,
                              QVBoxLayout, QLabel, QHBoxLayout)
 from PyQt6.QtCore import Qt
 
-from modelo_lineal import model
+
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from modelo_lineal import model
+
 from model_func import *
 
 
