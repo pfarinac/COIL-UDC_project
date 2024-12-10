@@ -3,7 +3,6 @@ numpy
 scikit-learn
 pandas
 matplotlib
-sqlite3
 sys
 unittest
 joblib

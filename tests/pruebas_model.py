@@ -1,9 +1,15 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from PyQt6.QtWidgets import QApplication, QLabel, QMessageBox
+from PyQt6.QtWidgets import QApplication, QLabel
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from model_func import MFuncs
+import sys
+import os
+
+# Agregar la carpeta src al path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
+from backend.model_func import MFuncs
 
 class TestMFuncs(unittest.TestCase):
 

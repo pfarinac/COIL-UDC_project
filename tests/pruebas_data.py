@@ -1,8 +1,14 @@
 import unittest
-from unittest.mock import MagicMock, patch
-from PyQt6.QtWidgets import QApplication, QLabel, QListWidget, QTableWidget, QMessageBox
+from unittest.mock import patch
+from PyQt6.QtWidgets import QApplication, QLabel, QListWidget, QTableWidget
 import pandas as pd
-from data_func import Funcs  # Reemplaza "module_name" con el nombre del archivo de tu módulo.
+import sys
+import os
+
+# Agregar la carpeta src al path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
+from backend.data_func import Funcs
 
 class TestFuncs(unittest.TestCase):
 

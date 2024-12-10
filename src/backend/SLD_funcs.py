@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import (QPushButton, QFileDialog, QLabel, QMessageBox)
 import joblib
 from joblib import dump
-
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *

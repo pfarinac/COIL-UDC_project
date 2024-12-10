@@ -1,9 +1,15 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
-from PyQt6.QtWidgets import QApplication, QMessageBox, QInputDialog
-from prepro_func import PFuncs
-from prepro_UI import PUI
+from PyQt6.QtWidgets import QApplication
+import sys
+import os
+
+# Agregar la carpeta src al path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
+from backend.prepro_func import PFuncs
+from frontend.prepro_UI import PUI
 
 class TestPFuncs(unittest.TestCase):
 

@@ -1,11 +1,17 @@
 import unittest
 from unittest.mock import MagicMock, patch
-import joblib
-from PyQt6.QtWidgets import QApplication, QMessageBox, QFileDialog, QLabel, QLineEdit, QTextEdit
-from SLD_funcs import SLDFuncs
-from SLD_UI import SLDUI
-from model_func import MFuncs
+from PyQt6.QtWidgets import QApplication, QLabel, QLineEdit, QTextEdit
 import numpy as np
+import sys
+import os
+
+# Agregar la carpeta src al path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
+from backend.SLD_funcs import SLDFuncs
+from frontend.SLD_UI import SLDUI
+from backend.model_func import MFuncs
+
 
 class TestSLDFuncs(unittest.TestCase):
 
@@ -115,7 +121,7 @@ class TestSLDUI(unittest.TestCase):
 
     def test_enable_prediction(self):
         self.ui.m_f.model = MagicMock()
-        self.ui.enable_prediction()
+        self.ui.enable_prediction(ready=True)
         self.assertTrue(self.ui.predict_button.isEnabled())
 
     def test_generate_input_fields(self):
