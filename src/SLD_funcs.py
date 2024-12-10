@@ -22,25 +22,34 @@ class SLDFuncs:
 
     def save_model(self):
         self.update_model()
+        
+
         file_path, _ = QFileDialog.getSaveFileName(
             None, "Save model", "", "Joblib Files (*.joblib)")
 
-        if file_path:
-            model_data = {
-                "model": self.model,
-                "description": self.description_text.toPlainText(),
-                "input_columns": self.model_input,
-                "output_column": self.model_output,
-                "r2_score": self.r2,
-                "mse": self.mse
-            }
-            try:
-                dump(model_data, file_path)
-                QMessageBox.information(
-                    None, "Saved Successfully", "The model has been saved successfully.")
-            except Exception as e:
-                QMessageBox.critical(
-                    None, "Error", f"Could not save model: {str(e)}")
+       
+        if not file_path:
+            
+            QMessageBox.warning(None, "Warning", "No file path selected. The model was not saved.")
+            return
+
+        model_data = {
+            "model": self.model,
+            "description": self.description_text.toPlainText(),
+            "input_columns": self.model_input,
+            "output_column": self.model_output,
+            "r2_score": self.r2,
+            "mse": self.mse
+        }
+
+        try:
+            
+            joblib.dump(model_data, file_path)
+            
+            QMessageBox.information(None, "Saved Successfully", "The model has been saved successfully.")
+        except Exception as e:
+            
+            QMessageBox.critical(None, "Error", f"Could not save model: {str(e)}")
 
     def load_model(self):
         # Abrir el diálogo de selección de archivo
