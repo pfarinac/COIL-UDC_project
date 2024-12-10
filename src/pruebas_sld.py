@@ -4,7 +4,7 @@ import joblib
 from PyQt6.QtWidgets import QApplication, QMessageBox, QFileDialog, QLabel, QLineEdit, QTextEdit
 from SLD_funcs import SLDFuncs
 from SLD_UI import SLDUI
-from modelo_lineal import model
+from model_func import MFuncs
 import numpy as np
 
 class TestSLDFuncs(unittest.TestCase):
@@ -17,7 +17,14 @@ class TestSLDFuncs(unittest.TestCase):
         # Crear datos de prueba para el modelo real
         x = np.array([[1], [2], [3], [4]])
         y = np.array([2, 4, 6, 8])
-        self.model_instance, self.r2, self.mse = model(x, y)
+        data_mock = MagicMock()  # Reemplazar con datos reales si es necesario
+        figure_mock = MagicMock()
+        canvas_mock = MagicMock()
+        label_formula_mock = QLabel("Formula Label")
+        label_r2_mse_mock = QLabel("R2/MSE Label")
+        model_funcs_instance = MFuncs(data_mock, figure_mock, canvas_mock, label_formula_mock, label_r2_mse_mock)
+
+        self.model_instance, self.r2, self.mse = model_funcs_instance.create_model(x, y)
 
         self.mock_model = MagicMock()
         self.description_text = QTextEdit()
