@@ -17,11 +17,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. Install system dependencies
-    - name: Install system libraries
+    # 2. Install system libraries
+    - name: Install system libraries for PyQt6
       run: |
         sudo apt-get update
-        sudo apt-get install -y libegl1 libglib2.0-0
+        sudo apt-get install -y \
+          libegl1-mesa \
+          libgbm-dev \
+          libxcb-cursor0 \
+          libxcb-xinerama0 \
+          libxkbcommon-x11-0 \
+          libglu1-mesa
 
     # 3. Set up Python
     - name: Set up Python
@@ -39,3 +45,4 @@ jobs:
     - name: Run tests
       run: |
         python -m unittest discover -s tests -p "*.py"
+
