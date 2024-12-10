@@ -3,6 +3,4 @@ numpy
 scikit-learn
 pandas
 matplotlib
-sys
-unittest
 joblib
