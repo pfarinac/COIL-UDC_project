@@ -17,8 +17,15 @@ class Funcs:
         self.table_widget = table
 
     def almacenar(self):
-        # model_description = description_text.toPlainText()
-        if self.target_combo.currentItem() == None or self.input_col == []:
+        current_item = self.target_combo.currentItem()  # Obtener el elemento seleccionado
+        if current_item is None:  # Verificar si no hay selección
+            QMessageBox.warning(
+                None, "Warning", "Please select at least an input and an output column")
+            return
+
+        self.output_col = current_item.text()  # Obtener el texto del elemento seleccionado
+
+        if not self.input_col:  # Verificar si input_col está vacío
             QMessageBox.warning(
                 None, "Warning", "Please select at least an input and an output column")
         else:

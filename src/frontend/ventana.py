@@ -1,7 +1,8 @@
 from PyQt6.QtWidgets import (QApplication, QWidget,
                              QVBoxLayout, QMainWindow, QScrollArea)
 from PyQt6.QtCore import Qt
-from backend.modelo_lineal import model
+import sys
+
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
