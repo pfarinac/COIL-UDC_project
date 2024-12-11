@@ -23,8 +23,8 @@ jobs:
       with:
         python-version: "3.11.4"
 
-    # 3. Install system dependencies for Qt
-    - name: Install system dependencies for Qt
+    # 3. Install system dependencies for Qt and EGL
+    - name: Install system dependencies for Qt and EGL
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -34,11 +34,13 @@ jobs:
           libxcb-cursor0 \
           libxkbcommon0 \
           libgl1-mesa-glx \
-          libx11-xcb1 \
-          libfontconfig1 \
+          libegl1 \
+          libegl-mesa0 \
           libxcb-render0 \
           libxcb-shape0 \
-          libxcb-sync1
+          libxcb-sync1 \
+          libfontconfig1 \
+          libx11-xcb1
 
     # 4. Install Python dependencies
     - name: Install dependencies
