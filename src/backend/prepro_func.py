@@ -2,11 +2,27 @@ from PyQt6.QtWidgets import (QMessageBox, QInputDialog)
 
 
 class PFuncs:
+    """
+    Clase para gestionar un preprocesado de datos trabajando con valores nulos,
+    incluyendo su conteo, eliminación o reemplazo con diferentes métodos.
+    """
+
     def __init__(self, data) -> None:
+        """
+        Inicializa una instancia de la clase PFuncs.
+
+        Parámetros:
+            data: Instancia de clase Funcs del archivo data_func
+        """
         self.table_widget = None
         self.d_f = data
 
     def count_nulls(self):
+        """
+        Cuenta el número de valores nulos en las columnas seleccionadas del DataFrame.
+
+        Muestra advertencias si no hay datos cargados.
+        """
         self.update_df()
         self.update_input_output()
         self.update_wtable()
@@ -26,6 +42,12 @@ class PFuncs:
                 None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
     def remove_nulls(self):
+        """
+        Elimina las filas que contienen valores nulos en las columnas seleccionadas del DataFrame
+        y actualiza la tabla en la interfaz.
+
+        Muestra advertencias si no hay datos cargados.
+        """
         self.update_df()
         self.update_input_output()
         self.update_wtable()
@@ -42,6 +64,12 @@ class PFuncs:
                 None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
     def replace_nulls_with_mean(self):
+        """
+        Reemplaza los valores nulos en las columnas seleccionadas con la media de cada columna
+        y actualiza la tabla en la interfaz.
+
+        Muestra advertencias si no hay datos cargados.
+        """
         self.update_df()
         self.update_input_output()
         self.update_wtable()
@@ -62,6 +90,12 @@ class PFuncs:
                 None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
     def replace_nulls_with_median(self):
+        """
+        Reemplaza los valores nulos en las columnas seleccionadas con la mediana de cada columna
+        y actualiza la tabla en la interfaz.
+
+        Muestra advertencias si no hay datos cargados.
+        """
         self.update_df()
         self.update_input_output()
         self.update_wtable()
@@ -81,6 +115,12 @@ class PFuncs:
                 None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
     def replace_nulls_with_value(self):
+        """
+        Solicita al usuario un valor constante para reemplazar los valores nulos en las columnas seleccionadas
+        y actualiza la tabla en la interfaz.
+
+        Muestra advertencias si no hay datos cargados o si el usuario no proporciona un valor válido.
+        """
         self.update_df()
         self.update_input_output()
         self.update_wtable()
@@ -106,11 +146,20 @@ class PFuncs:
                 None, "Warning", "You must first upload a CSV, XLSX or SQLite file.")
 
     def update_df(self):
+        """
+        Actualiza el DataFrame utilizado.
+        """
         self.df = self.d_f.df
 
     def update_wtable(self):
+        """
+        Actualiza el widget de tabla utilizado en la interfaz.
+        """
         self.table_widget = self.d_f.table_widget
 
     def update_input_output(self):
+        """
+        Actualiza las columnas de entrada y salida seleccionadas desde el objeto de datos.
+        """
         self.input_col = self.d_f.input_col
         self.output_col = self.d_f.output_col

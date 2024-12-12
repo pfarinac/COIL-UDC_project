@@ -7,7 +7,21 @@ from PyQt6.QtGui import *
 
 
 class SLDFuncs:
+    """
+    Clase que proporciona funcionalidades para guardar, cargar y usar un modelo, añadir una descripción al modelo,
+    incluyendo realizar predicciones y gestionar la interfaz de usuario asociada.
+    """
+
     def __init__(self, m_f, description_text: QTextEdit, result_label: QLabel, predict_button=QPushButton) -> None:
+        """
+        Inicializa una instancia de la clase SLDFuncs.
+
+        Parámetros:
+            m_f: Instancia de MFuncs.
+            description_text (QTextEdit): Campo de texto para la descripción del modelo.
+            result_label (QLabel): Etiqueta para mostrar el resultado de las predicciones.
+            predict_button (QPushButton): Botón para activar predicciones.
+        """
         self.m_f = m_f
         self.description_text = description_text
         self.result_label = result_label
@@ -17,16 +31,19 @@ class SLDFuncs:
         self.file_name = None
 
     def save_model(self):
+        """
+        Guarda el modelo entrenado junto con su configuración en un archivo.
+        Solicita al usuario seleccionar una ubicación de guardado y gestiona posibles errores.
+        """
         self.update_model()
-        
 
         file_path, _ = QFileDialog.getSaveFileName(
             None, "Save model", "", "Joblib Files (*.joblib)")
 
-       
         if not file_path:
-            
-            QMessageBox.warning(None, "Warning", "No file path selected. The model was not saved.")
+
+            QMessageBox.warning(
+                None, "Warning", "No file path selected. The model was not saved.")
             return
 
         model_data = {
@@ -39,38 +56,46 @@ class SLDFuncs:
         }
 
         try:
-            
+
             joblib.dump(model_data, file_path)
-            
-            QMessageBox.information(None, "Saved Successfully", "The model has been saved successfully.")
+
+            QMessageBox.information(
+                None, "Saved Successfully", "The model has been saved successfully.")
         except Exception as e:
-            
-            QMessageBox.critical(None, "Error", f"Could not save model: {str(e)}")
+
+            QMessageBox.critical(
+                None, "Error", f"Could not save model: {str(e)}")
 
     def load_model(self):
-        # Abrir el diálogo de selección de archivo
+        """
+        Carga un modelo guardado desde un archivo. Actualiza la interfaz y los campos relacionados.
+        Muestra mensajes de error si el archivo no es válido.
+        """
         self.file_name, _ = QFileDialog.getOpenFileName(
             None, "Load model", "", "Model Files (*.pkl *.joblib)")
 
         if self.file_name:
             try:
-                # Limpiar campos de entrada anteriores antes de iniciar un nuevo modelo
+
                 self.reset_input_fields()
-                # Cargar el modelo desde el archivo
+
                 self.loaded_model_data = joblib.load(self.file_name)
-                # Actualizar la interfaz con la información del modelo cargado
+
                 self.loaded_model(self.loaded_model_data)
-                # Mostrar mensaje de confirmación de carga
+
                 QMessageBox.information(
                     None, "Load model", "The model has been loaded successfully.")
             except Exception as e:
-                # Mostrar mensaje de error si el archivo es inválido
+
                 QMessageBox.warning(None, "Error Loading Model",
                                     f"Could not load model: {str(e)}")
 
     def make_prediction(self):
+        """
+        Realiza una predicción utilizando el modelo cargado o creado. Muestra los resultados
+        en la interfaz de usuario. Gestiona errores relacionados con entradas inválidas.
+        """
         self.update_model()
-        # Realizar predicción utilizando el modelo cargado o creado
         try:
             input_values = []
             for field_name, input_field in self.input_fields.items():
@@ -79,7 +104,6 @@ class SLDFuncs:
                     raise ValueError(f"Please enter a value for {field_name}")
                 input_values.append(float(value))
 
-            # Realizar la predicción
             prediction = self.model.predict([input_values])
             self.result_label.setVisible(True)
             if self.model_output == None:
@@ -95,7 +119,9 @@ class SLDFuncs:
                                  f"Error during prediction: {e}")
 
     def reset_input_fields(self):
-        # Eliminar todos los campos de entrada actuales
+        """
+        Elimina los campos de entrada y etiquetas actuales de la interfaz.
+        """
         for field in self.input_labels.values():
             field.deleteLater()
         for field in self.input_fields.values():
@@ -103,7 +129,12 @@ class SLDFuncs:
         self.input_fields.clear()
 
     def loaded_model(self, model_data):
-        # Cargar los datos del modelo cargado
+        """
+        Actualiza la configuración del modelo y la interfaz de usuario con los datos de un modelo cargado.
+
+        Parámetros:
+            model_data (dict): Datos cargados del modelo guardado.
+        """
         if "model" in model_data:
             self.model = model_data["model"]
             self.model_input = model_data["input_columns"]
@@ -120,6 +151,9 @@ class SLDFuncs:
             self.m_f.output_col = self.model_output
 
     def update_model(self):
+        """
+        Actualiza las propiedades del modelo y sus configuraciones desde la instancia asociada.
+        """
         self.model = self.m_f.model
         self.model_input = self.m_f.model_input
         self.model_output = self.m_f.model_output
