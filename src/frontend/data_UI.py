@@ -125,4 +125,5 @@ class UI:
         self.layout.addWidget(self.table_widget)
 
     def habilitar_confirm(self):
-        self.confirm.setEnabled(True)
+        if self.d_f.df is not None:
+            self.confirm.setEnabled(True)
