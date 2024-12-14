@@ -26,11 +26,18 @@ class PFuncs:
         self.update_df()
         self.update_input_output()
         self.update_wtable()
+        check_nulls = []  # Lista de prueba para comprobar si no hay ningun nulo
+        self.no_nulls = False  # Indicador de que no hay nulos
         if self.df is not None:
             # Seleccionar solo las columnas de entrada y salida
             columns_to_process = self.input_col + [self.output_col]
             # Contar los valores nulos solo en las columnas seleccionadas
             null_counts = self.df[columns_to_process].isnull().sum()
+            for _, i in null_counts.items():
+                if i == 0:
+                    check_nulls.append(True)
+            if len(check_nulls) == len(columns_to_process):
+                self.no_nulls = True
             # Crear el mensaje con el conteo de valores nulos por cada columna
             null_info = "\n".join(
                 [f"{col}: {count}" for col, count in null_counts.items()])

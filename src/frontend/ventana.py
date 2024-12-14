@@ -51,6 +51,8 @@ class CsvViewer(QMainWindow):
         self.m_u.layout_visualizar_iniciar_modelo.addLayout(
             self.sld_u.layout_descripcion_modelo)
 
+        self.sld_u.save_button.clicked.connect(self.desc_warning)
+
         # Creamos el layout principal y le añadimos los auxiliares
         layout = QVBoxLayout()
         layout.addLayout(self.d_u.layout)
@@ -140,6 +142,8 @@ class CsvViewer(QMainWindow):
         self.sld_u.enable_prediction(True)
         QMessageBox.information(
             None, "Model created succesfully", "Your model has been created succesfully")
+
+    def desc_warning(self):
         if self.sld_u.description_text.toPlainText() == "":
             QMessageBox.information(
                 None, "No description", "You haven't assigned any description to the model")

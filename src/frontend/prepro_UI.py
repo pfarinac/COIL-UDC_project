@@ -77,7 +77,13 @@ class PUI:
         self.layout_entrada_salida_preprocesado = QHBoxLayout()
 
     def habilitar_botones_preprocesado(self):
-        self.btn_remove_nulls.setEnabled(True)
-        self.btn_replace_nulls_mean.setEnabled(True)
-        self.btn_replace_nulls_median.setEnabled(True)
-        self.btn_replace_nulls_value.setEnabled(True)
+        if self.funcs.no_nulls == False:
+            self.btn_remove_nulls.setEnabled(True)
+            self.btn_replace_nulls_mean.setEnabled(True)
+            self.btn_replace_nulls_median.setEnabled(True)
+            self.btn_replace_nulls_value.setEnabled(True)
+        else:
+            self.btn_remove_nulls.setEnabled(False)
+            self.btn_replace_nulls_mean.setEnabled(False)
+            self.btn_replace_nulls_median.setEnabled(False)
+            self.btn_replace_nulls_value.setEnabled(False)

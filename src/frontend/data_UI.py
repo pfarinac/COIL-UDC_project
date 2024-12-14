@@ -68,6 +68,7 @@ class UI:
         self.load_button.setFixedSize(60, 44)
         layout_open_load.addWidget(self.load_button)
         self.load_button.clicked.connect(self.d_f.load_file)
+        self.load_button.clicked.connect(self.habilitar_confirm)
 
        # Añadir etiqueta de ruta del archivo al layout
         layout_open_load.addWidget(self.file_path_label)
@@ -112,6 +113,7 @@ class UI:
         # Botón de confirmación de selección
         self.confirm = QPushButton("Confirm selection")
         self.confirm.setFixedSize(145, 50)
+        self.confirm.setEnabled(False)
         self.features_list.clicked.connect(self.d_f.registrar_input)
         self.confirm.clicked.connect(self.d_f.almacenar)
         self.layout_entrada_salida.addWidget(self.confirm)
@@ -121,3 +123,6 @@ class UI:
         self.layout.addWidget(self.viewer_title)
         self.layout.addLayout(layout_open_load)
         self.layout.addWidget(self.table_widget)
+
+    def habilitar_confirm(self):
+        self.confirm.setEnabled(True)
