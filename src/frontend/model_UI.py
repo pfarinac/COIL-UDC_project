@@ -29,7 +29,7 @@ class MUI:
         Inicializa una instancia de la clase MUI.
 
         Parámetros:
-            data: Datos utilizados para inicializar las funcionalidades del modelo.
+            data: Instancia de clase Funcs del archivo data_func
         """
         self.layout = QVBoxLayout()
         self.d_f = data

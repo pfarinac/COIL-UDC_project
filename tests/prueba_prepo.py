@@ -36,6 +36,7 @@ class TestPFuncs(unittest.TestCase):
         mock_info.assert_called_once_with(
             None, "Null values", "Number of null values ​​per column:\nInput1: 1\nInput2: 1\nOutput: 1"
         )
+        self.assertFalse(self.funcs.no_nulls)
 
     @patch('PyQt6.QtWidgets.QMessageBox.information')
     def test_remove_nulls(self, mock_info):
