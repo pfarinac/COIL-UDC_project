@@ -6,7 +6,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import sys
 import os
 
-# Agregar la carpeta src al path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 from backend.model_func import MFuncs
@@ -40,7 +39,7 @@ class TestMFuncs(unittest.TestCase):
         self.funcs.df = MagicMock()
         self.funcs.input_col = ["col1"]
         self.funcs.output_col = "col2"
-        with patch("model_func.MFuncs.create_model") as mock_model:
+        with patch("backend.model_func.MFuncs.create_model") as mock_model:
             mock_clf = MagicMock()
             mock_model.return_value = (mock_clf, 0.95, 0.05)
 
@@ -63,7 +62,7 @@ class TestMFuncs(unittest.TestCase):
 
         # Mockear QMessageBox.warning para capturar advertencias
         with patch("PyQt6.QtWidgets.QMessageBox.warning") as mock_warning, \
-            patch("model_func.MFuncs.create_model") as mock_model:
+            patch("backend.model_func.MFuncs.create_model") as mock_model:
 
             mock_model.side_effect = RuntimeError("model should not be called")
             # Simular un modelo con los atributos necesarios pero que no se usará
