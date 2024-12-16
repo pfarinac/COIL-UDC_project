@@ -1,3 +1,5 @@
+from frontend.prepro_UI import PUI
+from backend.prepro_func import PFuncs
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
@@ -6,10 +8,9 @@ import sys
 import os
 
 # Agregar la carpeta src al path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+sys.path.append(os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '../src')))
 
-from backend.prepro_func import PFuncs
-from frontend.prepro_UI import PUI
 
 class TestPFuncs(unittest.TestCase):
     """
@@ -75,8 +76,10 @@ class TestPFuncs(unittest.TestCase):
         """
         self.funcs.replace_nulls_with_mean()
         # Verificar que los valores nulos fueron reemplazados
-        self.assertEqual(self.mock_data.df["Input1"].iloc[1], 2.0)  # Media de Input1
-        self.assertEqual(self.mock_data.df["Output"].iloc[2], 7.5)  # Media de Output
+        # Media de Input1
+        self.assertEqual(self.mock_data.df["Input1"].iloc[1], 2.0)
+        # Media de Output
+        self.assertEqual(self.mock_data.df["Output"].iloc[2], 7.5)
         mock_info.assert_called_once_with(
             None, "Replaced values", "Null values ​​have been replaced by the mean of the selected columns."
         )
@@ -89,8 +92,10 @@ class TestPFuncs(unittest.TestCase):
         """
         self.funcs.replace_nulls_with_median()
         # Verificar que los valores nulos fueron reemplazados
-        self.assertEqual(self.mock_data.df["Input1"].iloc[1], 2.0)  # Mediana de Input1
-        self.assertEqual(self.mock_data.df["Output"].iloc[2], 7.5)  # Mediana de Output
+        # Mediana de Input1
+        self.assertEqual(self.mock_data.df["Input1"].iloc[1], 2.0)
+        # Mediana de Output
+        self.assertEqual(self.mock_data.df["Output"].iloc[2], 7.5)
         mock_info.assert_called_once_with(
             None, "Replaced values", "Null values ​​have been replaced by the median of the selected columns."
         )
@@ -110,6 +115,7 @@ class TestPFuncs(unittest.TestCase):
             None, "Replaced values", "Null values has been replaced by '42' in the selected columns."
         )
 
+
 class TestPUI(unittest.TestCase):
     """
     Clase de prueba unitaria para la interfaz de usuario de preprocesado de datos (PUI).
@@ -119,13 +125,13 @@ class TestPUI(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """
-        Configura la aplicación Qt antes de ejecutar las pruebas para la interfaz de usuario.
+        Configura una instancia de QApplication requerida para probar componentes de PyQt6.
         """
         cls.app = QApplication([])
 
     def setUp(self):
         """
-        Configura el entorno necesario antes de cada prueba.
+        Configura los objetos y datos necesarios antes de cada prueba.
         Crea una instancia mock de los datos y una instancia de la interfaz PUI.
         """
         self.mock_data = MagicMock()
@@ -143,6 +149,7 @@ class TestPUI(unittest.TestCase):
         self.assertTrue(self.ui.btn_replace_nulls_mean.isEnabled())
         self.assertTrue(self.ui.btn_replace_nulls_median.isEnabled())
         self.assertTrue(self.ui.btn_replace_nulls_value.isEnabled())
+
 
 if __name__ == "__main__":
     unittest.main()
