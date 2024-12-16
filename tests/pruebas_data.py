@@ -1,4 +1,3 @@
-from backend.data_func import Funcs
 import unittest
 from unittest.mock import patch
 from PyQt6.QtWidgets import QApplication, QLabel, QListWidget, QTableWidget
@@ -7,9 +6,9 @@ import sys
 import os
 
 # Agregar la carpeta src al path
-sys.path.append(os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '../src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
+from backend.data_func import Funcs
 
 class TestFuncs(unittest.TestCase):
     """
@@ -43,7 +42,7 @@ class TestFuncs(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         """
-        Limpia la instancia de QApplication después de completar todas las pruebas.
+        Limpieza final después de todas las pruebas.
         """
         cls.app.quit()
 
@@ -63,8 +62,7 @@ class TestFuncs(unittest.TestCase):
         - Simula la selección de un archivo y la lectura del DataFrame.
         - Verifica que se llama al diálogo de archivo y que los datos se cargan correctamente.
         """
-        mock_read_csv.return_value = pd.DataFrame(
-            {"Col1": [1, 2], "Col2": [3, 4]})
+        mock_read_csv.return_value = pd.DataFrame({"Col1": [1, 2], "Col2": [3, 4]})
         with patch('PyQt6.QtWidgets.QFileDialog.getOpenFileName') as mock_dialog:
             mock_dialog.return_value = ('test.csv', 'CSV Files (*.csv)')
 
@@ -73,8 +71,7 @@ class TestFuncs(unittest.TestCase):
             mock_dialog.assert_called_once()
             self.assertIsNotNone(self.funcs.df)
             self.assertEqual(self.funcs.df.shape, (2, 2))
-            self.assertEqual(self.file_path_label.text(),
-                             'File path: test.csv')
+            self.assertEqual(self.file_path_label.text(), 'File path: test.csv')
 
     def test_mostrar_columnas(self):
         """
@@ -99,14 +96,11 @@ class TestFuncs(unittest.TestCase):
 
         self.assertEqual(self.table_widget.rowCount(), 2)
         self.assertEqual(self.table_widget.columnCount(), 2)
-        self.assertEqual(
-            self.table_widget.horizontalHeaderItem(0).text(), "Col1")
-        self.assertEqual(
-            self.table_widget.horizontalHeaderItem(1).text(), "Col2")
+        self.assertEqual(self.table_widget.horizontalHeaderItem(0).text(), "Col1")
+        self.assertEqual(self.table_widget.horizontalHeaderItem(1).text(), "Col2")
 
         self.assertEqual(self.table_widget.item(0, 0).text(), "1.0")
-        self.assertEqual(self.table_widget.item(
-            1, 0).background().color().name(), "#ff0000")  # Color rojo
+        self.assertEqual(self.table_widget.item(1, 0).background().color().name(), "#ff0000")  # Color rojo
 
     def test_registrar_input(self):
         """
@@ -150,7 +144,6 @@ class TestFuncs(unittest.TestCase):
         mock_info.assert_called_once_with(
             None, "Information", "Your selection has been successfully saved.\n"
         )
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,3 @@
-from backend.model_func import MFuncs
 import unittest
 from unittest.mock import MagicMock, patch
 from PyQt6.QtWidgets import QApplication, QLabel
@@ -7,9 +6,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import sys
 import os
 
-sys.path.append(os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '../src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
+from backend.model_func import MFuncs
 
 class TestMFuncs(unittest.TestCase):
     """
@@ -32,8 +31,7 @@ class TestMFuncs(unittest.TestCase):
         self.mock_canvas = MagicMock(spec=FigureCanvas)
         self.label_formula = QLabel()
         self.label_r2_mse = QLabel()
-        self.funcs = MFuncs(self.mock_data, self.mock_figure,
-                            self.mock_canvas, self.label_formula, self.label_r2_mse)
+        self.funcs = MFuncs(self.mock_data, self.mock_figure, self.mock_canvas, self.label_formula, self.label_r2_mse)
 
     @classmethod
     def tearDownClass(cls):
@@ -83,7 +81,7 @@ class TestMFuncs(unittest.TestCase):
         self.funcs.output_col = None
 
         with patch("PyQt6.QtWidgets.QMessageBox.warning") as mock_warning, \
-                patch("backend.model_func.MFuncs.create_model") as mock_model:
+             patch("backend.model_func.MFuncs.create_model") as mock_model:
 
             mock_model.side_effect = RuntimeError("model should not be called")
             mock_clf = MagicMock()
@@ -127,6 +125,7 @@ class TestMFuncs(unittest.TestCase):
         self.funcs.update_df()
         self.assertEqual(self.funcs.df, self.mock_data.df)
 
-
 if __name__ == '__main__':
     unittest.main()
+
+

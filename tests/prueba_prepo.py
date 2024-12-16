@@ -1,5 +1,3 @@
-from frontend.prepro_UI import PUI
-from backend.prepro_func import PFuncs
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
@@ -8,9 +6,10 @@ import sys
 import os
 
 # Agregar la carpeta src al path
-sys.path.append(os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '../src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
+from backend.prepro_func import PFuncs
+from frontend.prepro_UI import PUI
 
 class TestPFuncs(unittest.TestCase):
     """
@@ -76,10 +75,8 @@ class TestPFuncs(unittest.TestCase):
         """
         self.funcs.replace_nulls_with_mean()
         # Verificar que los valores nulos fueron reemplazados
-        # Media de Input1
-        self.assertEqual(self.mock_data.df["Input1"].iloc[1], 2.0)
-        # Media de Output
-        self.assertEqual(self.mock_data.df["Output"].iloc[2], 7.5)
+        self.assertEqual(self.mock_data.df["Input1"].iloc[1], 2.0)  # Media de Input1
+        self.assertEqual(self.mock_data.df["Output"].iloc[2], 7.5)  # Media de Output
         mock_info.assert_called_once_with(
             None, "Replaced values", "Null values ​​have been replaced by the mean of the selected columns."
         )
@@ -92,10 +89,8 @@ class TestPFuncs(unittest.TestCase):
         """
         self.funcs.replace_nulls_with_median()
         # Verificar que los valores nulos fueron reemplazados
-        # Mediana de Input1
-        self.assertEqual(self.mock_data.df["Input1"].iloc[1], 2.0)
-        # Mediana de Output
-        self.assertEqual(self.mock_data.df["Output"].iloc[2], 7.5)
+        self.assertEqual(self.mock_data.df["Input1"].iloc[1], 2.0)  # Mediana de Input1
+        self.assertEqual(self.mock_data.df["Output"].iloc[2], 7.5)  # Mediana de Output
         mock_info.assert_called_once_with(
             None, "Replaced values", "Null values ​​have been replaced by the median of the selected columns."
         )
@@ -114,7 +109,6 @@ class TestPFuncs(unittest.TestCase):
         mock_info.assert_called_once_with(
             None, "Replaced values", "Null values has been replaced by '42' in the selected columns."
         )
-
 
 class TestPUI(unittest.TestCase):
     """
@@ -149,7 +143,6 @@ class TestPUI(unittest.TestCase):
         self.assertTrue(self.ui.btn_replace_nulls_mean.isEnabled())
         self.assertTrue(self.ui.btn_replace_nulls_median.isEnabled())
         self.assertTrue(self.ui.btn_replace_nulls_value.isEnabled())
-
 
 if __name__ == "__main__":
     unittest.main()
