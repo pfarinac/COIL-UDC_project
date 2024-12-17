@@ -3,6 +3,9 @@ import sqlite3
 
 
 def cargar_datos(archivo):
+    """
+    Carga datos desde un archivo csv, excel o sqlite.
+    """
     # Verificar el tipo de archivo por su extensión
     if archivo.endswith('.csv'):
         try:

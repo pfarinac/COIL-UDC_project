@@ -41,7 +41,7 @@ class MFuncs:
         """
         self.update_input_output()
         self.update_df()
-
+        #Para evitar errores actualizamos model_input y model_output
         self.model_input = self.input_col.copy()
         self.model_output = self.output_col
         if self.df is not None and self.input_col and self.output_col:
@@ -124,7 +124,7 @@ class MFuncs:
             float: Error cuadrático medio (MSE) del modelo.
         """
         clf = LinearRegression()
-        clf.fit(x, y)
+        clf.fit(x, y) # Entrenamos el modelo
         prediccion = clf.predict(x)
         r2 = r2_score(y, prediccion)
         mse = mean_squared_error(y, prediccion)
